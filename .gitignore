@@ -1,0 +1,71 @@
+# Byte-compiled / optimized / DLL files
+.DS_Store
+.DS_Store/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+#visual estudio code
+.vscode
+
+#idea
+.idea
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# pyenv
+.python-version
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# database
+*.sqlite3
+
+report.json
+finalReport.json
+/certs/
+
+#mlflow
+tmp/*
+mlruns/*
+
+#compose develop
+docker-compose.deb*
+
+#pruebas
+prueba*
+
+#download reports
+/reports/
+
+config_mine.json
