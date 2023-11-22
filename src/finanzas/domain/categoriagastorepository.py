@@ -10,3 +10,15 @@ class CategoriaGastoRepository(ABC):
     @abstractmethod
     def list(self, criteria: Criteria) -> List[CategoriaGasto]:
         pass
+
+    @abstractmethod
+    def new(self, params: dict) -> CategoriaGasto:
+        pass
+
+    @abstractmethod
+    def update(self, params: dict) -> CategoriaGasto:
+        pass
+
+    @abstractmethod
+    def get(self, id_categoria_gasto: int) -> CategoriaGasto:
+        pass

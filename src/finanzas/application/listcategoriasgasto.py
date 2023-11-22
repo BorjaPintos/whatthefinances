@@ -12,9 +12,9 @@ from src.persistence.domain.simplefilter import SimpleFilter, WhereOperator
 
 class ListCategoriasGasto(TransactionalUseCase):
 
-    def __init__(self, categorias_gasto_repository: CategoriaGastoRepository):
-        super().__init__([categorias_gasto_repository])
-        self._categorias_gasto_repository = categorias_gasto_repository
+    def __init__(self, categoria_gasto_repository: CategoriaGastoRepository):
+        super().__init__([categoria_gasto_repository])
+        self._categoria_gasto_repository = categoria_gasto_repository
 
     @transactional(readonly=True)
     def execute(self, params: dict) -> List[CategoriaGasto]:
@@ -22,7 +22,7 @@ class ListCategoriasGasto(TransactionalUseCase):
         criteria = Criteria(order=Order(OrderBy(params["order_property"]), OrderType(params["order_type"])),
                             filter=self._create_filters(params)
                             )
-        cuentas = self._categorias_gasto_repository.list(criteria)
+        cuentas = self._categoria_gasto_repository.list(criteria)
         return cuentas
 
     @staticmethod

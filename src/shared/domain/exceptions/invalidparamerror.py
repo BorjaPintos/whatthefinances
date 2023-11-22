@@ -1,0 +1,2 @@
+class InvalidParamError(ValueError):
+    "InvalidParamError"

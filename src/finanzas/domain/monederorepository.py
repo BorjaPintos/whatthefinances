@@ -10,3 +10,15 @@ class MonederoRepository(ABC):
     @abstractmethod
     def list(self, criteria: Criteria) -> List[Monedero]:
         pass
+
+    @abstractmethod
+    def new(self, params: dict) -> Monedero:
+        pass
+
+    @abstractmethod
+    def update(self, params: dict) -> Monedero:
+        pass
+
+    @abstractmethod
+    def get(self, id_cuenta: int) -> Monedero:
+        pass

@@ -11,7 +11,7 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 @InitTable()
 class MonederoEntity(BaseEntity):
     __tablename__ = 'finanzas_monederos'
-    nombre = Column(Text, nullable=False)
+    nombre = Column(Text, nullable=False, unique=True)
     cantidad_base = Column(Float(precision=2), nullable=False)
     diferencia = Column(Float(precision=2), server_default="0.00", nullable=False)
     total = column_property(cantidad_base + diferencia)
@@ -54,3 +54,9 @@ class MonederoEntity(BaseEntity):
                          "diferencia": self.diferencia,
                          "total": self.total
                          })
+
+    def update(self, params: dict):
+        if params["nombre"]:
+            self.nombre = params["nombre"]
+        if params["cantidad_base"]:
+            self.cantidad_base = params["cantidad_base"]

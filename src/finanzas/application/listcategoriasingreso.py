@@ -12,16 +12,16 @@ from src.persistence.domain.simplefilter import WhereOperator, SimpleFilter
 
 class ListCategoriasIngreso(TransactionalUseCase):
 
-    def __init__(self, categorias_ingreso_repository: CategoriaIngresoRepository):
-        super().__init__([categorias_ingreso_repository])
-        self._categorias_ingreso_repository = categorias_ingreso_repository
+    def __init__(self, categoria_ingreso_repository: CategoriaIngresoRepository):
+        super().__init__([categoria_ingreso_repository])
+        self._categoria_ingreso_repository = categoria_ingreso_repository
 
     @transactional(readonly=True)
     def execute(self, params: dict) -> List[CategoriaIngreso]:
         criteria = Criteria(order=Order(OrderBy(params["order_property"]), OrderType(params["order_type"])),
                             filter=self._create_filters(params)
                             )
-        cuentas = self._categorias_ingreso_repository.list(criteria)
+        cuentas = self._categoria_ingreso_repository.list(criteria)
         return cuentas
 
     @staticmethod

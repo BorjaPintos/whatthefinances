@@ -32,5 +32,5 @@ class Cuenta:
                 "cantidad_base": self._cantidad_base,
                 "diferencia": self._diferencia,
                 "total": self._total,
-                "ponderación": self._ponderacion
+                "ponderacion": self._ponderacion
                 }
