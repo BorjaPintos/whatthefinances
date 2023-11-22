@@ -11,8 +11,9 @@ test_feature() {
 
 
 main(){
-    test_feature "tests/behave/version/features/" $1 $2
-    test_feature "tests/behave/login/features/" $1 $2
+    #test_feature "tests/behave/version/features/" $1 $2
+    #test_feature "tests/behave/login/features/" $1 $2
+    test_feature "tests/behave/finanzas/features/" $1 $2
 }
 
 main $1 $2

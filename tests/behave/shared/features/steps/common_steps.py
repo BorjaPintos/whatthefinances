@@ -15,6 +15,12 @@ def check_item(context):
             assert (str(items[0][k]) == str(element[k]))
     return items[0] == element
 
+@then(u'Obtengo la siguiente lista')
+def check_list(context):
+    event_list = context.result.json()
+    table = common_functions.retrieve_context_table(context)
+    common_functions.check_list_elements_by_keys(table, event_list)
+
 
 @then('Obtengo el codigo de estado {code}')
 def status_code(context, code):
