@@ -43,3 +43,15 @@ def retrieve_context_table(context):
     for row in context.table:
         result.append(row_to_dict(row, properties))
     return result
+
+
+def check_list_elements_by_keys(l1, l2):
+    if len(l1) != len(l2):
+        raise AssertionError(
+            f'Expected {len(l2)} elements, found {len(l1)}'
+        )
+    for e1, e2 in zip(l1, l2):
+        for key in e1.keys():
+            if str(e1.get(key)) != str(e2[key]):
+                raise AssertionError("row:" + str(e1) + ", row[" + key + "]:" +
+                                     str(e1.get(key)) + "; element[" + key + "]:" + str(e2[key]))

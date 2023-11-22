@@ -71,7 +71,7 @@ def import_routes(rootpath, app):
     delete_operacion_use_case = DeleteOperacion(operacion_repository=operacion_repository)
 
     @app.route(rootpath + "/cuenta", methods=['GET'])
-    # @login_required
+    @login_required
     @serialize_response
     def list_cuentas():
         code = 200
@@ -87,7 +87,7 @@ def import_routes(rootpath, app):
         return response, code
 
     @app.route(rootpath + "/cuenta/<id_cuenta>", methods=['GET'])
-    # @login_required
+    @login_required
     @serialize_response
     def get_cuenta(id_cuenta: int):
         code = 200
@@ -102,7 +102,7 @@ def import_routes(rootpath, app):
         return response, code
 
     @app.route(rootpath + "/cuenta", methods=['POST'])
-    # @login_required
+    @login_required
     @serialize_response
     def create_cuenta():
         code = 201
@@ -123,7 +123,7 @@ def import_routes(rootpath, app):
             return response, code
 
     @app.route(rootpath + "/cuenta/<id_cuenta>", methods=['POST'])
-    # @login_required
+    @login_required
     @serialize_response
     def update_cuenta(id_cuenta: int):
         code = 200
@@ -144,7 +144,7 @@ def import_routes(rootpath, app):
             return response, code
 
     @app.route(rootpath + "/monedero", methods=['GET'])
-    # @login_required
+    @login_required
     @serialize_response
     def list_monederos():
         code = 200
@@ -160,7 +160,7 @@ def import_routes(rootpath, app):
         return response, code
 
     @app.route(rootpath + "/monedero/<id_monedero>", methods=['GET'])
-    # @login_required
+    @login_required
     @serialize_response
     def get_monedero(id_monedero: int):
         code = 200
@@ -176,7 +176,7 @@ def import_routes(rootpath, app):
         return response, code
 
     @app.route(rootpath + "/monedero", methods=['POST'])
-    # @login_required
+    @login_required
     @serialize_response
     def create_monedero():
         code = 201
@@ -196,7 +196,7 @@ def import_routes(rootpath, app):
             return response, code
 
     @app.route(rootpath + "/monedero/<id_monedero>", methods=['POST'])
-    # @login_required
+    @login_required
     @serialize_response
     def update_monedero(id_monedero: int):
         code = 200
@@ -216,7 +216,7 @@ def import_routes(rootpath, app):
             return response, code
 
     @app.route(rootpath + "/categoria_ingreso", methods=['GET'])
-    # @login_required
+    @login_required
     @serialize_response
     def list_categorias_ingreso():
         code = 200
@@ -234,7 +234,7 @@ def import_routes(rootpath, app):
         return response, code
 
     @app.route(rootpath + "/categoria_ingreso/<id_categoria_ingreso>", methods=['GET'])
-    # @login_required
+    @login_required
     @serialize_response
     def get_categoria_ingreso(id_categoria_ingreso: int):
         code = 200
@@ -251,7 +251,7 @@ def import_routes(rootpath, app):
         return response, code
 
     @app.route(rootpath + "/categoria_ingreso", methods=['POST'])
-    # @login_required
+    @login_required
     @serialize_response
     def create_categoria_ingreso():
         code = 201
@@ -273,7 +273,7 @@ def import_routes(rootpath, app):
             return response, code
 
     @app.route(rootpath + "/categoria_ingreso/<id_categoria_ingreso>", methods=['POST'])
-    # @login_required
+    @login_required
     @serialize_response
     def update_categoria_ingreso(id_categoria_ingreso: int):
         code = 200
@@ -296,7 +296,7 @@ def import_routes(rootpath, app):
             return response, code
 
     @app.route(rootpath + "/categoria_gasto", methods=['GET'])
-    # @login_required
+    @login_required
     @serialize_response
     def list_categorias_gasto():
         code = 200
@@ -314,7 +314,7 @@ def import_routes(rootpath, app):
         return response, code
 
     @app.route(rootpath + "/categoria_gasto/<id_categoria_gasto>", methods=['GET'])
-    # @login_required
+    @login_required
     @serialize_response
     def get_categoria_gasto(id_categoria_gasto: int):
         code = 200
@@ -330,7 +330,7 @@ def import_routes(rootpath, app):
         return response, code
 
     @app.route(rootpath + "/categoria_gasto", methods=['POST'])
-    # @login_required
+    @login_required
     @serialize_response
     def create_categoria_gasto():
         code = 201
@@ -352,7 +352,7 @@ def import_routes(rootpath, app):
             return response, code
 
     @app.route(rootpath + "/categoria_gasto/<id_categoria_gasto>", methods=['POST'])
-    # @login_required
+    @login_required
     @serialize_response
     def update_categoria_gasto(id_categoria_gasto: int):
         code = 200
@@ -375,7 +375,7 @@ def import_routes(rootpath, app):
             return response, code
 
     @app.route(rootpath + "/operacion", methods=['GET'])
-    # @login_required
+    @login_required
     @serialize_response
     def list_operaciones():
         code = 200
@@ -401,7 +401,7 @@ def import_routes(rootpath, app):
         return response, code
 
     @app.route(rootpath + "/operacion/<id_operacion>", methods=['GET'])
-    # @login_required
+    @login_required
     @serialize_response
     def get_operacion(id_operacion: int):
         code = 200
@@ -417,7 +417,7 @@ def import_routes(rootpath, app):
         return response, code
 
     @app.route(rootpath + "/operacion", methods=['POST'])
-    # @login_required
+    @login_required
     @serialize_response
     def create_operacion():
         code = 201
@@ -443,7 +443,7 @@ def import_routes(rootpath, app):
             return response, code
 
     @app.route(rootpath + "/operacion/<id_operacion>", methods=['POST'])
-    # @login_required
+    @login_required
     @serialize_response
     def update_operacion(id_operacion: int):
         code = 200
@@ -470,7 +470,7 @@ def import_routes(rootpath, app):
             return response, code
 
     @app.route(rootpath + "/operacion/<id_operacion>", methods=['DELETE'])
-    # @login_required
+    @login_required
     @serialize_response
     def delete_operacion(id_operacion: int):
         code = 200
