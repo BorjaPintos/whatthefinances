@@ -18,21 +18,16 @@ def import_routes(rootpath, app):
     def login():
         username = request.json["name"]
         password = request.json["password"]
-        try:
-            user = login_use_case.execute(username, password)
-            if user:
-                token = create_token(user, app.config['token_secret'], app.config['token_login_hours_alive'])
-                code = 200
-                logger.info("El usuario " + username + " se ha logueado correctamente")
-                response = {'token': token}
-            else:
-                raise UnauthorizedError()
-            return response, code
-        except UnauthorizedError as e:
-            code = 404
-            logger.warning("El usuario " + username + " no se puede loguear")
-            response = Error("Invalid username or password", code)
-            return response, code
+
+        user = login_use_case.execute(username, password)
+        if user:
+            token = create_token(user, app.config['token_secret'], app.config['token_login_hours_alive'])
+            code = 200
+            logger.info("El usuario " + username + " se ha logueado correctamente")
+            response = {'token': token}
+        else:
+            raise UnauthorizedError()
+        return response, code
 
     @app.login_manager.request_loader
     def load_user_from_request(request):

@@ -5,7 +5,7 @@
     "DEBUG": true,
     "PORT": 9090,
     "HOST": "0.0.0.0",
-    "use_ssl": false,
+    "use_ssl": true,
     "ssl": {
       "cert_path": "./ssl/server.crt",
       "key_path": "./ssl/server.key",

@@ -25,6 +25,7 @@ class SQLAlchemyDatabase(Database):
         self._session_maker = sessionmaker(bind=self._engine)
         return connection
 
+
     def commit(self):
         self._connection.commit()
 
@@ -56,6 +57,9 @@ class SQLAlchemyDatabase(Database):
 
     def delete_table(self, entity: BaseEntity):
         return self._metadata.drop_all(self._engine, [entity.__table__])
+
+    def clear_table(self, table_name: str):
+        return self.exec_sql("Delete from {}".format(table_name))
 
     def exec_sql(self, query: str, commit: bool = True):
         res = self._connection.execute(text(query))
