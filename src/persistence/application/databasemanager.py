@@ -1,11 +1,13 @@
 import traceback
 from contextlib import contextmanager
 from typing import List
+from unittest.mock import Mock
 
 from loguru import logger
 
 from src.persistence.domain.database import Database
 from src.persistence.domain.init_table import InitTable
+from src.persistence.infrastructure.mockdatabase import MockDatabase
 from src.persistence.infrastructure.orm.baseentity import BaseEntity
 from src.persistence.infrastructure.postgresql.postgresdatabase import PostgresDatabase
 from src.persistence.infrastructure.sqlite.sqlitedatabase import SQLiteDatabase
@@ -17,10 +19,12 @@ class DatabaseManager:
     @staticmethod
     def init(config: dict):
         DatabaseManager._DATABASE = DatabaseManager.__init_database(config)
+        return DatabaseManager
 
     @staticmethod
     def __init_database(config: dict) -> Database:
         switch_database = {
+            'mock': MockDatabase,
             'sqlite': SQLiteDatabase,
             'postgres': PostgresDatabase
         }
@@ -37,6 +41,10 @@ class DatabaseManager:
     @staticmethod
     def delete_table(entity: BaseEntity):
         return DatabaseManager._DATABASE.delete_table(entity)
+
+    @staticmethod
+    def clear_table(table_name: str):
+        return DatabaseManager._DATABASE.clear_table(table_name)
 
     @staticmethod
     def describe_table(table_name: str) -> List[tuple]:

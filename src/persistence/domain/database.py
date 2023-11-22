@@ -3,6 +3,8 @@ from typing import List
 
 from sqlalchemy.orm import DeclarativeMeta
 
+from src.persistence.infrastructure.orm.baseentity import BaseEntity
+
 
 class Database:
 
@@ -23,6 +25,14 @@ class Database:
 
     @abstractmethod
     def list_tables(self) -> List[str]:
+        pass
+
+    @abstractmethod
+    def delete_table(self, entity: BaseEntity):
+        pass
+
+    @abstractmethod
+    def clear_table(self, table_name: str):
         pass
 
     @abstractmethod
@@ -52,4 +62,9 @@ class Database:
 
     @abstractmethod
     def rollback(self):
+        pass
+
+
+    @abstractmethod
+    def new_session(self):
         pass

@@ -9,7 +9,7 @@ from loguru import logger
 from src.persistence.application.databasemanager import DatabaseManager
 from application.iapp import IApp
 from src.finanzas.infrastructure.rest import finanzasroutes
-from src.login.infrastructure.rest import loginroutes
+from src.login.infrastructure.rest import loginroutes, userroutes
 from src.version.infrastructure.rest import versionroutes
 
 
@@ -17,10 +17,14 @@ def _add_headers(app):
     @app.after_request
     def add_headers(resp):
         resp.headers['Content-Type'] = 'application/json'
-        resp.headers['Server'] = app.config.get('server_info', '')
         if app.config['use_ssl']:
-            resp.headers['Strict-Transport-Security'] = 'max-age=31536000; \
-                includeSubDomains'
+            resp.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+        resp.headers["X-Frame-Options"] = "deny"
+        resp.headers["X-Content-Type-Options"] = "nosniff"
+        resp.headers["Referrer-Policy"] = "no-referrer"
+        resp.headers["Cache-Control"] = "no-store, max-age=0"
+        resp.headers[
+            "Content-Security-Policy"] = "default-src 'self'; form-action 'self'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests; block-all-mixed-content"
         return resp
 
 
@@ -53,11 +57,6 @@ class Rest(IApp):
 
         logger.info("End run")
 
-    def _need_execution(self):
-        """Esta funcion sirve para saber si flask se va a reiniciar,
-        con lo que en la primera ejecucion podemos evitar ejecutar cosas, como un thread"""
-        return os.environ.get("WERKZEUG_RUN_MAIN") is not None or self.app.config['DEBUG'] is False
-
     def init_app(self):
         _add_headers(self.app)
         self._init_routes()
@@ -72,4 +71,5 @@ class Rest(IApp):
     def _init_routes(self):
         versionroutes.import_routes("/version", self.app)
         loginroutes.import_routes("/login", self.app)
+        userroutes.import_routes("/user", self.app)
         finanzasroutes.import_routes("/finanzas", self.app)

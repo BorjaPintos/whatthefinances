@@ -1,5 +1,6 @@
 import traceback
 
+from src.login.domain.exceptions.unauthorizederror import UnauthorizedError
 from src.persistence.application.baseusecase import BaseUseCase
 from src.persistence.application.databasemanager import DatabaseManager
 from src.shared.domain.exceptions.invalidparamerror import InvalidParamError
@@ -35,6 +36,8 @@ def transactional(readonly=False):
                         set_sessions(args[0], session)
                         return function(*args, **kwargs)
 
+            except UnauthorizedError as e:
+                raise e
             except NotFoundError as e:
                 raise e
             except InvalidParamError as e:
