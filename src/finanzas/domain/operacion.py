@@ -71,7 +71,7 @@ class Operacion:
 
     def get_dto(self) -> dict:
         return {"id": self._id,
-                "fecha": "fecha",
+                "fecha": self._fecha,
                 "cantidad": self._cantidad,
                 "descripcion": self._descripcion,
                 "id_categoria_gasto": self._id_categoria_gasto,

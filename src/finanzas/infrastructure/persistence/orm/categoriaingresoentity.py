@@ -10,17 +10,17 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 @InitTable()
 class CategoriaIngresoEntity(BaseEntity):
     __tablename__ = 'finanzas_categorias_ingreso'
-    descripcion = Column(Text, nullable=False)
-    cuenta_abono_defecto = Column(Integer)
-    monedero_defecto = Column(Integer)
+    descripcion = Column(Text, nullable=False, unique=True)
+    id_cuenta_abono_defecto = Column(Integer)
+    id_monedero_defecto = Column(Integer)
 
     @staticmethod
     def get_column(str_property) -> Column:
         switcher = {
             "id": CategoriaIngresoEntity.id,
             "descripcion": CategoriaIngresoEntity.descripcion,
-            "id_cuenta_abono_defecto": CategoriaIngresoEntity.cuenta_abono_defecto,
-            "id_monedero_defecto": CategoriaIngresoEntity.monedero_defecto,
+            "id_cuenta_abono_defecto": CategoriaIngresoEntity.id_cuenta_abono_defecto,
+            "id_monedero_defecto": CategoriaIngresoEntity.id_monedero_defecto,
         }
         return switcher.get(str_property, CategoriaIngresoEntity.id)
 
@@ -29,8 +29,8 @@ class CategoriaIngresoEntity(BaseEntity):
         switcher = {
             "id": CategoriaIngresoEntity.id,
             "descripcion": CategoriaIngresoEntity.descripcion,
-            "id_cuenta_abono_defecto": CategoriaIngresoEntity.cuenta_abono_defecto,
-            "id_monedero_defecto": CategoriaIngresoEntity.monedero_defecto,
+            "id_cuenta_abono_defecto": CategoriaIngresoEntity.id_cuenta_abono_defecto,
+            "id_monedero_defecto": CategoriaIngresoEntity.id_monedero_defecto,
         }
         return switcher.get(str_property, CategoriaIngresoEntity.id)
 
@@ -39,9 +39,20 @@ class CategoriaIngresoEntity(BaseEntity):
         caster = {
             CategoriaIngresoEntity.id: int,
             CategoriaIngresoEntity.descripcion: str,
-            CategoriaIngresoEntity.cuenta_abono_defecto: int,
-            CategoriaIngresoEntity.monedero_defecto: int,
+            CategoriaIngresoEntity.id_cuenta_abono_defecto: int,
+            CategoriaIngresoEntity.id_monedero_defecto: int,
 
         }
         return caster.get(column)(value)
 
+    def convert_to_object_domain(self) -> CategoriaIngreso:
+        return CategoriaIngreso({"id": self.id,
+                                 "descripcion": self.descripcion,
+                                 "id_cuenta_abono_defecto": self.id_cuenta_abono_defecto,
+                                 "id_monedero_defecto": self.id_monedero_defecto,
+                                 })
+
+    def update(self, params: dict):
+        self.descripcion = params["descripcion"]
+        self.id_cuenta_abono_defecto = params.get("id_cuenta_abono_defecto")
+        self.id_monedero_defecto = params.get("id_monedero_defecto")

@@ -13,12 +13,12 @@ class OperacionEntity(BaseEntity):
     fecha = Column(Date, nullable=False)
     cantidad = Column(Float(precision=2), nullable=False)
     descripcion = Column(Text, nullable=False)
-    categoria_gasto = Column(Integer, nullable=False)
-    cuenta_cargo = Column(Integer, nullable=False)
-    monedero_cargo = Column(Integer, nullable=False)
-    categoria_ingreso = Column(Integer, nullable=False)
-    cuenta_abono = Column(Integer, nullable=False)
-    monedero_abono = Column(Integer, nullable=False)
+    id_categoria_gasto = Column(Integer, nullable=False)
+    id_cuenta_cargo = Column(Integer, nullable=False)
+    id_monedero_cargo = Column(Integer, nullable=False)
+    id_categoria_ingreso = Column(Integer, nullable=False)
+    id_cuenta_abono = Column(Integer, nullable=False)
+    id_monedero_abono = Column(Integer, nullable=False)
 
     @staticmethod
     def get_column(str_property) -> Column:
@@ -26,13 +26,7 @@ class OperacionEntity(BaseEntity):
             "id": OperacionEntity.id,
             "fecha": OperacionEntity.fecha,
             "cantidad": OperacionEntity.cantidad,
-            "descripcion": OperacionEntity.descripcion,
-            "categoria_gasto": OperacionEntity.categoria_gasto,
-            "cuenta_cargo": OperacionEntity.cuenta_cargo,
-            "monedero_cargo": OperacionEntity.monedero_cargo,
-            "categoria_ingreso": OperacionEntity.categoria_ingreso,
-            "cuenta_abono": OperacionEntity.cuenta_abono,
-            "monedero_abono": OperacionEntity.monedero_abono,
+            "descripcion": OperacionEntity.descripcion
         }
         return switcher.get(str_property, OperacionEntity.id)
 
@@ -45,12 +39,12 @@ class OperacionEntity(BaseEntity):
             "begin_cantidad": OperacionEntity.cantidad,
             "end_cantidad": OperacionEntity.cantidad,
             "descripcion": OperacionEntity.descripcion,
-            "categoria_gasto": OperacionEntity.categoria_gasto,
-            "cuenta_cargo": OperacionEntity.cuenta_cargo,
-            "monedero_cargo": OperacionEntity.monedero_cargo,
-            "categoria_ingreso": OperacionEntity.categoria_ingreso,
-            "cuenta_abono": OperacionEntity.cuenta_abono,
-            "monedero_abono": OperacionEntity.monedero_abono,
+            "id_categoria_gasto": OperacionEntity.id_categoria_gasto,
+            "id_cuenta_cargo": OperacionEntity.id_cuenta_cargo,
+            "id_monedero_cargo": OperacionEntity.id_monedero_cargo,
+            "id_categoria_ingreso": OperacionEntity.id_categoria_ingreso,
+            "id_cuenta_abono": OperacionEntity.id_cuenta_abono,
+            "id_monedero_abono": OperacionEntity.id_monedero_abono,
         }
         return switcher.get(str_property, OperacionEntity.id)
 
@@ -61,12 +55,22 @@ class OperacionEntity(BaseEntity):
             OperacionEntity.fecha: datetime,
             OperacionEntity.cantidad: float,
             OperacionEntity.descripcion: str,
-            OperacionEntity.categoria_gasto: int,
-            OperacionEntity.cuenta_cargo: int,
-            OperacionEntity.monedero_cargo: int,
-            OperacionEntity.categoria_ingreso: int,
-            OperacionEntity.cuenta_abono: int,
-            OperacionEntity.monedero_abono: int
-
+            OperacionEntity.id_categoria_gasto: int,
+            OperacionEntity.id_cuenta_cargo: int,
+            OperacionEntity.id_monedero_cargo: int,
+            OperacionEntity.id_categoria_ingreso: int,
+            OperacionEntity.id_cuenta_abono: int,
+            OperacionEntity.id_monedero_abono: int
         }
         return caster.get(column)(value)
+
+    def update(self, params: dict):
+        self.fecha = params.get("fecha"),
+        self.cantidad = params.get("cantidad"),
+        self.descripcion = params.get("descripcion"),
+        self.id_categoria_gasto = params.get("id_categoria_gasto"),
+        self.id_categoria_ingreso = params.get("id_categoria_ingreso"),
+        self.id_cuenta_cargo = params.get("id_cuenta_cargo"),
+        self.id_cuenta_abono = params.get("id_cuenta_abono"),
+        self.id_monedero_cargo = params.get("id_monedero_cargo"),
+        self.id_monedero_abono = params.get("id_monedero_abono")

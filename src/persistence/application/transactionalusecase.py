@@ -1,5 +1,9 @@
+import traceback
+
 from src.persistence.application.baseusecase import BaseUseCase
 from src.persistence.application.databasemanager import DatabaseManager
+from src.shared.domain.exceptions.invalidparamerror import InvalidParamError
+from src.shared.domain.exceptions.notfounderror import NotFoundError
 
 
 class TransactionalUseCase(BaseUseCase):
@@ -21,15 +25,22 @@ class TransactionalUseCase(BaseUseCase):
 def transactional(readonly=False):
     def transactional_decorator(function):
         def transactional_function(*args, **kwargs):
-            if readonly:
-                with DatabaseManager.get_readonly_session_scope() as session:
-                    set_sessions(args[0], session)
-                    return function(*args, **kwargs)
-            else:
-                with DatabaseManager.get_session_scope() as session:
-                    set_sessions(args[0], session)
-                    return function(*args, **kwargs)
+            try:
+                if readonly:
+                    with DatabaseManager.get_readonly_session_scope() as session:
+                        set_sessions(args[0], session)
+                        return function(*args, **kwargs)
+                else:
+                    with DatabaseManager.get_session_scope() as session:
+                        set_sessions(args[0], session)
+                        return function(*args, **kwargs)
 
+            except NotFoundError as e:
+                raise e
+            except InvalidParamError as e:
+                raise e
+            except Exception as e:
+                traceback.print_exc()
         return transactional_function
 
     return transactional_decorator

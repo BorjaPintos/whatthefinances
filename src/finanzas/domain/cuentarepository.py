@@ -9,3 +9,15 @@ class CuentaRepository(ABC):
     @abstractmethod
     def list(self, criteria: Criteria) -> List[Cuenta]:
         pass
+
+    @abstractmethod
+    def new(self, params: dict) -> Cuenta:
+        pass
+
+    @abstractmethod
+    def update(self, params: dict) -> Cuenta:
+        pass
+
+    @abstractmethod
+    def get(self, id_cuenta: int) -> Cuenta:
+        pass

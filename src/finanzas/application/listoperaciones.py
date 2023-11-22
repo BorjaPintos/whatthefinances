@@ -1,7 +1,7 @@
 from typing import List
 
 from src.finanzas.domain.operacion import Operacion
-from src.finanzas.domain.operacionresorepository import OperacionRepository
+from src.finanzas.domain.operacionrepository import OperacionRepository
 from src.persistence.application.transactionalusecase import transactional, TransactionalUseCase
 from src.persistence.domain.criteria import Criteria, OrderType, Order, OrderBy
 from src.persistence.domain.filter import Filter
