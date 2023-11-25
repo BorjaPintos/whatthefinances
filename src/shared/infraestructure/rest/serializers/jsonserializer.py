@@ -16,6 +16,9 @@ class JsonSerializer(ISerializer):
         else:
             return json.dumps(object_to_serialize, default=obj_type)
 
+    def get_mimetype(self) -> str:
+        return 'application/json'
+
 
 def obj_type(obj: object):
     if isinstance(obj, list):

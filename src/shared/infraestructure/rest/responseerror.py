@@ -1,7 +1,7 @@
 """Created on 25-10-2019."""
 
 
-class Error():
+class Error:
     """The Class Error."""
 
     def __init__(self, message, code):
@@ -16,3 +16,6 @@ class Error():
     def get_code(self):
         """Get code."""
         return self.code
+
+    def get_dto(self) -> dict:
+        return {"message": self.message, "code": self.code}

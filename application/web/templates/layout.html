@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<!-- lo estoy copiando de aquí: https://coderthemes.com/hyper/saas/dashboard-analytics.html -->
+<!-- iconos de aquí: https://icon-sets.iconify.design/uil/ -->
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script src="assets/hyper-config/js/hyper-config.js"></script>
+    <link href="assets/hyper-config/css/app-saas.min.css" rel="stylesheet" id="app-style">
+    <link href="assets/hyper-config/css/icons.min.css" rel="stylesheet">
+    <link href="assets/jquery/css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <link href="assets/css/custom.css" rel="stylesheet">
+    <title>Finanzas</title>
+</head>
+<body class="show">
+
+<div class="wrapper">
+
+    <div class="navbar-custom">
+        <div class="topbar container-fluid">
+            <div class="d-flex align-items-center gap-lg-2 gap-1">
+
+                <!-- Topbar Brand Logo -->
+                <div class="logo-topbar">
+                    <!-- Logo light -->
+                    <a href="index.html" class="logo-light">
+                        <span class="logo-lg">
+                            <img src="assets/images/logo.png" alt="logo">
+                        </span>
+                        <span class="logo-sm">
+                            <img src="assets/images/logo-sm.png" alt="small logo">
+                        </span>
+                    </a>
+
+                    <!-- Logo Dark -->
+                    <a href="index.html" class="logo-dark">
+                        <span class="logo-lg">
+                            <img src="assets/images/logo.png" alt="dark logo">
+                        </span>
+                        <span class="logo-sm">
+                            <img src="assets/images/logo-sm.png" alt="small logo">
+                        </span>
+                    </a>
+                </div>
+
+                <!-- Sidebar Menu Toggle Button -->
+                <button class="button-toggle-menu">
+                    <i class="mdi mdi-menu"></i>
+                </button>
+
+                <!-- Horizontal Menu Toggle Button -->
+                <button class="navbar-toggle" data-bs-toggle="collapse" data-bs-target="#topnav-menu-content">
+                </button>
+
+            </div>
+
+            <ul class="topbar-menu d-flex align-items-center gap-3">
+
+                <li class="dropdown">
+                    <a class="nav-link dropdown-toggle arrow-none nav-user px-2" data-bs-toggle="dropdown" href="#"
+                       role="button" aria-haspopup="false" aria-expanded="false">
+                        <span class="d-lg-flex flex-column gap-1 d-none">
+                            <h5 class="my-0">{{ username }}</h5>
+                        </span>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated profile-dropdown">
+                        <!-- item-->
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="mdi mdi-account-circle me-1"></i>
+                            <span>Mi cuenta</span>
+                        </a>
+
+                        <!-- item-->
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="mdi mdi-account-edit me-1"></i>
+                            <span>Configuración</span>
+                        </a>
+
+                        <!-- item-->
+                        <a href="javascript:void(0);" class="dropdown-item">
+                            <i class="mdi mdi-logout me-1"></i>
+                            <span>Cerrar session</span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="leftside-menu">
+
+        <!-- Brand Logo Light -->
+        <a href="index.html" class="logo logo-light">
+            <span class="logo-lg">
+                <img src="assets/images/logo.png" alt="logo">
+            </span>
+            <span class="logo-sm">
+                <img src="assets/images/logo-sm.png" alt="small logo">
+            </span>
+        </a>
+
+        <!-- Brand Logo Dark -->
+        <a href="index.html" class="logo logo-dark">
+            <span class="logo-lg">
+                <img src="assets/images/logo-dark.png" alt="dark logo">
+            </span>
+            <span class="logo-sm">
+                <img src="assets/images/logo-dark-sm.png" alt="small logo">
+            </span>
+        </a>
+
+        <!-- Sidebar Hover Menu Toggle Button -->
+        <div class="button-sm-hover" data-bs-toggle="tooltip" data-bs-placement="right" title="Show Full Sidebar">
+            <i class="ri-checkbox-blank-circle-line align-middle"></i>
+        </div>
+
+        <!-- Full Sidebar Menu Close Button -->
+        <div class="button-close-fullsidebar">
+            <i class="ri-close-fill align-middle"></i>
+        </div>
+
+        <!-- Sidebar -left -->
+        <div class="h-100" id="leftside-menu-container" data-simplebar>
+
+            <!--- Sidemenu -->
+            <ul class="side-nav">
+
+                <li class="side-nav-title">Navigation</li>
+
+                <li class="side-nav-item">
+                    <a href="home.html" class="side-nav-link">
+                        <i class="uil-signal-alt-3"></i>
+                        <span> Resumen </span>
+                    </a>
+                </li>
+
+                <li class="side-nav-item">
+                    <a href="cuentas.html" class="side-nav-link">
+                        <i class="uil-clipboard-notes"></i>
+                        <span> Cuentas </span>
+                    </a>
+                </li>
+
+                <li class="side-nav-item">
+                    <a href="monederos.html" class="side-nav-link">
+                        <i class="uil-euro-circle"></i>
+                        <span> Monederos </span>
+                    </a>
+                </li>
+
+                <li class="side-nav-item">
+                    <a href="operaciones.html" class="side-nav-link">
+                        <i class="uil-exposure-increase"></i>
+                        <span> Operaciones </span>
+                    </a>
+                </li>
+
+                <li class="side-nav-item">
+                    <a data-bs-toggle="collapse" href="#sidebarCrm" aria-expanded="false" aria-controls="sidebarCrm"
+                       class="side-nav-link">
+                        <i class="uil uil-wrench"></i>
+                        <span> Configuración </span>
+                    </a>
+                    <div class="collapse" id="sidebarCrm">
+                        <ul class="side-nav-second-level">
+                            <li>
+                                <a href="categorias-ingreso.html">Categorias Ingreso</a>
+                            </li>
+                            <li>
+                                <a href="categorias-gasto.html"> Categorias Gasto</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+            </ul>
+            <!--- End Sidemenu -->
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <!-- ========== Left Sidebar End ========== -->
+
+</div>
+<div class="content-page">
+    <div class="page-title-box">
+        <div class="page-title-right">
+        </div>
+        <h4 class="page-title">{{ title }}</h4>
+    </div>
+    {% block contenido %}
+
+    {% endblock%}
+
+</div>
+<script type="text/javascript" src="assets/jquery/js/jquery-3.7.1.min.js"></script>
+<script type="text/javascript" src="assets/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="assets/hyper-config/js/app.min.js"></script>
+{% block script %}
+
+{% endblock%}
+</body>
+</html>

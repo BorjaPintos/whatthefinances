@@ -1,0 +1,36 @@
+{% extends 'lista.html'%}
+
+{% block lista %}
+{% for monedero in lista %}
+<tr>
+    <td>
+        <div class="d-flex align-items-center">
+            <div class="flex-grow-1 ms-2">
+                {{monedero.nombre}}
+            </div>
+        </div>
+    </td>
+    <td>
+        {% if monedero.total >=0 %}
+        <span class="ms-2 text-success fw-semibold">{{monedero.total}}</span>
+        {% else %}
+        <span class="ms-2 fw-semibold">{{monedero.total}}</span>
+        {% endif %}
+    </td>
+
+    <td class="text-end">
+        <a href="javascript:void(0);" class="font-18 text-info me-2" data-bs-toggle="tooltip"
+           data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit"><i
+                class="uil uil-pen"></i></a>
+        <a href="javascript:void(0);" class="font-18 text-danger" data-bs-toggle="tooltip"
+           data-bs-placement="top" aria-label="Delete" data-bs-original-title="Delete"><i
+                class="uil uil-trash"></i></a>
+    </td>
+</tr>
+{% endfor %}
+{% endblock%}
+
+
+{% block script %}
+<script type="text/javascript" src="assets/js/monederos.js"></script>
+{% endblock%}

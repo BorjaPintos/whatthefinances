@@ -1,4 +1,6 @@
-from flask import request
+import json
+
+from flask import request, Response
 from loguru import logger
 from src.login.application.getuser import GetUser
 from src.login.application.login import Login
@@ -14,27 +16,37 @@ def import_routes(rootpath, app):
     getuser_use_case = GetUser(user_repository=UserRepositorySQLAlchemy())
 
     @app.route(rootpath, methods=['POST'])
-    @serialize_response
     def login():
-        username = request.json["name"]
-        password = request.json["password"]
+        try:
+            username = request.json["name"]
+            password = request.json["password"]
 
-        user = login_use_case.execute(username, password)
-        if user:
-            token = create_token(user, app.config['token_secret'], app.config['token_login_hours_alive'])
-            code = 200
-            logger.info("El usuario " + username + " se ha logueado correctamente")
-            response = {'token': token}
-        else:
-            raise UnauthorizedError()
-        return response, code
+            user = login_use_case.execute(username, password)
+            if user:
+                token = create_token(user, app.config['token_secret'], app.config['token_login_hours_alive'])
+                code = 200
+                logger.info("El usuario " + username + " se ha logueado correctamente")
+                msg = {'token': token}
+                response = Response(json.dumps(msg), 200, mimetype='application/json')
+                response.set_cookie("token", token)
+                return response, code
+            else:
+                raise UnauthorizedError()
+        except:
+            logger.info("Usuario o contraseña incorrectos")
+            msg = Error("Usuario o contraseña incorrectos", 401).__dict__
+            return Response(json.dumps(msg), 401, mimetype='application/json')
+
 
     @app.login_manager.request_loader
     def load_user_from_request(request):
         token = request.headers.get('Authorization')
+        if token:
+            token = token.replace('Bearer ', '', 1)
+        else:
+            token = request.cookies.get("token")
         try:
             if token:
-                token = token.replace('Bearer ', '', 1)
                 user_token = decode_auth_token(token, app.config['token_secret'])
                 user = getuser_use_case.execute(user_token.get("user").get("id"))
                 if user:
