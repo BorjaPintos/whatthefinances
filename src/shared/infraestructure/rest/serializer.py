@@ -10,3 +10,6 @@ class Serializer:
 
     def dumps(self, object_to_serialize: object):
         return self.serializer_impl.dumps(object_to_serialize)
+
+    def get_mimetype(self) -> str:
+        return self.serializer_impl.get_mimetype()

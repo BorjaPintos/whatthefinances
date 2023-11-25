@@ -10,3 +10,7 @@ class ISerializer(ABC):
     @abstractmethod
     def dumps(self, objectToSerialize) -> str:
         raise NotImplementedError
+
+    @abstractmethod
+    def get_mimetype(self) -> str:
+        raise NotImplementedError
