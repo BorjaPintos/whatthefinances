@@ -1,0 +1,107 @@
+{% extends 'lista.html'%}
+
+{% block lista %}
+{% for categoria_gasto in lista %}
+<tr>
+    <td>
+        <div class="d-flex align-items-center">
+            <div id="descripcion-{{categoria_gasto.id}}" class="flex-grow-1 ms-2">
+                {{categoria_gasto.descripcion}}
+            </div>
+        </div>
+    </td>
+    <td>
+        {% if categoria_gasto.id_cuenta_cargo_defecto %}
+        <span id="cuenta-defecto-{{categoria_gasto.id}}" class="badge badge-danger-lighten">{{categoria_gasto.nombre_cuenta_cargo_defecto}}</span>
+        <input id="id-cuenta-defecto-{{categoria_gasto.id}}" type="hidden"
+               value="{{categoria_gasto.id_cuenta_cargo_defecto}}"/>
+        {% else %}
+        <span id="cuenta-defecto-{{categoria_gasto.id}}" class="badge badge-danger-lighten">Todas</span>
+        <input id="id-cuenta-defecto-{{categoria_gasto.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+    <td>
+        {% if categoria_gasto.id_monedero_defecto %}
+        <span id="monedero-defecto-{{categoria_gasto.id}}" class="badge badge-danger-lighten">{{categoria_gasto.nombre_monedero_defecto}}</span>
+        <input id="id-monedero-defecto-{{categoria_gasto.id}}" type="hidden"
+               value="{{categoria_gasto.id_monedero_defecto}}"/>
+        {% else %}
+        <span id="monedero-defecto-{{categoria_gasto.id}}" class="badge badge-danger-lighten">Ninguno</span>
+        <input id="id-monedero-defecto-{{categoria_gasto.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+    <td class="text-end">
+        <a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip"
+           data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit"
+           data-element="{{categoria_gasto.id}}"><i
+                class="uil uil-pen"></i></a>
+        <a class="delete-element font-18 text-danger" data-bs-toggle="tooltip"
+           data-bs-placement="top" aria-label="Delete" data-bs-original-title="Delete"
+           data-element="{{categoria_gasto.id}}">
+            <i class="uil uil-trash"></i>
+        </a>
+    </td>
+</tr>
+{% endfor %}
+{% endblock%}
+
+{% block titulo_add %}
+Añadir Ccategoria Ingreso
+{% endblock %}
+
+{% block contenido_add %}
+<div class="form-outline form-white mb-4">
+    <input type="text" id="addTypeDescripcionX" class="form-control form-control-lg"/>
+    <label class="form-label" for="addTypeDescripcionX">Descripción</label>
+</div>
+<div class="form-outline form-white mb-4">
+    <select class="form-select" id="add-cuenta-select">
+        <option value="" selected="">Todas</option>
+        {% for cuenta in lista_cuentas %}
+        <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="form-outline form-white mb-4">
+    <select class="form-select" id="add-monedero-select">
+        <option value="" selected="">Ninguno</option>
+        {% for monedero in lista_monederos %}
+        <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+        {% endfor %}
+    </select>
+</div>
+{% endblock %}
+
+{% block titulo_edit %}
+Editar cuenta
+{% endblock %}
+
+{% block contenido_edit %}
+<div class="form-outline form-white mb-4">
+    <input type="text" id="editTypeDescripcionX" class="form-control form-control-lg"/>
+    <label class="form-label" for="editTypeDescripcionX">Descripción</label>
+</div>
+<div class="form-outline form-white mb-4">
+    <select class="form-select" id="edit-cuenta-select">
+        <option value="">Todas</option>
+        {% for cuenta in lista_cuentas %}
+        <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+        {% endfor %}
+    </select>
+</div>
+<div class="form-outline form-white mb-4">
+    <select class="form-select" id="edit-monedero-select">
+        <option value="">Ninguno</option>
+        {% for monedero in lista_monederos %}
+        <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+        {% endfor %}
+    </select>
+</div>
+<input type="hidden" id="editTypeIdX"/>
+{% endblock %}
+
+
+{% block script %}
+<script type="text/javascript" src="assets/js/categoria-gasto.js"></script>
+{% endblock%}

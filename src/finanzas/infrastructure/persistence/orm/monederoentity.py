@@ -17,7 +17,7 @@ class MonederoEntity(BaseEntity):
     total = column_property(cantidad_base + diferencia)
 
     @staticmethod
-    def get_column(str_property) -> Column:
+    def get_order_column(str_property) -> Column:
         switcher = {
             "id": MonederoEntity.id,
             "nombre": MonederoEntity.nombre,

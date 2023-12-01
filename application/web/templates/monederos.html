@@ -1,34 +1,66 @@
 {% extends 'lista.html'%}
 
 {% block lista %}
-{% for monedero in lista %}
+{% for monederos in lista %}
 <tr>
     <td>
         <div class="d-flex align-items-center">
-            <div class="flex-grow-1 ms-2">
-                {{monedero.nombre}}
+            <div id="nombre-{{monederos.id}}" class="flex-grow-1 ms-2">
+                {{monederos.nombre}}
             </div>
         </div>
     </td>
     <td>
-        {% if monedero.total >=0 %}
-        <span class="ms-2 text-success fw-semibold">{{monedero.total}}</span>
+        {% if monederos.total >=0 %}
+        <span id="total-{{monederos.id}}" class="ms-2 text-success fw-semibold">{{monederos.total}}</span>
         {% else %}
-        <span class="ms-2 fw-semibold">{{monedero.total}}</span>
+        <span id="total-{{monederos.id}}" class="ms-2 fw-semibold">{{monederos.total}}</span>
         {% endif %}
     </td>
 
     <td class="text-end">
-        <a href="javascript:void(0);" class="font-18 text-info me-2" data-bs-toggle="tooltip"
-           data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit"><i
+        <a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip"
+           data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="{{monederos.id}}"><i
                 class="uil uil-pen"></i></a>
-        <a href="javascript:void(0);" class="font-18 text-danger" data-bs-toggle="tooltip"
-           data-bs-placement="top" aria-label="Delete" data-bs-original-title="Delete"><i
-                class="uil uil-trash"></i></a>
+        <a class="delete-element font-18 text-danger" data-bs-toggle="tooltip"
+           data-bs-placement="top" aria-label="Delete" data-bs-original-title="Delete" data-element="{{monederos.id}}">
+            <i class="uil uil-trash"></i>
+        </a>
     </td>
 </tr>
 {% endfor %}
 {% endblock%}
+
+{% block titulo_add %}
+Añadir monederos
+{% endblock %}
+
+{% block contenido_add %}
+<div class="form-outline form-white mb-4">
+    <input type="text" id="addTypeNombreX" class="form-control form-control-lg"/>
+    <label class="form-label" for="addTypeNombreX">Nombre</label>
+</div>
+<div class="form-outline form-white mb-4">
+    <input type="text" id="addTypeTotalX" class="form-control form-control-lg"/>
+    <label class="form-label" for="addTypeTotalX">Total</label>
+</div>
+{% endblock %}
+
+{% block titulo_edit %}
+Editar monederos
+{% endblock %}
+
+{% block contenido_edit %}
+<div class="form-outline form-white mb-4">
+    <input type="text" id="editTypeNombreX" class="form-control form-control-lg"/>
+    <label class="form-label" for="editTypeNombreX">Nombre</label>
+</div>
+<div class="form-outline form-white mb-4">
+    <input type="text" id="editTypeTotalX" class="form-control form-control-lg"/>
+    <label class="form-label" for="editTypeTotalX">Total</label>
+</div>
+<input type="hidden" id="editTypeIdX"/>
+{% endblock %}
 
 
 {% block script %}

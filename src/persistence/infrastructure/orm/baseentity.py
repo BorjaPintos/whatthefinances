@@ -10,7 +10,7 @@ class BaseEntity(DeclarativeBase):
 
     @staticmethod
     @abstractmethod
-    def get_column(str_property: str) -> Column:
+    def get_order_column(str_property: str) -> Column:
         pass
 
     @staticmethod
