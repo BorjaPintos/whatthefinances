@@ -1,6 +1,6 @@
 $('#add-button').on( "click", function() {
     $("#addTypeNombreX").val('')
-    $("#addTypeTotalX").val('')
+    $("#addTypeCantidadInicialX").val('')
     $("#addTypePonderacionX").val('')
     $("#addTypeMessageX").text('')
     $('#add').modal('show')
@@ -18,11 +18,11 @@ $('.edit-element').on( "click", function() {
 
     var id = $(this).attr("data-element")
     var nombre = $.trim($('#nombre-'+id).text())
-    var total = $('#total-'+id).text()
+    var cantidad_inicial = $('#cantidad_inicial-'+id).text()
     var ponderacion = $('#ponderacion-'+id).text()
 
     $("#editTypeNombreX").val(nombre)
-    $("#editTypeTotalX").val(total)
+    $("#editTypeCantidadInicialX").val(cantidad_inicial)
     $("#editTypePonderacionX").val(ponderacion)
     $("#editTypeIdX").val(id)
 
@@ -43,13 +43,13 @@ $('.delete-element').on( "click", function() {
 
 function add_cuenta() {
     var nombre = $.trim($("#addTypeNombreX").val());
-    var total = $("#addTypeTotalX").val();
+    var cantidad_inicial = $("#addTypeCantidadInicialX").val();
     var ponderacion = $("#addTypePonderacionX").val();
 
 
     var data = {
         nombre: nombre,
-        total: total,
+        cantidad_inicial: cantidad_inicial,
         ponderacion:ponderacion
     }
     var xhttp = new XMLHttpRequest();
@@ -97,13 +97,13 @@ function delete_cuenta(id) {
 function update_cuenta() {
     var id = $.trim($("#editTypeIdX").val())
     var nombre = $.trim($("#editTypeNombreX").val());
-    var total = $("#editTypeTotalX").val();
+    var cantidad_inicial = $("#editTypeCantidadInicialX").val();
     var ponderacion = $("#editTypePonderacionX").val();
 
 
     var data = {
         nombre: nombre,
-        total: total,
+        cantidad_inicial: cantidad_inicial,
         ponderacion:ponderacion
     }
     var xhttp = new XMLHttpRequest();

@@ -36,20 +36,22 @@ def create_categoria_gasto(context):
     for row in context.table:
         data = {
             "descripcion": row.get("descripcion"),
-            "id_cuenta_cargo_defecto": row.get("id_cuenta_cargo_defecto"),
-            "id_monedero_defecto": row.get("id_monedero_defecto")
+            "id_cuenta_cargo_defecto": int(row.get("id_cuenta_cargo_defecto")) if row.get(
+                "id_cuenta_cargo_defecto") else None,
+            "id_monedero_defecto": int(row.get("id_monedero_defecto")) if row.get("id_monedero_defecto") else None
         }
         url = _get_categoria_gasto_base_url(context)
         context.result = common_functions.make_post_request(context, url, data)
 
 
 @when('Actualizo la categoria_gasto con id {id}')
-def create_categoria_gasto(context, id):
+def update_categoria_gasto(context, id):
     for row in context.table:
         data = {
             "descripcion": row.get("descripcion"),
-            "id_cuenta_cargo_defecto": row.get("id_cuenta_cargo_defecto"),
-            "id_monedero_defecto": row.get("id_monedero_defecto")
+            "id_cuenta_cargo_defecto": int(row.get("id_cuenta_cargo_defecto")) if row.get(
+                "id_cuenta_cargo_defecto") else None,
+            "id_monedero_defecto": int(row.get("id_monedero_defecto")) if row.get("id_monedero_defecto") else None
         }
         url = _get_categoria_gasto_base_url(context) + "/{}".format(id)
         context.result = common_functions.make_post_request(context, url, data)

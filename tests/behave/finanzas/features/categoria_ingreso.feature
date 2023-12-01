@@ -2,11 +2,11 @@ Feature: CategoriaIngreso
 
   Scenario: GetCategoriaIngreso sin loguearse
     Given Las siguientes cuentas creadas
-      | nombre     | cantidad_base | diferencia | ponderacion |
-      | CuentaTest | 0.0           | 0.0        | 100         |
+      | nombre     | cantidad_inicial | diferencia | ponderacion |
+      | CuentaTest | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre       | cantidad_base | diferencia |
-      | MonederoTest | 0.0           | 0.0        |
+      | nombre       | cantidad_inicial | diferencia |
+      | MonederoTest | 0.0              | 0.0        |
     And Las siguientes categorias_ingreso creadas
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | Test        | 1                       | 1                   |
@@ -16,11 +16,11 @@ Feature: CategoriaIngreso
   Scenario: GetCategoriaIngreso correcto
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre     | cantidad_base | diferencia | ponderacion |
-      | CuentaTest | 0.0           | 0.0        | 100         |
+      | nombre     | cantidad_inicial | diferencia | ponderacion |
+      | CuentaTest | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre       | cantidad_base | diferencia |
-      | MonederoTest | 0.0           | 0.0        |
+      | nombre       | cantidad_inicial | diferencia |
+      | MonederoTest | 0.0              | 0.0        |
     And Las siguientes categorias_ingreso creadas
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | Test        | 1                       | 1                   |
@@ -30,11 +30,11 @@ Feature: CategoriaIngreso
   Scenario: GetCategoriaIngreso que no existe
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre     | cantidad_base | diferencia | ponderacion |
-      | CuentaTest | 0.0           | 0.0        | 100         |
+      | nombre     | cantidad_inicial | diferencia | ponderacion |
+      | CuentaTest | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre       | cantidad_base | diferencia |
-      | MonederoTest | 0.0           | 0.0        |
+      | nombre       | cantidad_inicial | diferencia |
+      | MonederoTest | 0.0              | 0.0        |
     And Las siguientes categorias_ingreso creadas
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | Test        | 1                       | 1                   |
@@ -43,11 +43,11 @@ Feature: CategoriaIngreso
 
   Scenario: ListCategoriaIngreso sin loguearse
     Given Las siguientes cuentas creadas
-      | nombre     | cantidad_base | diferencia | ponderacion |
-      | CuentaTest | 0.0           | 0.0        | 100         |
+      | nombre     | cantidad_inicial | diferencia | ponderacion |
+      | CuentaTest | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre       | cantidad_base | diferencia |
-      | MonederoTest | 0.0           | 0.0        |
+      | nombre       | cantidad_inicial | diferencia |
+      | MonederoTest | 0.0              | 0.0        |
     And Las siguientes categorias_ingreso creadas
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | Test        | 1                       | 1                   |
@@ -57,11 +57,11 @@ Feature: CategoriaIngreso
   Scenario: ListCategoriaIngreso de un elemento
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre     | cantidad_base | diferencia | ponderacion |
-      | CuentaTest | 0.0           | 0.0        | 100         |
+      | nombre     | cantidad_inicial | diferencia | ponderacion |
+      | CuentaTest | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre       | cantidad_base | diferencia |
-      | MonederoTest | 0.0           | 0.0        |
+      | nombre       | cantidad_inicial | diferencia |
+      | MonederoTest | 0.0              | 0.0        |
     And Las siguientes categorias_ingreso creadas
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | Test        | 1                       | 1                   |
@@ -74,13 +74,13 @@ Feature: CategoriaIngreso
   Scenario: ListCategoriaIngreso de varios elementos
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre      | cantidad_base | diferencia | ponderacion |
-      | CuentaTest1 | 0.0           | 0.0        | 100         |
-      | CuentaTest2 | 0.0           | 0.0        | 100         |
+      | nombre      | cantidad_inicial | diferencia | ponderacion |
+      | CuentaTest1 | 0.0              | 0.0        | 100         |
+      | CuentaTest2 | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre        | cantidad_base | diferencia |
-      | MonederoTest1 | 0.0           | 0.0        |
-      | MonederoTest2 | 0.0           | 0.0        |
+      | nombre        | cantidad_inicial | diferencia |
+      | MonederoTest1 | 0.0              | 0.0        |
+      | MonederoTest2 | 0.0              | 0.0        |
     And Las siguientes categorias_ingreso creadas
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | A           | 1                       | 1                   |
@@ -95,11 +95,11 @@ Feature: CategoriaIngreso
 
   Scenario: CreateCategoriaIngreso sin loguearse
     Given Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
-      | Test   | 0.0           | 0.0        | 100         |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | Test   | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
-      | Test   | 0.0           | 0.0        |
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 0.0              | 0.0        |
     When Creo la siguiente categoria_ingreso
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | Test        | 1                       | 1                   |
@@ -108,11 +108,11 @@ Feature: CategoriaIngreso
   Scenario: CreateCategoriaIngreso correcto
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
-      | Test   | 0.0           | 0.0        | 100         |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | Test   | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
-      | Test   | 0.0           | 0.0        |
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 0.0              | 0.0        |
     When Creo la siguiente categoria_ingreso
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | Test        | 1                       | 1                   |
@@ -126,11 +126,11 @@ Feature: CategoriaIngreso
   Scenario: CreateCategoriaIngreso sin parametro descripcion
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
-      | Test   | 0.0           | 0.0        | 100         |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | Test   | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
-      | Test   | 0.0           | 0.0        |
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 0.0              | 0.0        |
     When Creo la siguiente categoria_ingreso
       | id_cuenta_abono_defecto | id_monedero_defecto |
       | 1                       | 1                   |
@@ -139,11 +139,11 @@ Feature: CategoriaIngreso
   Scenario: CreateCategoriaIngreso solo con descripcion
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
-      | Test   | 0.0           | 0.0        | 100         |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | Test   | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
-      | Test   | 0.0           | 0.0        |
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 0.0              | 0.0        |
     When Creo la siguiente categoria_ingreso
       | descripcion      |
       | solo-descripcion |
@@ -157,11 +157,11 @@ Feature: CategoriaIngreso
   Scenario: CreateCategoriaIngreso duplicado
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
-      | Test   | 0.0           | 0.0        | 100         |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | Test   | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
-      | Test   | 0.0           | 0.0        |
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 0.0              | 0.0        |
     And Las siguientes categorias_ingreso creadas
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | Test        | 1                       | 1                   |
@@ -173,11 +173,11 @@ Feature: CategoriaIngreso
   Scenario: CreateCategoriaIngreso varios
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
-      | Test   | 0.0           | 0.0        | 100         |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | Test   | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
-      | Test   | 0.0           | 0.0        |
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 0.0              | 0.0        |
     When Creo la siguiente categoria_ingreso
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | A           | 1                       | 1                   |
@@ -195,11 +195,11 @@ Feature: CategoriaIngreso
 
   Scenario: UpdateCategoriaIngreso sin loguearse
     Given Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
-      | Test   | 0.0           | 0.0        | 100         |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | Test   | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
-      | Test   | 0.0           | 0.0        |
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 0.0              | 0.0        |
     And Las siguientes categorias_ingreso creadas
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | Test        | 1                       | 1                   |
@@ -211,11 +211,11 @@ Feature: CategoriaIngreso
   Scenario: UpdateCategoriaIngreso correcto
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
-      | Test   | 0.0           | 0.0        | 100         |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | Test   | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
-      | Test   | 0.0           | 0.0        |
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 0.0              | 0.0        |
     And Las siguientes categorias_ingreso creadas
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | Test        | 1                       | 1                   |
@@ -237,11 +237,11 @@ Feature: CategoriaIngreso
   Scenario: UpdateCategoriaIngreso sin cambiar nada
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
-      | Test   | 0.0           | 0.0        | 100         |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | Test   | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
-      | Test   | 0.0           | 0.0        |
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 0.0              | 0.0        |
     And Las siguientes categorias_ingreso creadas
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | Test        | 1                       | 1                   |
@@ -253,11 +253,11 @@ Feature: CategoriaIngreso
   Scenario: UpdateCategoriaIngreso con nombre duplicado
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
-      | Test   | 0.0           | 0.0        | 100         |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | Test   | 0.0              | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
-      | Test   | 0.0           | 0.0        |
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 0.0              | 0.0        |
     And Las siguientes categorias_ingreso creadas
       | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
       | A           | 1                       | 1                   |

@@ -11,13 +11,13 @@ def _get_cuenta_base_url(context) -> str:
 def given_cuenta(context):
     for row in context.table:
         nombre = row["nombre"]
-        cantidad_base = row["cantidad_base"]
+        cantidad_inicial = row["cantidad_inicial"]
         diferencia = row["diferencia"]
         ponderacion = row["ponderacion"]
 
         context.database.exec_sql(
-            'INSERT into finanzas_cuentas ("nombre", "cantidad_base", "diferencia", "ponderacion") values ("{}",{},{}, {});'.format(
-                nombre, cantidad_base, diferencia, ponderacion))
+            'INSERT into finanzas_cuentas ("nombre", "cantidad_inicial", "diferencia", "ponderacion") values ("{}",{},{},{});'.format(
+                nombre, cantidad_inicial, diferencia, ponderacion))
 
 
 @when('Obtengo la cuenta con id {id}')
@@ -37,21 +37,20 @@ def create_cuenta(context):
     for row in context.table:
         data = {
             "nombre": row.get("nombre"),
-            "cantidad_base": row.get("cantidad_base"),
-            "diferencia": row.get("diferencia"),
-            "ponderacion":row.get("ponderacion")
+            "cantidad_inicial": float(row.get("cantidad_inicial")),
+            "ponderacion": float(row.get("ponderacion"))
         }
         url = _get_cuenta_base_url(context)
         context.result = common_functions.make_post_request(context, url, data)
 
 
 @when('Actualizo la cuenta con id {id}')
-def create_cuenta(context, id):
+def update_cuenta(context, id):
     for row in context.table:
         data = {
             "nombre": row.get("nombre"),
-            "cantidad_base": row.get("cantidad_base"),
-            "diferencia": row.get("diferencia")
+            "cantidad_inicial": float(row.get("cantidad_inicial")),
+            "ponderacion": float(row.get("ponderacion"))
         }
         url = _get_cuenta_base_url(context) + "/{}".format(id)
         context.result = common_functions.make_post_request(context, url, data)
