@@ -34,7 +34,7 @@ class MonederoRepositorySQLAlchemy(ITransactionalRepository, MonederoRepository)
     def new(self, params: dict) -> Monedero:
         try:
             entity = MonederoEntity(nombre=params.get("nombre"),
-                                    cantidad_base=params.get("cantidad_base"),
+                                    cantidad_inicial=params.get("cantidad_inicial"),
                                     diferencia=params.get("diferencia"))
             self._session.add(entity)
             self._session.flush()

@@ -1,5 +1,8 @@
-from typing import Any, Tuple
+import locale
 
+locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
+
+from typing import Any, Tuple
 from flask import Request
 from loguru import logger
 from src.finanzas.application.createcategoriagasto import CreateCategoriaGasto
@@ -99,10 +102,10 @@ def create_cuenta(request: Request) -> Tuple[Any, int]:
     code = 201
     params = {
         "nombre": request.json.get('nombre'),
-        "cantidad_base": request.json.get('cantidad_base', 0.00),
-        "diferencia": request.json.get('diferencia', 0.00),
+        "cantidad_inicial": request.json.get('cantidad_inicial', 0.00),
         "ponderacion": request.json.get('ponderacion', 0.00),
     }
+    __cast_params(params)
     cuenta = create_cuenta_use_case.execute(params)
     if cuenta:
         response = cuenta.get_dto()
@@ -112,14 +115,16 @@ def create_cuenta(request: Request) -> Tuple[Any, int]:
         raise MessageError("Parece que ya existe una cuenta con ese nombre: {}".format(params.get("nombre")), code)
     return response, code
 
+
 def update_cuenta(request: Request, id_cuenta: int) -> Tuple[Any, int]:
     code = 200
     params = {
         "id": id_cuenta,
         "nombre": request.json.get('nombre', None),
-        "cantidad_base": request.json.get('cantidad_base', None),
+        "cantidad_inicial": request.json.get('cantidad_inicial', None),
         "ponderacion": request.json.get('ponderacion', None),
     }
+    __cast_params(params)
     cuenta = update_cuenta_use_case.execute(params)
     if cuenta:
         response = cuenta.get_dto()
@@ -162,9 +167,9 @@ def create_monedero(request: Request) -> Tuple[Any, int]:
     code = 201
     params = {
         "nombre": request.json.get('nombre'),
-        "cantidad_base": request.json.get('cantidad_base', 0.00),
-        "diferencia": request.json.get('diferencia', 0.00)
+        "cantidad_inicial": request.json.get('cantidad_inicial', 0.00)
     }
+    __cast_params(params)
     monedero = create_monedero_use_case.execute(params)
     if monedero:
         response = monedero.get_dto()
@@ -180,8 +185,9 @@ def update_monedero(request: Request, id_monedero: int) -> Tuple[Any, int]:
     params = {
         "id": id_monedero,
         "nombre": request.json.get('nombre', None),
-        "cantidad_base": request.json.get('cantidad_base', None)
+        "cantidad_inicial": request.json.get('cantidad_inicial', None)
     }
+    __cast_params(params)
     monedero = update_monedero_use_case.execute(params)
     if monedero:
         response = monedero.get_dto()
@@ -201,6 +207,7 @@ def list_categorias_ingreso(request: Request) -> Tuple[Any, int]:
         "id_monedero_defecto": request.args.get('id_monedero_defecto', None),
         "id_cuenta_abono_defecto": request.args.get('id_cuenta_abono_defecto', None),
     }
+    __cast_params(params)
     elements = list_categorias_ingreso_use_case.execute(params)
     response = []
     for element in elements:
@@ -230,6 +237,7 @@ def create_categoria_ingreso(request: Request) -> Tuple[Any, int]:
         "id_cuenta_abono_defecto": request.json.get('id_cuenta_abono_defecto', None),
         "id_monedero_defecto": request.json.get('id_monedero_defecto', None)
     }
+    __cast_params(params)
     categoria_ingreso = create_categoria_ingreso_use_case.execute(params)
     if categoria_ingreso:
         response = categoria_ingreso.get_dto()
@@ -250,6 +258,7 @@ def update_categoria_ingreso(request: Request, id_categoria_ingreso: int) -> Tup
         "id_cuenta_abono_defecto": request.json.get('id_cuenta_abono_defecto', None),
         "id_monedero_defecto": request.json.get('id_monedero_defecto', None)
     }
+    __cast_params(params)
     categoria_ingreso = update_categoria_ingreso_use_case.execute(params)
     if categoria_ingreso:
         response = categoria_ingreso.get_dto()
@@ -271,6 +280,7 @@ def list_categorias_gasto(request: Request) -> Tuple[Any, int]:
         "id_monedero_defecto": request.args.get('id_monedero_defecto', None),
         "id_cuenta_cargo_defecto": request.args.get('id_cuenta_cargo_defecto', None),
     }
+    __cast_params(params)
     elements = list_categorias_gasto_use_case.execute(params)
     response = []
     for element in elements:
@@ -299,6 +309,7 @@ def create_categoria_gasto(request: Request) -> Tuple[Any, int]:
         "id_cuenta_cargo_defecto": request.json.get('id_cuenta_cargo_defecto', None),
         "id_monedero_defecto": request.json.get('id_monedero_defecto', None)
     }
+    __cast_params(params)
     categoria_gasto = create_categoria_gasto_use_case.execute(params)
     if categoria_gasto:
         response = categoria_gasto.get_dto()
@@ -319,6 +330,7 @@ def update_categoria_gasto(request: Request, id_categoria_gasto: int) -> Tuple[A
         "id_cuenta_cargo_defecto": request.json.get('id_cuenta_cargo_defecto', None),
         "id_monedero_defecto": request.json.get('id_monedero_defecto', None)
     }
+    __cast_params(params)
     categoria_gasto = update_categoria_gasto_use_case.execute(params)
     if categoria_gasto:
         response = categoria_gasto.get_dto()
@@ -348,6 +360,7 @@ def list_operaciones(request: Request) -> Tuple[Any, int]:
         "id_categoria_gasto": request.args.get('id_categoria_gasto', None),
         "id_categoria_ingreso": request.args.get('id_categoria_ingreso', None),
     }
+    __cast_params(params)
     elements = list_operaciones_use_case.execute(params)
     response = []
     for element in elements:
@@ -382,6 +395,7 @@ def create_operacion(request: Request) -> Tuple[Any, int]:
         "id_categoria_gasto": request.json.get('id_categoria_gasto', None),
         "id_categoria_ingreso": request.json.get('id_categoria_ingreso', None),
     }
+    __cast_params(params)
     operacion = create_operacion_use_case.execute(params)
     if operacion:
         response = operacion.get_dto()
@@ -411,8 +425,8 @@ def update_operacion(request: Request, id_operacion: int) -> Tuple[Any, int]:
         response = operacion.get_dto()
     else:
         code = 400
-        logger.warning("Error al actualizar la operacion con id: {}".format(id_operacion))
-        raise MessageError("Error al actualizar la operacion con id: {}".format(id_operacion), code)
+        logger.warning("Error al actualizar la operación con id: {}".format(id_operacion))
+        raise MessageError("Error al actualizar la operación con id: {}".format(id_operacion), code)
     return response, code
 
 
@@ -423,6 +437,50 @@ def delete_operacion(request: Request, id_operacion: int) -> Tuple[Any, int]:
         response = {}
     else:
         code = 400
-        logger.warning("Error al eliminar la operacion con id: {}".format(id_operacion))
-        raise MessageError("Error al eliminar la operacion con id: {}".format(id_operacion), code)
+        logger.warning("Error al eliminar la operación con id: {}".format(id_operacion))
+        raise MessageError("Error al eliminar la operación con id: {}".format(id_operacion), code)
     return response, code
+
+
+def __cast_params(params: dict):
+    if params.get("id_monedero_defecto") is not None:
+        params["id_monedero_defecto"] = apply_locale_int(params["id_monedero_defecto"])
+    if params.get("id_cuenta_abono_defecto") is not None:
+        params["id_cuenta_abono_defecto"] = apply_locale_int(params["id_cuenta_abono_defecto"])
+    if params.get("id_cuenta_cargo_defecto") is not None:
+        params["id_cuenta_cargo_defecto"] = apply_locale_int(params["id_cuenta_cargo_defecto"])
+    if params.get("id_monedero_cargo") is not None:
+        params["id_monedero_cargo"] = apply_locale_int(params["id_monedero_cargo"])
+    if params.get("id_cuenta_cargo") is not None:
+        params["id_cuenta_cargo"] = apply_locale_int(params["id_cuenta_cargo"])
+    if params.get("id_monedero_abono") is not None:
+        params["id_monedero_abono"] = apply_locale_int(params["id_monedero_abono"])
+    if params.get("id_cuenta_abono") is not None:
+        params["id_cuenta_abono"] = apply_locale_int(params["id_cuenta_abono"])
+    if params.get("id_categoria_gasto") is not None:
+        params["id_categoria_gasto"] = apply_locale_int(params["id_categoria_gasto"])
+    if params.get("id_cuenta_abono") is not None:
+        params["id_categoria_ingreso"] = apply_locale_int(params["id_categoria_ingreso"])
+
+    if params.get("begin_cantidad") is not None:
+        params["begin_cantidad"] = apply_locale_float(params["begin_cantidad"])
+    if params.get("end_cantidad") is not None:
+        params["end_cantidad"] = apply_locale_float(params["end_cantidad"])
+    if params.get("ponderacion") is not None:
+        params["ponderacion"] = apply_locale_float(params["ponderacion"])
+    if params.get("cantidad_inicial") is not None:
+        params["cantidad_inicial"] = apply_locale_float(params["cantidad_inicial"])
+
+
+def apply_locale_float(value):
+    if isinstance(value, float):
+        return value
+    if isinstance(value, str):
+        return locale.atof(value)
+
+
+def apply_locale_int(value):
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str):
+        return locale.atoi(value)

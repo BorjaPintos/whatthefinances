@@ -34,7 +34,7 @@ class CuentaRepositorySQLAlchemy(ITransactionalRepository, CuentaRepository):
     def new(self, params: dict) -> Cuenta:
         try:
             entity = CuentaEntity(nombre=params.get("nombre"),
-                                  cantidad_base=params.get("cantidad_base"),
+                                  cantidad_inicial=params.get("cantidad_inicial"),
                                   diferencia=params.get("diferencia"),
                                   ponderacion=params.get("ponderacion"))
             self._session.add(entity)

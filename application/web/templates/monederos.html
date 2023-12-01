@@ -11,10 +11,24 @@
         </div>
     </td>
     <td>
-        {% if monederos.total >=0 %}
-        <span id="total-{{monederos.id}}" class="ms-2 text-success fw-semibold">{{monederos.total}}</span>
+        {% if monederos.cantidad_inicial >=0 %}
+        <span id="cantidad_inicial-{{monederos.id}}" class="ms-2 text-success fw-semibold">{{monederos.cantidad_inicial | formato_decimal }}</span> <span class="ms-2 text-success">€</span>
         {% else %}
-        <span id="total-{{monederos.id}}" class="ms-2 fw-semibold">{{monederos.total}}</span>
+        <span id="cantidad_inicial-{{monederos.id}}" class="ms-2 text-danger fw-semibold">{{monederos.cantidad_inicial | formato_decimal}}</span> <span class="ms-2 text-danger">€</span>
+        {% endif %}
+    </td>
+    <td>
+        {% if monederos.diferencia >=0 %}
+        <span id="diferencia-{{monederos.id}}" class="ms-2 text-success fw-semibold">{{monederos.diferencia | formato_decimal}}</span> <span class="ms-2 text-success">€</span>
+        {% else %}
+        <span id="diferencia-{{monederos.id}}" class="ms-2 text-danger fw-semibold">{{monederos.diferencia | formato_decimal}}</span> <span class="ms-2 text-danger">€</span>
+        {% endif %}
+    </td>
+    <td>
+        {% if monederos.total >=0 %}
+        <span id="total-{{monederos.id}}" class="ms-2 text-success fw-semibold">{{monederos.total | formato_decimal}}</span><span class="ms-2 text-success">€</span>
+        {% else %}
+        <span id="total-{{monederos.id}}" class="ms-2 text-danger fw-semibold">{{monederos.total | formato_decimal}}</span><span class="ms-2 text-danger">€</span>
         {% endif %}
     </td>
 
@@ -41,8 +55,8 @@ Añadir monederos
     <label class="form-label" for="addTypeNombreX">Nombre</label>
 </div>
 <div class="form-outline form-white mb-4">
-    <input type="text" id="addTypeTotalX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypeTotalX">Total</label>
+    <input type="text" id="addTypeCantidadInicialX" class="form-control form-control-lg"/>
+    <label class="form-label" for="addTypeCantidadInicialX">Cantidad Inicial</label>
 </div>
 {% endblock %}
 
@@ -56,8 +70,8 @@ Editar monederos
     <label class="form-label" for="editTypeNombreX">Nombre</label>
 </div>
 <div class="form-outline form-white mb-4">
-    <input type="text" id="editTypeTotalX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypeTotalX">Total</label>
+    <input type="text" id="editTypeCantidadInicialX" class="form-control form-control-lg"/>
+    <label class="form-label" for="editTypeCantidadInicialX">Cantidad Inicial</label>
 </div>
 <input type="hidden" id="editTypeIdX"/>
 {% endblock %}

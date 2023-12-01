@@ -1,7 +1,6 @@
 $('#add-button').on( "click", function() {
     $("#addTypeNombreX").val('')
-    $("#addTypeTotalX").val('')
-    $("#addTypePonderacionX").val('')
+    $("#addTypeCantidadInicialX").val('')
     $("#addTypeMessageX").text('')
     $('#add').modal('show')
 } );
@@ -18,12 +17,10 @@ $('.edit-element').on( "click", function() {
 
     var id = $(this).attr("data-element")
     var nombre = $.trim($('#nombre-'+id).text())
-    var total = $('#total-'+id).text()
-    var ponderacion = $('#ponderacion-'+id).text()
+    var cantidad_inicial = $('#cantidad_inicial-'+id).text()
 
     $("#editTypeNombreX").val(nombre)
-    $("#editTypeTotalX").val(total)
-    $("#editTypePonderacionX").val(ponderacion)
+    $("#editTypeCantidadInicialX").val(cantidad_inicial)
     $("#editTypeIdX").val(id)
 
     $('#edit').modal('show')
@@ -43,14 +40,12 @@ $('.delete-element').on( "click", function() {
 
 function add_monedero() {
     var nombre = $.trim($("#addTypeNombreX").val());
-    var total = $("#addTypeTotalX").val();
-    var ponderacion = $("#addTypePonderacionX").val();
+    var cantidad_inicial = $("#addTypeCantidadInicialX").val();
 
 
     var data = {
         nombre: nombre,
-        total: total,
-        ponderacion:ponderacion
+        cantidad_inicial: cantidad_inicial,
     }
     var xhttp = new XMLHttpRequest();
 
@@ -97,14 +92,12 @@ function delete_monedero(id) {
 function update_monedero() {
     var id = $.trim($("#editTypeIdX").val())
     var nombre = $.trim($("#editTypeNombreX").val());
-    var total = $("#editTypeTotalX").val();
-    var ponderacion = $("#editTypePonderacionX").val();
+    var cantidad_inicial = $("#editTypeCantidadInicialX").val();
 
 
     var data = {
         nombre: nombre,
-        total: total,
-        ponderacion:ponderacion
+        cantidad_inicial: cantidad_inicial,
     }
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", "/finanzas/monedero/"+id, true);

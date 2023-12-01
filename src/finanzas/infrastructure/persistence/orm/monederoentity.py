@@ -2,6 +2,7 @@ from typing import Any
 
 from sqlalchemy import Column, Text, Integer, Float
 from sqlalchemy.orm import column_property
+from sqlalchemy.sql import functions
 
 from src.finanzas.domain.monedero import Monedero
 from src.persistence.domain.init_table import InitTable
@@ -12,18 +13,17 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 class MonederoEntity(BaseEntity):
     __tablename__ = 'finanzas_monederos'
     nombre = Column(Text, nullable=False, unique=True)
-    cantidad_base = Column(Float(precision=2), nullable=False)
+    cantidad_inicial = Column(Float(precision=2), server_default="0.00", nullable=False)
     diferencia = Column(Float(precision=2), server_default="0.00", nullable=False)
-    total = column_property(cantidad_base + diferencia)
 
     @staticmethod
     def get_order_column(str_property) -> Column:
         switcher = {
             "id": MonederoEntity.id,
             "nombre": MonederoEntity.nombre,
-            "cantidad_base": MonederoEntity.cantidad_base,
+            "cantidad_inicial": MonederoEntity.cantidad_inicial,
             "diferencia": MonederoEntity.diferencia,
-            "total": MonederoEntity.total,
+            "total": (MonederoEntity.cantidad_inicial + MonederoEntity.diferencia),
         }
         return switcher.get(str_property, MonederoEntity.id)
 
@@ -40,9 +40,8 @@ class MonederoEntity(BaseEntity):
         caster = {
             MonederoEntity.id: int,
             MonederoEntity.nombre: str,
-            MonederoEntity.cantidad_base: float,
-            MonederoEntity.diferencia: float,
-            MonederoEntity.total: float
+            MonederoEntity.cantidad_inicial: float,
+            MonederoEntity.diferencia: float
 
         }
         return caster.get(column)(value)
@@ -50,13 +49,14 @@ class MonederoEntity(BaseEntity):
     def convert_to_object_domain(self) -> Monedero:
         return Monedero({"id": self.id,
                          "nombre": self.nombre,
-                         "cantidad_base": self.cantidad_base,
-                         "diferencia": self.diferencia,
-                         "total": self.total
+                         "cantidad_inicial": self.cantidad_inicial,
+                         "diferencia": self.diferencia
                          })
 
     def update(self, params: dict):
-        if params["nombre"]:
+        if params.get("nombre"):
             self.nombre = params["nombre"]
-        if params["cantidad_base"]:
-            self.cantidad_base = params["cantidad_base"]
+        if params.get("cantidad_inicial"):
+            self.cantidad_inicial = params["cantidad_inicial"]
+        if params.get("diferencia"):
+            self.diferencia = params["diferencia"]

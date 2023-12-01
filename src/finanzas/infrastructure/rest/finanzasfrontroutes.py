@@ -1,3 +1,6 @@
+import locale
+
+locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
 from flask import request, render_template
 from flask_login import login_required
 
@@ -5,6 +8,10 @@ from src.finanzas.infrastructure.rest import finanzascontroller
 
 
 def import_routes(rootpath, app):
+    @app.template_filter()
+    def formato_decimal(value):
+        return locale.str(value)
+
     @app.route(rootpath + "home.html", methods=['GET'])
     @login_required
     def home():
@@ -16,7 +23,7 @@ def import_routes(rootpath, app):
     def cuentas():
         user = request.user
         lista_cuentas, code = finanzascontroller.list_cuentas(request)
-        lista_headers = ["Nombre", "Total", "Ponderación"]
+        lista_headers = ["Nombre", "Ponderación", "Capital Inicial", "Diferencia", "Total"]
         return render_template('/cuentas.html', username=user.get_name(),
                                title="Cuentas",
                                lista_headers=lista_headers,
@@ -27,7 +34,7 @@ def import_routes(rootpath, app):
     def monederos():
         user = request.user
         lista_monederos, code = finanzascontroller.list_monederos(request)
-        lista_headers = ["Nombre", "Total"]
+        lista_headers = ["Nombre", "Capital Inicial", "Diferencia", "Total"]
         return render_template('/monederos.html', username=user.get_name(),
                                title="Monederos",
                                lista_headers=lista_headers,

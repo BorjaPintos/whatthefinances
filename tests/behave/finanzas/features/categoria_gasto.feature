@@ -2,10 +2,10 @@ Feature: CategoriaGasto
 
   Scenario: GetCategoriaGasto sin loguearse
     Given Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     And Las siguientes categorias_gasto creadas
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -16,10 +16,10 @@ Feature: CategoriaGasto
   Scenario: GetCategoriaGasto correcto
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     And Las siguientes categorias_gasto creadas
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -30,10 +30,10 @@ Feature: CategoriaGasto
   Scenario: GetCategoriaGasto que no existe
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     And Las siguientes categorias_gasto creadas
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -43,10 +43,10 @@ Feature: CategoriaGasto
 
   Scenario: ListCategoriaGasto sin loguearse
     Given Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     And Las siguientes categorias_gasto creadas
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -57,10 +57,10 @@ Feature: CategoriaGasto
   Scenario: ListCategoriaGasto de un elemento
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre     | cantidad_base | diferencia | ponderacion |
+      | nombre     | cantidad_inicial | diferencia | ponderacion |
       | CuentaTest | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre       | cantidad_base | diferencia |
+      | nombre       | cantidad_inicial | diferencia |
       | MonederoTest | 0.0           | 0.0        |
     And Las siguientes categorias_gasto creadas
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -74,11 +74,11 @@ Feature: CategoriaGasto
   Scenario: ListCategoriaGasto de varios elementos
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre      | cantidad_base | diferencia | ponderacion |
+      | nombre      | cantidad_inicial | diferencia | ponderacion |
       | CuentaTest1 | 0.0           | 0.0        | 100         |
       | CuentaTest2 | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre        | cantidad_base | diferencia |
+      | nombre        | cantidad_inicial | diferencia |
       | MonederoTest1 | 0.0           | 0.0        |
       | MonederoTest2 | 0.0           | 0.0        |
     And Las siguientes categorias_gasto creadas
@@ -95,10 +95,10 @@ Feature: CategoriaGasto
 
   Scenario: CreateCategoriaGasto sin loguearse
     Given Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     When Creo la siguiente categoria_gasto
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -108,10 +108,10 @@ Feature: CategoriaGasto
   Scenario: CreateCategoriaGasto correcto
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     When Creo la siguiente categoria_gasto
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -126,10 +126,10 @@ Feature: CategoriaGasto
   Scenario: CreateCategoriaGasto sin parametro descripcion
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     When Creo la siguiente categoria_gasto
       | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -140,10 +140,10 @@ Feature: CategoriaGasto
   Scenario: CreateCategoriaGasto solo descripcion
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     When Creo la siguiente categoria_gasto
       | descripcion |
@@ -158,10 +158,10 @@ Feature: CategoriaGasto
   Scenario: CreateCategoriaGasto duplicado
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     And Las siguientes categorias_gasto creadas
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -174,10 +174,10 @@ Feature: CategoriaGasto
   Scenario: CreateCategoriaGasto varios
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     When Creo la siguiente categoria_gasto
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -196,10 +196,10 @@ Feature: CategoriaGasto
 
   Scenario: UpdateCategoriaGasto sin loguearse
     Given Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     And Las siguientes categorias_gasto creadas
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -212,10 +212,10 @@ Feature: CategoriaGasto
   Scenario: UpdateCategoriaGasto correcto
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     And Las siguientes categorias_gasto creadas
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -238,10 +238,10 @@ Feature: CategoriaGasto
   Scenario: UpdateCategoriaGasto sin cambiar nada
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     And Las siguientes categorias_gasto creadas
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
@@ -254,10 +254,10 @@ Feature: CategoriaGasto
   Scenario: UpdateCategoriaGasto con nombre duplicado
     Given Una sesion correcta
     And Las siguientes cuentas creadas
-      | nombre | cantidad_base | diferencia | ponderacion |
+      | nombre | cantidad_inicial | diferencia | ponderacion |
       | Test   | 0.0           | 0.0        | 100         |
     And Los siguientes monederos creados
-      | nombre | cantidad_base | diferencia |
+      | nombre | cantidad_inicial | diferencia |
       | Test   | 0.0           | 0.0        |
     And Las siguientes categorias_gasto creadas
       | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |

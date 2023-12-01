@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Text, Float, Integer
 from sqlalchemy.orm import column_property
+from sqlalchemy.sql import functions
 from typing_extensions import Any
 
 from src.finanzas.domain.cuenta import Cuenta
@@ -11,9 +12,8 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 class CuentaEntity(BaseEntity):
     __tablename__ = 'finanzas_cuentas'
     nombre = Column(Text, nullable=False, unique=True)
-    cantidad_base = Column(Float(precision=2), nullable=False)
+    cantidad_inicial = Column(Float(precision=2), server_default="0.00", nullable=False)
     diferencia = Column(Float(precision=2), server_default="0.00", nullable=False)
-    total = column_property(cantidad_base + diferencia)
     ponderacion = Column(Integer)
 
     @staticmethod
@@ -21,9 +21,9 @@ class CuentaEntity(BaseEntity):
         switcher = {
             "id": CuentaEntity.id,
             "nombre": CuentaEntity.nombre,
-            "cantidad_base": CuentaEntity.cantidad_base,
+            "cantidad_inicial": CuentaEntity.cantidad_inicial,
             "diferencia": CuentaEntity.diferencia,
-            "total": CuentaEntity.total,
+            "total": (CuentaEntity.cantidad_inicial + CuentaEntity.diferencia),
             "ponderacion": CuentaEntity.ponderacion
         }
         return switcher.get(str_property, CuentaEntity.id)
@@ -41,9 +41,8 @@ class CuentaEntity(BaseEntity):
         caster = {
             CuentaEntity.id: int,
             CuentaEntity.nombre: str,
-            CuentaEntity.cantidad_base: float,
+            CuentaEntity.cantidad_inicial: float,
             CuentaEntity.diferencia: float,
-            CuentaEntity.total: float,
             CuentaEntity.ponderacion: int
 
         }
@@ -52,16 +51,17 @@ class CuentaEntity(BaseEntity):
     def convert_to_object_domain(self) -> Cuenta:
         return Cuenta({"id": self.id,
                        "nombre": self.nombre,
-                       "cantidad_base": self.cantidad_base,
+                       "cantidad_inicial": self.cantidad_inicial,
                        "diferencia": self.diferencia,
-                       "total": self.total,
                        "ponderacion": self.ponderacion
                        })
 
     def update(self, params: dict):
-        if params["nombre"]:
+        if  params.get("nombre"):
             self.nombre = params["nombre"]
-        if params["cantidad_base"]:
-            self.cantidad_base = params["cantidad_base"]
-        if params["ponderacion"]:
+        if  params.get("cantidad_inicial"):
+            self.cantidad_inicial = params["cantidad_inicial"]
+        if  params.get("diferencia"):
+            self.diferencia = params["diferencia"]
+        if  params.get("ponderacion"):
             self.ponderacion = params["ponderacion"]

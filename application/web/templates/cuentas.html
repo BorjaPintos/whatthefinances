@@ -11,15 +11,30 @@
         </div>
     </td>
     <td>
-        {% if cuenta.total >=0 %}
-        <span id="total-{{cuenta.id}}" class="ms-2 text-success fw-semibold">{{cuenta.total}}</span>
+        <span id="ponderacion-{{cuenta.id}}" class="flex-grow-1 ms-2">{{cuenta.ponderacion | formato_decimal }}</span>
+    </td>
+    <td>
+        {% if cuenta.cantidad_inicial >=0 %}
+        <span id="cantidad_inicial-{{cuenta.id}}" class="ms-2 text-success fw-semibold">{{cuenta.cantidad_inicial | formato_decimal }}</span> <span class="ms-2 text-success">€</span>
         {% else %}
-        <span id="total-{{cuenta.id}}" class="ms-2 fw-semibold">{{cuenta.total}}</span>
+        <span id="cantidad_inicial-{{cuenta.id}}" class="ms-2 text-danger fw-semibold">{{cuenta.cantidad_inicial | formato_decimal}}</span> <span class="ms-2 text-danger">€</span>
         {% endif %}
     </td>
     <td>
-        <span id="ponderacion-{{cuenta.id}}" class="flex-grow-1 ms-2">{{cuenta.ponderacion}}</span>
+        {% if cuenta.diferencia >=0 %}
+        <span id="diferencia-{{cuenta.id}}" class="ms-2 text-success fw-semibold">{{cuenta.diferencia | formato_decimal}}</span> <span class="ms-2 text-success">€</span>
+        {% else %}
+        <span id="diferencia-{{cuenta.id}}" class="ms-2 text-danger fw-semibold">{{cuenta.diferencia | formato_decimal}}</span> <span class="ms-2 text-danger">€</span>
+        {% endif %}
     </td>
+    <td>
+        {% if cuenta.total >=0 %}
+        <span id="total-{{cuenta.id}}" class="ms-2 text-success fw-semibold">{{cuenta.total | formato_decimal}}</span> <span class="ms-2 text-success">€</span>
+        {% else %}
+        <span id="total-{{cuenta.id}}" class="ms-2 text-danger fw-semibold">{{cuenta.total | formato_decimal}}</span> <span class="ms-2 text-danger">€</span>
+        {% endif %}
+    </td>
+
 
     <td class="text-end">
         <a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip"
@@ -44,12 +59,12 @@ Añadir cuenta
     <label class="form-label" for="addTypeNombreX">Nombre</label>
 </div>
 <div class="form-outline form-white mb-4">
-    <input type="text" id="addTypeTotalX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypeTotalX">Total</label>
-</div>
-<div class="form-outline form-white mb-4">
     <input type="text" id="addTypePonderacionX" class="form-control form-control-lg"/>
     <label class="form-label" for="addTypePonderacionX">Ponderación</label>
+</div>
+<div class="form-outline form-white mb-4">
+    <input type="text" id="addTypeCantidadInicialX" class="form-control form-control-lg"/>
+    <label class="form-label" for="addTypeCantidadInicialX">Cantidad inicial</label>
 </div>
 {% endblock %}
 
@@ -63,12 +78,12 @@ Editar cuenta
     <label class="form-label" for="editTypeNombreX">Nombre</label>
 </div>
 <div class="form-outline form-white mb-4">
-    <input type="text" id="editTypeTotalX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypeTotalX">Total</label>
-</div>
-<div class="form-outline form-white mb-4">
     <input type="text" id="editTypePonderacionX" class="form-control form-control-lg"/>
     <label class="form-label" for="editTypePonderacionX">Ponderación</label>
+</div>
+<div class="form-outline form-white mb-4">
+    <input type="text" id="editTypeCantidadInicialX" class="form-control form-control-lg"/>
+    <label class="form-label" for="editTypeCantidadInicialX">Cantidad Inicial</label>
 </div>
 <input type="hidden" id="editTypeIdX"/>
 {% endblock %}
