@@ -5,7 +5,6 @@ from src.finanzas.infrastructure.rest import finanzascontroller
 
 
 def import_routes(rootpath, app):
-
     @app.route(rootpath + "home.html", methods=['GET'])
     @login_required
     def home():
@@ -33,3 +32,33 @@ def import_routes(rootpath, app):
                                title="Monederos",
                                lista_headers=lista_headers,
                                lista=lista_monederos)
+
+    @app.route(rootpath + "categorias-ingreso.html", methods=['GET'])
+    @login_required
+    def categorias_ingreso():
+        user = request.user
+        lista_categorias_ingreso, code = finanzascontroller.list_categorias_ingreso(request)
+        lista_cuentas, code = finanzascontroller.list_cuentas(request)
+        lista_monederos, code = finanzascontroller.list_monederos(request)
+        lista_headers = ["Descripción", "Cuenta Abono por defecto", "Monedero abono por defecto"]
+        return render_template('/categorias_ingreso.html', username=user.get_name(),
+                               title="Categorias Ingreso",
+                               lista_headers=lista_headers,
+                               lista=lista_categorias_ingreso,
+                               lista_cuentas=lista_cuentas,
+                               lista_monederos=lista_monederos)
+
+    @app.route(rootpath + "categorias-gasto.html", methods=['GET'])
+    @login_required
+    def categorias_gasto():
+        user = request.user
+        lista_categorias_gasto, code = finanzascontroller.list_categorias_gasto(request)
+        lista_cuentas, code = finanzascontroller.list_cuentas(request)
+        lista_monederos, code = finanzascontroller.list_monederos(request)
+        lista_headers = ["Descripción", "Cuenta cargo por defecto", "Monedero cargo por defecto"]
+        return render_template('/categorias_gasto.html', username=user.get_name(),
+                               title="Categorias Gasto",
+                               lista_headers=lista_headers,
+                               lista=lista_categorias_gasto,
+                               lista_cuentas=lista_cuentas,
+                               lista_monederos=lista_monederos)

@@ -1,7 +1,7 @@
 """Created on 22-10-2019."""
 from typing import Tuple
 
-from sqlalchemy import desc, asc, or_, and_, not_
+from sqlalchemy import desc, asc, or_, and_, not_, func, Text
 from sqlalchemy.orm import Query
 from sqlalchemy.sql.elements import BooleanClauseList
 
@@ -127,8 +127,14 @@ class SQLAlchemyQueryBuilder:
 
         order = self.__order_func_from_order_type(
             criteria.order().order_type())
-        order_list = [order(self.__entity_class.get_column(
-            criteria.order().order_by().field_name()))]
+        column_order = self.__entity_class.get_order_column(criteria.order().order_by().field_name())
+        order_list = []
+        if isinstance(column_order.type, Text):
+            order_list.append(
+                order(func.upper(self.__entity_class.get_order_column(criteria.order().order_by().field_name()))))
+        else:
+            order_list.append(order(self.__entity_class.get_order_column(criteria.order().order_by().field_name())))
+
         order_list.extend(defaultOrder.get_default_order(self.__entity_class))
         return order_list
 

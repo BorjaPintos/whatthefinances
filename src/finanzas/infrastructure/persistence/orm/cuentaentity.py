@@ -17,7 +17,7 @@ class CuentaEntity(BaseEntity):
     ponderacion = Column(Integer)
 
     @staticmethod
-    def get_column(str_property) -> Column:
+    def get_order_column(str_property) -> Column:
         switcher = {
             "id": CuentaEntity.id,
             "nombre": CuentaEntity.nombre,

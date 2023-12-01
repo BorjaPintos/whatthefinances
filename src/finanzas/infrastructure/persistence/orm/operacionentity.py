@@ -21,7 +21,7 @@ class OperacionEntity(BaseEntity):
     id_monedero_abono = Column(Integer, nullable=False)
 
     @staticmethod
-    def get_column(str_property) -> Column:
+    def get_order_column(str_property) -> Column:
         switcher = {
             "id": OperacionEntity.id,
             "fecha": OperacionEntity.fecha,

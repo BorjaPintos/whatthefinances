@@ -12,7 +12,7 @@ class UserEntity(BaseEntity):
     password = Column(Text, nullable=False)
 
     @staticmethod
-    def get_column(str_property: str):
+    def get_order_column(str_property: str):
         switcher = {
             "id": UserEntity.id,
             "name": UserEntity.name,

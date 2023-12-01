@@ -15,7 +15,7 @@ class CategoriaIngresoEntity(BaseEntity):
     id_monedero_defecto = Column(Integer)
 
     @staticmethod
-    def get_column(str_property) -> Column:
+    def get_order_column(str_property) -> Column:
         switcher = {
             "id": CategoriaIngresoEntity.id,
             "descripcion": CategoriaIngresoEntity.descripcion,
