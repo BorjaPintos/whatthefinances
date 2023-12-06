@@ -53,3 +53,9 @@ def update_operacion(context, id):
         }
         url = _get_operacion_base_url(context) + "/{}".format(id)
         context.result = common_functions.make_post_request(context, url, data)
+
+
+@when('Borro la operacion con id {id}')
+def delete_operacion(context, id):
+    url = _get_operacion_base_url(context) + "/{}".format(id)
+    context.result = common_functions.make_delete_request(context, url)

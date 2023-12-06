@@ -342,3 +342,92 @@ Feature: Operacion
       | nombre        | cantidad_inicial | diferencia | total |
       | MonederoTest1 | 20.0             | 10.0       | 30.0  |
       | MonederoTest2 | 40.0             | 80.0       | 120.0 |
+
+
+  Scenario: CreateOperacion Transferencia de monederos correcto con categorias
+    Given Una sesion correcta
+    And Las siguientes cuentas creadas
+      | nombre      | cantidad_inicial | diferencia | ponderacion |
+      | CuentaTest1 | 30.0             | 0.0        | 60          |
+      | CuentaTest2 | 50.0             | 0.0        | 40          |
+    And Los siguientes monederos creados
+      | nombre        | cantidad_inicial | diferencia |
+      | MonederoTest1 | 20.0             | 0.0        |
+      | MonederoTest2 | 40.0             | 0.0        |
+    And Las siguientes categorias_ingreso creadas
+      | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
+      | IngresoTest | 1                       | 1                   |
+    And Las siguientes categorias_gasto creadas
+      | descripcion | id_cuenta_cargo_defecto | id_monedero_defecto |
+      | GastoTest   | 1                       | 1                   |
+    When Creo la siguiente operacion
+      | fecha      | descripcion   | cantidad | id_monedero_abono | id_monedero_cargo | id_categoria_ingreso | id_categoria_gasto |
+      | 04/12/2023 | OperacionTest | 10.0     | 2                 | 1                 | 1                    | 1                  |
+    Then Obtengo el codigo de estado 201
+    When Listo 10 operaciones desde la pagina 0
+    Then Obtengo el codigo de estado 200
+    And  Obtengo la siguiente lista paginada
+      | fecha      | descripcion   | cantidad | id_monedero_abono | id_monedero_cargo | nombre_monedero_abono | nombre_monedero_cargo | id_cuenta_abono | id_cuenta_cargo |
+      | 04/12/2023 | OperacionTest | 10.0     | 2                 | 1                 | MonederoTest2         | MonederoTest1         | None            | None            |
+    And No hay mas elementos en la lista paginada
+    When Listo los monederos
+    Then Obtengo el codigo de estado 200
+    And  Obtengo la siguiente lista
+      | nombre        | cantidad_inicial | diferencia | total |
+      | MonederoTest1 | 20.0             | -10.0      | 10.0  |
+      | MonederoTest2 | 40.0             | 10.0       | 50.0  |
+    When Listo las cuentas
+    Then  Obtengo la siguiente lista
+      | nombre      | cantidad_inicial | diferencia | total |
+      | CuentaTest1 | 30.0             | 0.0        | 30.0  |
+      | CuentaTest2 | 50.0             | 0.0        | 50.0  |
+
+
+  Scenario: DeleteOperacion con ponderacion
+    Given Una sesion correcta
+    And Las siguientes cuentas creadas
+      | nombre      | cantidad_inicial | diferencia | ponderacion |
+      | CuentaTest1 | 0.0              | 0.0        | 60          |
+      | CuentaTest2 | 0.0              | 0.0        | 40          |
+    And Los siguientes monederos creados
+      | nombre       | cantidad_inicial | diferencia |
+      | MonederoTest | 0.0              | 0.0        |
+    And Las siguientes categorias_ingreso creadas
+      | descripcion | id_cuenta_abono_defecto | id_monedero_defecto |
+      | IngresoTest | 1                       | 1                   |
+    When Creo la siguiente operacion
+      | fecha      | descripcion   | cantidad | id_monedero_abono | id_categoria_ingreso |
+      | 04/12/2023 | OperacionTest | 1000.0   | 1                 | 1                    |
+    Then Obtengo el codigo de estado 201
+    When Listo 10 operaciones desde la pagina 0
+    Then Obtengo el codigo de estado 200
+    And  Obtengo la siguiente lista paginada
+      | id | fecha      | descripcion   | cantidad | id_monedero_abono | id_categoria_ingreso | nombre_cuenta_abono | nombre_monedero_abono | descripcion_categoria_ingreso |
+      | 1  | 04/12/2023 | OperacionTest | 1000.0   | 1                 | 1                    | None                | MonederoTest          | IngresoTest                   |
+    And No hay mas elementos en la lista paginada
+    When Listo las cuentas
+    Then  Obtengo la siguiente lista
+      | nombre      | diferencia | total |
+      | CuentaTest1 | 600.0      | 600.0 |
+      | CuentaTest2 | 400.0      | 400.0 |
+    When Listo los monederos
+    Then Obtengo el codigo de estado 200
+    And  Obtengo la siguiente lista
+      | nombre       | diferencia | total  |
+      | MonederoTest | 1000.0     | 1000.0 |
+    When Borro la operacion con id 1
+    Then Obtengo el codigo de estado 200
+    When Listo 10 operaciones desde la pagina 0
+    Then Obtengo el codigo de estado 200
+    And  No obtengo nada paginado
+    And No hay mas elementos en la lista paginada
+    When Listo las cuentas
+    Then  Obtengo la siguiente lista
+      | nombre      | diferencia | total |
+      | CuentaTest1 | 0.0        | 0.0   |
+      | CuentaTest2 | 0.0        | 0.0   |
+    When Listo los monederos
+    Then Obtengo el codigo de estado 200
+    And  Obtengo la siguiente lista
+      | nombre       | diferencia | total |
+      | MonederoTest | 0.0        | 0.0   |

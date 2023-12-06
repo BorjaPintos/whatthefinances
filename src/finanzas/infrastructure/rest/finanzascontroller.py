@@ -97,7 +97,7 @@ def list_cuentas(request: Request) -> Tuple[Any, int]:
 
 def get_cuenta(request: Request, id_cuenta: int) -> Tuple[Any, int]:
     code = 200
-    cuenta = get_cuenta_use_case.execute(id_cuenta)
+    cuenta = get_cuenta_use_case.execute(apply_locale_int(id_cuenta))
     if cuenta:
         response = cuenta.get_dto()
     else:
@@ -163,7 +163,7 @@ def list_monederos(request: Request) -> Tuple[Any, int]:
 
 def get_monedero(request: Request, id_monedero: int) -> Tuple[Any, int]:
     code = 200
-    monedero = get_monedero_use_case.execute(id_monedero)
+    monedero = get_monedero_use_case.execute(apply_locale_int(id_monedero))
     if monedero:
         response = monedero.get_dto()
     else:
@@ -228,7 +228,7 @@ def list_categorias_ingreso(request: Request) -> Tuple[Any, int]:
 
 def get_categoria_ingreso(request: Request, id_categoria_ingreso: int) -> Tuple[Any, int]:
     code = 200
-    categoria_ingreso = get_categoria_ingreso_use_case.execute(id_categoria_ingreso)
+    categoria_ingreso = get_categoria_ingreso_use_case.execute(apply_locale_int(id_categoria_ingreso))
     if categoria_ingreso:
         response = categoria_ingreso.get_dto()
     else:
@@ -301,7 +301,7 @@ def list_categorias_gasto(request: Request) -> Tuple[Any, int]:
 
 def get_categoria_gasto(request: Request, id_categoria_gasto: int) -> Tuple[Any, int]:
     code = 200
-    categoria_gasto = get_categoria_gasto_use_case.execute(id_categoria_gasto)
+    categoria_gasto = get_categoria_gasto_use_case.execute(apply_locale_int(id_categoria_gasto))
     if categoria_gasto:
         response = categoria_gasto.get_dto()
     else:
@@ -383,7 +383,7 @@ def list_operaciones(request: Request) -> Tuple[Pagination, int]:
 
 def get_operacion(request: Request, id_operacion: int) -> Tuple[Any, int]:
     code = 200
-    operacion = get_operacion_use_case.execute(id_operacion)
+    operacion = get_operacion_use_case.execute(apply_locale_int(id_operacion))
     if operacion:
         response = operacion.get_dto()
     else:
@@ -446,7 +446,7 @@ def update_operacion(request: Request, id_operacion: int) -> Tuple[Any, int]:
 
 def delete_operacion(request: Request, id_operacion: int) -> Tuple[Any, int]:
     code = 200
-    operacion = delete_operacion_use_case.execute(id_operacion)
+    operacion = delete_operacion_use_case.execute(apply_locale_int(id_operacion))
     if operacion:
         response = {}
     else:

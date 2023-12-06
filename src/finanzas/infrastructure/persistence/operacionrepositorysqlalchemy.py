@@ -155,11 +155,11 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
 
     def delete(self, id_operacion: int) -> bool:
         try:
-            query = self.__get_complete_join_query(Criteria(filter=SimpleFilter("id", WhereOperator.IS, id_operacion)))
-            result = query.one_or_none()
-            if result is None:
+            query_builder = SQLAlchemyQueryBuilder(OperacionEntity, self._session).build_base_query()
+            entity = query_builder.filter_by(id=id_operacion).one_or_none()
+            if entity is None:
                 raise NotFoundError("No se encuentra la operación con id:  {}".format(id_operacion))
-            self._session.delete(result)
+            self._session.delete(entity)
             return True
         except Exception as e:
             traceback.print_exc()
