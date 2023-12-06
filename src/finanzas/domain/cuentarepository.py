@@ -15,7 +15,7 @@ class CuentaRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, params: dict) -> Cuenta:
+    def update(self, cuenta: Cuenta) -> bool:
         pass
 
     @abstractmethod

@@ -46,10 +46,10 @@ class CategoriaGastoEntity(BaseEntity):
         }
         return caster.get(column)(value)
 
-    def update(self, params: dict):
-        self.descripcion = params["descripcion"]
-        self.id_cuenta_cargo_defecto = params.get("id_cuenta_cargo_defecto")
-        self.id_monedero_defecto = params.get("id_monedero_defecto")
+    def update(self, categoria_gasto: CategoriaGasto):
+        self.descripcion = categoria_gasto.get_descripcion()
+        self.id_cuenta_cargo_defecto = categoria_gasto.get_id_cuenta_cargo_defecto()
+        self.id_monedero_defecto = categoria_gasto.get_id_monedero_defecto()
 
     def convert_to_object_domain(self) -> CategoriaGasto:
         return CategoriaGasto({"id": self.id,

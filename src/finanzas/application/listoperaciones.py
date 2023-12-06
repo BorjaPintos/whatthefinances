@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple, Union, Any
 
 from src.finanzas.domain.operacion import Operacion
 from src.finanzas.domain.operacionrepository import OperacionRepository
@@ -17,13 +17,14 @@ class ListOperaciones(TransactionalUseCase):
         self._operacion_repository = operacion_repository
 
     @transactional(readonly=True)
-    def execute(self, params: dict) -> List[Operacion]:
+    def execute(self, params: dict) -> Tuple[List[Operacion], Union[bool, Any]]:
 
         criteria = Criteria(order=Order(OrderBy(params["order_property"]), OrderType(params["order_type"])),
-                            filter=self._create_filters(params)
+                            filter=self._create_filters(params),
+                            offset=params["offset"],
+                            limit=params["count"]
                             )
-        operaciones = self._operacion_repository.list(criteria)
-        return operaciones
+        return self._operacion_repository.list(criteria)
 
     @staticmethod
     def _create_filters(params: dict) -> Filter:
@@ -67,10 +68,10 @@ class ListOperaciones(TransactionalUseCase):
         if "begin_cantidad" in params and params["begin_cantidad"]:
             cantidad_filter = SimpleFilter(
                 "begin_cantidad", WhereOperator.GREATERTHANOREQUAL, params["begin_cantidad"])
-            filter = combine_filters(filter, CompositeOperator.AND, fecha_filter)
+            filter = combine_filters(filter, CompositeOperator.AND, cantidad_filter)
         if "end_cantidad" in params and params["end_cantidad"]:
             cantidad_filter = SimpleFilter(
                 "end_cantidad", WhereOperator.LESSTHANOREQUAL, params["end_cantidad"])
-            filter = combine_filters(filter, CompositeOperator.AND, fecha_filter)
+            filter = combine_filters(filter, CompositeOperator.AND, cantidad_filter)
 
         return filter

@@ -13,17 +13,29 @@ class Cuenta:
     def get_nombre(self) -> str:
         return self._nombre
 
+    def set_nombre(self, nombre: str):
+        self._nombre = nombre
+
     def get_cantidad_inicial(self) -> float:
         return self._cantidad_inicial
 
+    def set_cantidad_inicial(self, cantidad_inicial: float):
+        self._cantidad_inicial = cantidad_inicial
+
     def get_diferencia(self) -> float:
         return self._diferencia
+
+    def set_diferencia(self, diferencia: float):
+        self._diferencia = diferencia
 
     def get_total(self) -> float:
         return self._cantidad_inicial + self._diferencia
 
     def get_ponderacion(self) -> int:
         return self._ponderacion
+
+    def set_ponderacion(self, ponderacion: float):
+        self._ponderacion = ponderacion
 
     def get_dto(self) -> dict:
         return {"id": self._id,

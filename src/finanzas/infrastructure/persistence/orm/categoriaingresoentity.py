@@ -52,7 +52,7 @@ class CategoriaIngresoEntity(BaseEntity):
                                  "id_monedero_defecto": self.id_monedero_defecto,
                                  })
 
-    def update(self, params: dict):
-        self.descripcion = params["descripcion"]
-        self.id_cuenta_abono_defecto = params.get("id_cuenta_abono_defecto")
-        self.id_monedero_defecto = params.get("id_monedero_defecto")
+    def update(self, categoria_ingreso: CategoriaIngreso):
+        self.descripcion = categoria_ingreso.get_descripcion()
+        self.id_cuenta_abono_defecto = categoria_ingreso.get_id_cuenta_abono_defecto()
+        self.id_monedero_defecto = categoria_ingreso.get_id_monedero_defecto()

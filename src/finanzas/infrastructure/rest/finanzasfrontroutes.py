@@ -3,14 +3,19 @@ import locale
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
 from flask import request, render_template
 from flask_login import login_required
-
 from src.finanzas.infrastructure.rest import finanzascontroller
+import datetime
 
 
 def import_routes(rootpath, app):
     @app.template_filter()
     def formato_decimal(value):
         return locale.str(value)
+
+    @app.template_filter()
+    def formato_fecha(value):
+        date = datetime.datetime.fromtimestamp(value)
+        return date.strftime("%Y-%m-%d")
 
     @app.route(rootpath + "home.html", methods=['GET'])
     @login_required
@@ -69,3 +74,15 @@ def import_routes(rootpath, app):
                                lista=lista_categorias_gasto,
                                lista_cuentas=lista_cuentas,
                                lista_monederos=lista_monederos)
+
+    @app.route(rootpath + "operaciones.html", methods=['GET'])
+    @login_required
+    def operaciones():
+        user = request.user
+        lista_paginada_operaciones, code = finanzascontroller.list_operaciones(request)
+        lista_headers = ["Fecha", "Cantidad", "Descripcion", "Categoría Gasto", "Cuenta Cargo", "Monedero Cargo",
+                         "Categoría Ingreso", "Cuenta Abono", "Monedero abono"]
+        return render_template('/operaciones.html', username=user.get_name(),
+                               title="Operaciones",
+                               lista_headers=lista_headers,
+                               lista=lista_paginada_operaciones.get_elements())

@@ -68,39 +68,37 @@ class CategoriaIngresoRepositorySQLAlchemy(ITransactionalRepository, CategoriaIn
         return None
 
     def check_cuenta(self, id_cuenta: int):
-        if id_cuenta:
+        if id_cuenta is not None:
             query_builder = SQLAlchemyQueryBuilder(CuentaEntity, self._session).build_base_query()
             cuenta_entity = query_builder.filter_by(id=id_cuenta).one_or_none()
             if cuenta_entity is None:
                 raise NotFoundError("No se encuentra la cuenta con id:  {}".format(id_cuenta))
 
     def check_monedero(self, id_monedero: int):
-        if id_monedero:
+        if id_monedero is not None:
             query_builder = SQLAlchemyQueryBuilder(MonederoEntity, self._session).build_base_query()
             monedero_entity = query_builder.filter_by(id=id_monedero).one_or_none()
             if monedero_entity is None:
                 raise NotFoundError("No se encuentra el monedero con id:  {}".format(id_monedero))
 
-    def update(self, params: dict) -> CategoriaIngreso:
+    def update(self, categoria_ingreso: CategoriaIngreso) -> bool:
         try:
-            if "id_cuenta_abono_defecto" in params and params["id_cuenta_abono_defecto"]:
-                self.check_cuenta(params["id_cuenta_abono_defecto"])
-            if "id_monedero_defecto" in params and params["id_monedero_defecto"]:
-                self.check_monedero(params["id_monedero_defecto"])
+            self.check_cuenta(categoria_ingreso.get_id_cuenta_abono_defecto())
+            self.check_monedero(categoria_ingreso.get_id_monedero_defecto())
 
             query_builder = SQLAlchemyQueryBuilder(CategoriaIngresoEntity, self._session).build_base_query()
-            entity = query_builder.filter_by(id=params["id"]).one_or_none()
+            entity = query_builder.filter_by(id=categoria_ingreso.get_id()).one_or_none()
             if entity is None:
-                raise NotFoundError("No se encuentra la categoria ingreso con id:  {}".format(params["id"]))
+                raise NotFoundError("No se encuentra la categoría ingreso con id:  {}".format(categoria_ingreso.get_id()))
             else:
-                entity.update(params)
-                return entity.convert_to_object_domain()
+                entity.update(categoria_ingreso)
+                return True
         except NotFoundError as e:
             logger.info(e)
             raise e
         except Exception as e:
             traceback.print_exc()
-        return None
+        return False
 
     def get(self, id_categoria_ingreso: int) -> CategoriaIngreso:
         try:

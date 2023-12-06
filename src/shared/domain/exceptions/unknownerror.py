@@ -1,0 +1,2 @@
+class UnknownError(ValueError):
+    "UnknownError"

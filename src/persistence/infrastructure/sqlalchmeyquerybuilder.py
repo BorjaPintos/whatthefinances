@@ -1,5 +1,4 @@
-"""Created on 22-10-2019."""
-from typing import Tuple
+from typing import Tuple, Any, Union
 
 from sqlalchemy import desc, asc, or_, and_, not_, func, Text
 from sqlalchemy.orm import Query
@@ -73,7 +72,7 @@ class SQLAlchemyQueryBuilder:
             query = query.filter(condition)
         return query
 
-    def _get_conditions(self, filter: SimpleFilter) -> BooleanClauseList:
+    def _get_conditions(self, filter: SimpleFilter) -> Union[BooleanClauseList, Any]:
         function = SQLAlchemyQueryBuilder.SQL_FUNCTION_MAP.get(filter.get_operator())
         if function is None:
             return None
@@ -114,12 +113,6 @@ class SQLAlchemyQueryBuilder:
         query = query.order_by(*order_by_clauses)
         return query
 
-    def build_pagination_query(self, criteria: Criteria,
-                               defaultOrder: SQLAlchemyOrderDefault) -> Query:
-        """Build the pagination query."""
-        query = self.build_order_query(criteria, defaultOrder)
-        query = query.offset(criteria.offset()).limit(criteria.limit() + 1)
-        return query
 
     def __get_order_by_clauses(self, criteria: Criteria, defaultOrder: SQLAlchemyOrderDefault):
         if criteria.order() is None:

@@ -1,0 +1,160 @@
+{% extends 'lista.html'%}
+
+{% block lista %}
+{% for operacion in lista %}
+<tr>
+    <td>
+        <div class="d-flex align-items-center">
+            <div class="ms-2">
+                <i id="fecha-{{operacion.id}}">{{operacion.fecha}}</i>
+            </div>
+        </div>
+    </td>
+    <td>
+        {% if operacion.cantidad >=0 %}
+        <span id="cantidad-{{operacion.id}}" class="ms-2 text-success fw-semibold">{{operacion.cantidad | formato_decimal}}</span>
+        <span class="ms-2 text-success">€</span>
+        {% else %}
+        <span id="cantidad-{{operacion.id}}" class="ms-2 text-danger fw-semibold">{{operacion.cantidad | formato_decimal}}</span>
+        <span class="ms-2 text-danger">€</span>
+        {% endif %}
+    </td>
+    <td>
+        <div class="d-flex align-items-center">
+            <div id="descripcion-{{operacion.id}}" class="flex-grow-1 ms-2">
+                {{operacion.descripcion}}
+            </div>
+        </div>
+    </td>
+    <td>
+        {% if operacion.id_categoria_gasto %}
+
+        <span id="descripcion_categoria_gasto-{{operacion.id}}" class="badge badge-danger-lighten">{{operacion.descripcion_categoria_gasto}}</span>
+        <input id="id_categoria_gasto-{{operacion.id}}" type="hidden" value="{{operacion.id_categoria_gasto}}"/>
+
+        {% else %}
+        <span id="descripcion_categoria_gasto-{{operacion.id}}" class="badge badge-lighten">-</span>
+        <input id="id_categoria_gasto-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if operacion.id_cuenta_cargo %}
+        <span id="nombre_cuenta_cargo-{{operacion.id}}" class="badge badge-danger-lighten">{{operacion.nombre_cuenta_cargo}}</span>
+        <input id="id_cuenta_cargo-{{operacion.id}}" type="hidden" value="{{operacion.id_cuenta_cargo}}"/>
+        {% else %}
+        <span id="nombre_cuenta_cargo-{{operacion.id}}" class="badge badge-lighten">-</span>
+        <input id="id_cuenta_cargo-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if operacion.id_monedero_cargo %}
+        <span id="nombre_monedero_cargo-{{operacion.id}}" class="badge badge-danger-lighten">{{operacion.nombre_monedero_cargo}}</span>
+        <input id="id_monedero_cargo-{{operacion.id}}" type="hidden" value="{{operacion.id_monedero_cargo}}"/>
+        {% else %}
+        <span id="nombre_monedero_cargo-{{operacion.id}}" class="badge badge-lighten">-</span>
+        <input id="id_monedero_cargo-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if operacion.id_categoria_ingreso %}
+        <span id="descripcion_categoria_ingreso-{{operacion.id}}" class="badge badge-success-lighten">{{operacion.descripcion_categoria_ingreso}}</span>
+        <input id="id_categoria_ingreso-{{operacion.id}}" type="hidden" value="{{operacion.id_categoria_ingreso}}"/>
+        {% else %}
+        <span id="descripcion_categoria_ingreso-{{operacion.id}}" class="badge badge-lighten">-</span>
+        <input id="id_categoria_ingreso-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if operacion.id_cuenta_abono %}
+        <span id="nombre_cuenta_abono-{{operacion.id}}" class="badge badge-success-lighten">{{operacion.nombre_cuenta_abono}}</span>
+        <input id="id_cuenta_abono-{{operacion.id}}" type="hidden" value="{{operacion.id_cuenta_abono}}"/>
+        {% else %}
+        <span id="nombre_cuenta_abono-{{operacion.id}}" class="badge badge-lighten">-</span>
+        <input id="id_cuenta_abono-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if operacion.id_monedero_abono %}
+        <span id="nombre_monedero_abono-{{operacion.id}}" class="badge badge-success-lighten">{{operacion.nombre_monedero_abono}}</span>
+        <input id="id_monedero_abono-{{operacion.id}}" type="hidden" value="{{operacion.id_monedero_abono}}"/>
+        {% else %}
+        <span id="nombre_monedero_abono-{{operacion.id}}" class="badge badge-lighten">-</span>
+        <input id="id_monedero_abono-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+    <td class="text-end">
+        <a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip"
+           data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit"
+           data-element="{{operacion.id}}"><i class="uil uil-pen"></i></a>
+        <a class="delete-element font-18 text-danger" data-bs-toggle="tooltip"
+           data-bs-placement="top" aria-label="Delete" data-bs-original-title="Delete"
+           data-element="{{operacion.id}}">
+            <i class="uil uil-trash"></i>
+        </a>
+    </td>
+</tr>
+{% endfor %}
+{% endblock%}
+
+{% block titulo_add %}
+Añadir operación
+{% endblock %}
+
+{% block contenido_add %}
+<div class="form-outline form-white mb-4">
+    <div class="input-group date">
+        <input id="addFechaDataPicker" type="text" class="form-control">
+        <div class="input-group-addon">
+            <span class="glyphicon glyphicon-th"></span>
+        </div>
+    </div>
+
+    <input type="text" id="addTypeDescripcionX" class="form-control form-control-lg"/>
+    <label class="form-label" for="addTypeDescripcionX">Descripción</label>
+</div>
+<div class="form-outline form-white mb-4">
+
+</div>
+<div class="form-outline form-white mb-4">
+
+</div>
+{% endblock %}
+
+{% block titulo_edit %}
+Editar Operacion
+{% endblock %}
+
+{% block contenido_edit %}
+<div class="form-outline form-white mb-4">
+
+    <div class="input-group date">
+        <input id="editFechaDataPicker" type="text" class="form-control">
+        <div class="input-group-addon">
+            <span class="glyphicon glyphicon-th"></span>
+        </div>
+    </div>
+    <input type="text" id="editTypeDescripcionX" class="form-control form-control-lg"/>
+    <label class="form-label" for="editTypeDescripcionX">Descripción</label>
+</div>
+<div class="form-outline form-white mb-4">
+
+</div>
+<div class="form-outline form-white mb-4">
+
+</div>
+<input type="hidden" id="editTypeIdX"/>
+{% endblock %}
+
+
+{% block script %}
+<link href="assets/bootstrap/css/bootstrap-datepicker.min.css" rel="stylesheet">
+<script type="text/javascript" src="assets/bootstrap/js/bootstrap-datepicker.min.js"></script>
+<script type="text/javascript" src="assets/bootstrap/js/bootstrap-datepicker.es.min.js"></script>
+<script type="text/javascript" src="assets/js/operaciones.js"></script>
+{% endblock%}
