@@ -15,11 +15,19 @@ def check_item(context):
             assert (str(items[0][k]) == str(element[k]))
     return items[0] == element
 
+
 @then(u'Obtengo la siguiente lista')
 def check_list(context):
     event_list = context.result.json()
     table = common_functions.retrieve_context_table(context)
     common_functions.check_list_elements_by_keys(table, event_list)
+
+@then(u'Obtengo una lista vacía')
+def check_list(context):
+    event_list = context.result.json()
+    if len(event_list) != 0:
+        raise AssertionError(f'Expected 0 elements, found {len(event_list)}')
+
 
 @then(u'Obtengo la siguiente lista paginada')
 def check_pagination_list(context):
@@ -28,12 +36,22 @@ def check_pagination_list(context):
     elements = pagination_list.get("elements")
     common_functions.check_list_elements_by_keys(table, elements)
 
+
+@then(u'No obtengo nada paginado')
+def check_pagination_list(context):
+    pagination_list = context.result.json()
+    elements = pagination_list.get("elements")
+    if len(elements) != 0:
+        raise AssertionError(f'Expected 0 elements, found {len(elements)}')
+
+
 @then(u'No hay mas elementos en la lista paginada')
 def check_pagination_more_elements(context):
     pagination_list = context.result.json()
     more_elements = pagination_list.get("has_more_elements")
     if more_elements:
         raise AssertionError("Existen más elementos de los que se piden")
+
 
 @then(u'Hay mas elementos en la lista paginada')
 def check_pagination_more_elements(context):
@@ -61,7 +79,8 @@ def login(context, name, password):
 
 @given('Una sesion correcta')
 def create_users(context):
-    context.database.exec_sql('INSERT into user ("name", "password") values ("{}","{}");'.format("admin", "addd55c9db8c0d868e7a826df9c58c364dda0bbd25e151f9acfaf993e73c5fb1276d119d3a11c2931aeb72fc3131a71c61edfa291cf261347e8377108fa61c22"))
+    context.database.exec_sql('INSERT into user ("name", "password") values ("{}","{}");'.format("admin",
+                                                                                                 "addd55c9db8c0d868e7a826df9c58c364dda0bbd25e151f9acfaf993e73c5fb1276d119d3a11c2931aeb72fc3131a71c61edfa291cf261347e8377108fa61c22"))
     url = common_functions.get_endpoint_server(context) + '/login'
     data = {"name": "admin",
             "password": "test"}

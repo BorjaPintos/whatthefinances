@@ -7,11 +7,11 @@ from src.shared.domain.exceptions.invalidparamerror import InvalidParamError
 
 
 def update_cantidad_cuentas(cuenta_repository: CuentaRepository, params: dict):
-    if params["id_cuenta_abono"]:
+    if params["id_cuenta_abono"]is not None:
         cuenta = cuenta_repository.get(params["id_cuenta_abono"])
         cuenta.set_diferencia(cuenta.get_diferencia() + params["cantidad"])
         cuenta_repository.update(cuenta)
-    if params["id_cuenta_cargo"]:
+    if params["id_cuenta_cargo"]is not None:
         cuenta = cuenta_repository.get(params["id_cuenta_cargo"])
         cuenta.set_diferencia(cuenta.get_diferencia() - params["cantidad"])
         cuenta_repository.update(cuenta)
@@ -28,11 +28,11 @@ def update_cantidad_cuentas(cuenta_repository: CuentaRepository, params: dict):
 
 
 def update_cantidad_monederos(monedero_repository: MonederoRepository, params: dict):
-    if params["id_monedero_abono"]:
+    if params["id_monedero_abono"] is not None:
         monedero = monedero_repository.get(params["id_monedero_abono"])
         monedero.set_diferencia(monedero.get_diferencia() + params["cantidad"])
         monedero_repository.update(monedero)
-    if params["id_monedero_cargo"]:
+    if params["id_monedero_cargo"]is not None:
         monedero = monedero_repository.get(params["id_monedero_cargo"])
         monedero.set_diferencia(monedero.get_diferencia() - params["cantidad"])
         monedero_repository.update(monedero)
@@ -59,11 +59,11 @@ def do_ponderacion(cuenta_repository: CuentaRepository, cantidad: float, add: bo
 
 
 def revert_cantidad_cuentas(cuenta_repository: CuentaRepository, operacion_original: Operacion):
-    if operacion_original.get_id_cuenta_abono():
+    if operacion_original.get_id_cuenta_abono() is not None:
         cuenta = cuenta_repository.get(operacion_original.get_id_cuenta_abono())
         cuenta.set_diferencia(cuenta.get_diferencia() - operacion_original.get_cantidad())
         cuenta_repository.update(cuenta)
-    if operacion_original.get_id_cuenta_cargo():
+    if operacion_original.get_id_cuenta_cargo() is not None:
         cuenta = cuenta_repository.get(operacion_original.get_id_cuenta_cargo())
         cuenta.set_diferencia(cuenta.get_diferencia() + operacion_original.get_cantidad())
         cuenta_repository.update(cuenta)
@@ -80,11 +80,11 @@ def revert_cantidad_cuentas(cuenta_repository: CuentaRepository, operacion_origi
 
 
 def revert_cantidad_monederos(monedero_repository: MonederoRepository, operacion_original: Operacion):
-    if operacion_original.get_id_monedero_abono():
+    if operacion_original.get_id_monedero_abono() is not None:
         monedero = monedero_repository.get(operacion_original.get_id_monedero_abono())
         monedero.set_diferencia(monedero.get_diferencia() - operacion_original.get_cantidad())
         monedero_repository.update(monedero)
-    if operacion_original.get_id_monedero_cargo():
+    if operacion_original.get_id_monedero_cargo() is not None:
         monedero = monedero_repository.get(operacion_original.get_id_monedero_cargo())
         monedero.set_diferencia(monedero.get_diferencia() + operacion_original.get_cantidad())
         monedero_repository.update(monedero)
