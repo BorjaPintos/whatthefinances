@@ -21,6 +21,27 @@ def check_list(context):
     table = common_functions.retrieve_context_table(context)
     common_functions.check_list_elements_by_keys(table, event_list)
 
+@then(u'Obtengo la siguiente lista paginada')
+def check_pagination_list(context):
+    pagination_list = context.result.json()
+    table = common_functions.retrieve_context_table(context)
+    elements = pagination_list.get("elements")
+    common_functions.check_list_elements_by_keys(table, elements)
+
+@then(u'No hay mas elementos en la lista paginada')
+def check_pagination_more_elements(context):
+    pagination_list = context.result.json()
+    more_elements = pagination_list.get("has_more_elements")
+    if more_elements:
+        raise AssertionError("Existen más elementos de los que se piden")
+
+@then(u'Hay mas elementos en la lista paginada')
+def check_pagination_more_elements(context):
+    pagination_list = context.result.json()
+    more_elements = pagination_list.get("has_more_elements")
+    if not more_elements:
+        raise AssertionError("No existen más elementos de los que se piden")
+
 
 @then('Obtengo el codigo de estado {code}')
 def status_code(context, code):

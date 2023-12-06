@@ -16,7 +16,7 @@ class CategoriaIngresoRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, params: dict) -> CategoriaIngreso:
+    def update(self, categoria_ingreso: CategoriaIngreso) -> bool:
         pass
 
     @abstractmethod

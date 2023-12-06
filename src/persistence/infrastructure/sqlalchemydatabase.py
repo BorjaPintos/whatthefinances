@@ -69,3 +69,4 @@ class SQLAlchemyDatabase(Database):
 
     def new_session(self):
         return self._session_maker()
+

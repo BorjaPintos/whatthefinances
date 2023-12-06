@@ -56,12 +56,8 @@ class CuentaEntity(BaseEntity):
                        "ponderacion": self.ponderacion
                        })
 
-    def update(self, params: dict):
-        if  params.get("nombre"):
-            self.nombre = params["nombre"]
-        if  params.get("cantidad_inicial"):
-            self.cantidad_inicial = params["cantidad_inicial"]
-        if  params.get("diferencia"):
-            self.diferencia = params["diferencia"]
-        if  params.get("ponderacion"):
-            self.ponderacion = params["ponderacion"]
+    def update(self, cuenta: Cuenta):
+        self.nombre = cuenta.get_nombre()
+        self.cantidad_inicial = cuenta.get_cantidad_inicial()
+        self.diferencia = cuenta.get_diferencia()
+        self.ponderacion = cuenta.get_ponderacion()

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Tuple, Union, Any
 
 from src.finanzas.domain.operacion import Operacion
 from src.persistence.domain.criteria import Criteria
@@ -8,15 +8,15 @@ from src.persistence.domain.criteria import Criteria
 class OperacionRepository(ABC):
 
     @abstractmethod
-    def list(self, criteria: Criteria) -> List[Operacion]:
+    def list(self, criteria: Criteria) -> Tuple[List[Operacion], Union[bool, Any]]:
         pass
 
     @abstractmethod
-    def new(self, params: dict) -> Operacion:
+    def new(self, params: dict) -> bool:
         pass
 
     @abstractmethod
-    def update(self, params: dict) -> Operacion:
+    def update(self, operacion: Operacion) -> bool:
         pass
 
     @abstractmethod

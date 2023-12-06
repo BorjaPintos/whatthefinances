@@ -53,10 +53,7 @@ class MonederoEntity(BaseEntity):
                          "diferencia": self.diferencia
                          })
 
-    def update(self, params: dict):
-        if params.get("nombre"):
-            self.nombre = params["nombre"]
-        if params.get("cantidad_inicial"):
-            self.cantidad_inicial = params["cantidad_inicial"]
-        if params.get("diferencia"):
-            self.diferencia = params["diferencia"]
+    def update(self, monedero: Monedero):
+        self.nombre = monedero.get_nombre()
+        self.cantidad_inicial = monedero.get_cantidad_inicial()
+        self.diferencia = monedero.get_diferencia()

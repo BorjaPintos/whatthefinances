@@ -16,7 +16,7 @@ class MonederoRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, params: dict) -> Monedero:
+    def update(self, monedero: Monedero) -> True:
         pass
 
     @abstractmethod

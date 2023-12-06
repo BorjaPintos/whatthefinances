@@ -1,5 +1,5 @@
 import traceback
-from typing import List
+from typing import List, Union, Any, Tuple
 
 from loguru import logger
 from sqlalchemy.exc import IntegrityError
@@ -38,14 +38,14 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
 
         query_builder = SQLAlchemyQueryBuilder(OperacionEntity, self._session, selected_columns=columnas)
         query = query_builder.build_order_query(criteria) \
-            .join(CategoriaGastoEntity, OperacionEntity.id_categoria_gasto == CategoriaGastoEntity.id, isouter=False) \
-            .join(CuentaCargo, OperacionEntity.id_cuenta_cargo == CuentaCargo.id, isouter=False) \
-            .join(MonederoCargo, OperacionEntity.id_monedero_cargo == MonederoCargo.id, isouter=False) \
+            .join(CategoriaGastoEntity, OperacionEntity.id_categoria_gasto == CategoriaGastoEntity.id, isouter=True) \
+            .join(CuentaCargo, OperacionEntity.id_cuenta_cargo == CuentaCargo.id, isouter=True) \
+            .join(MonederoCargo, OperacionEntity.id_monedero_cargo == MonederoCargo.id, isouter=True) \
             .join(CategoriaIngresoEntity, OperacionEntity.id_categoria_ingreso == CategoriaIngresoEntity.id,
-                  isouter=False) \
-            .join(CuentaAbono, OperacionEntity.id_cuenta_abono == CuentaAbono.id, isouter=False) \
-            .join(MonederoAbono, OperacionEntity.id_monedero_abono == MonederoAbono.id, isouter=False)
-        return query
+                  isouter=True) \
+            .join(CuentaAbono, OperacionEntity.id_cuenta_abono == CuentaAbono.id, isouter=True) \
+            .join(MonederoAbono, OperacionEntity.id_monedero_abono == MonederoAbono.id, isouter=True)
+        return query.offset(criteria.offset()).limit(criteria.limit() + 1)
 
     @staticmethod
     def __get_operation_from_complete_join_row(row) -> Operacion:
@@ -68,18 +68,20 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
                   }
         return Operacion(params)
 
-    def list(self, criteria: Criteria) -> List[Operacion]:
+    def list(self, criteria: Criteria) -> Tuple[List[Operacion], Union[bool, Any]]:
         elements = []
         try:
             query = self.__get_complete_join_query(criteria)
             result = query.all()
+            n_elements = min(len(result), criteria.limit())
             if result is not None:
-                for row in result:
-                    elements.append(self.__get_operation_from_complete_join_row(row))
+                for i in range(n_elements):
+                    elements.append(self.__get_operation_from_complete_join_row(result[i]))
+            return elements, len(result) > criteria.limit()
         except Exception as e:
             traceback.print_exc()
 
-        return elements
+        return elements, False
 
     def get(self, id_operacion: int) -> Operacion:
         try:
@@ -97,7 +99,7 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
             traceback.print_exc()
         return None
 
-    def new(self, params: dict) -> Operacion:
+    def new(self, params: dict) -> bool:
         try:
 
             self.check_cuenta(params.get("id_cuenta_cargo"))
@@ -118,7 +120,7 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
                                      id_monedero_abono=params.get("id_monedero_abono"))
             self._session.add(entity)
             self._session.flush()
-            return self.get(entity.id)
+            return True
         except IntegrityError as e:
             logger.info(e)
         except NotFoundError as e:
@@ -126,30 +128,30 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
             raise e
         except Exception as e:
             traceback.print_exc()
-        return None
+        return False
 
-    def update(self, params: dict) -> Operacion:
+    def update(self, operacion: Operacion) -> bool:
         try:
-            self.check_cuenta(params.get("id_cuenta_cargo"))
-            self.check_cuenta(params.get("id_cuenta_abono"))
-            self.check_monedero(params.get("id_monedero_cargo"))
-            self.check_monedero(params.get("id_monedero_abono"))
-            self.check_categoria_ingreso(params.get("id_categoria_ingreso"))
-            self.check_categoria_gasto(params.get("id_categoria_gasto"))
+            self.check_cuenta(operacion.get_id_cuenta_cargo())
+            self.check_cuenta(operacion.get_id_cuenta_abono())
+            self.check_monedero(operacion.get_id_monedero_cargo())
+            self.check_monedero(operacion.get_id_monedero_abono())
+            self.check_categoria_ingreso(operacion.get_id_categoria_ingreso())
+            self.check_categoria_gasto(operacion.get_id_categoria_gasto())
 
             query_builder = SQLAlchemyQueryBuilder(OperacionEntity, self._session).build_base_query()
-            entity = query_builder.filter_by(id=params["id"]).one_or_none()
+            entity = query_builder.filter_by(id=operacion.get_id()).one_or_none()
             if entity is None:
-                raise NotFoundError("No se encuentra la operation con id:  {}".format(params["id"]))
+                raise NotFoundError("No se encuentra la operation con id:  {}".format(operacion.get_id()))
             else:
-                entity.update(params)
-                return self.get(entity.id)
+                entity.update(operacion)
+                return True
         except NotFoundError as e:
             logger.info(e)
             raise e
         except Exception as e:
             traceback.print_exc()
-        return None
+        return False
 
     def delete(self, id_operacion: int) -> bool:
         try:

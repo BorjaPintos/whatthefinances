@@ -3,6 +3,7 @@ from typing import Any
 
 from sqlalchemy import Column, Date, Float, Text, Integer
 
+from src.finanzas.domain.operacion import Operacion
 from src.persistence.domain.init_table import InitTable
 from src.persistence.infrastructure.orm.baseentity import BaseEntity
 
@@ -13,12 +14,12 @@ class OperacionEntity(BaseEntity):
     fecha = Column(Date, nullable=False)
     cantidad = Column(Float(precision=2), nullable=False)
     descripcion = Column(Text, nullable=False)
-    id_categoria_gasto = Column(Integer, nullable=False)
-    id_cuenta_cargo = Column(Integer, nullable=False)
-    id_monedero_cargo = Column(Integer, nullable=False)
-    id_categoria_ingreso = Column(Integer, nullable=False)
-    id_cuenta_abono = Column(Integer, nullable=False)
-    id_monedero_abono = Column(Integer, nullable=False)
+    id_categoria_gasto = Column(Integer)
+    id_cuenta_cargo = Column(Integer)
+    id_monedero_cargo = Column(Integer)
+    id_categoria_ingreso = Column(Integer)
+    id_cuenta_abono = Column(Integer)
+    id_monedero_abono = Column(Integer)
 
     @staticmethod
     def get_order_column(str_property) -> Column:
@@ -64,13 +65,13 @@ class OperacionEntity(BaseEntity):
         }
         return caster.get(column)(value)
 
-    def update(self, params: dict):
-        self.fecha = params.get("fecha"),
-        self.cantidad = params.get("cantidad"),
-        self.descripcion = params.get("descripcion"),
-        self.id_categoria_gasto = params.get("id_categoria_gasto"),
-        self.id_categoria_ingreso = params.get("id_categoria_ingreso"),
-        self.id_cuenta_cargo = params.get("id_cuenta_cargo"),
-        self.id_cuenta_abono = params.get("id_cuenta_abono"),
-        self.id_monedero_cargo = params.get("id_monedero_cargo"),
-        self.id_monedero_abono = params.get("id_monedero_abono")
+    def update(self, operacion: Operacion):
+        self.fecha = operacion.get_fecha()
+        self.cantidad = operacion.get_cantidad()
+        self.descripcion = operacion.get_descripcion()
+        self.id_categoria_gasto = operacion.get_id_categoria_gasto()
+        self.id_categoria_ingreso = operacion.get_id_categoria_ingreso()
+        self.id_cuenta_cargo = operacion.get_id_cuenta_cargo()
+        self.id_cuenta_abono = operacion.get_id_cuenta_abono()
+        self.id_monedero_cargo = operacion.get_id_monedero_cargo()
+        self.id_monedero_abono = operacion.get_id_monedero_abono()

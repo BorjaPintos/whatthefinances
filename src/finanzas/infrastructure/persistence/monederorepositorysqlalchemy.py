@@ -45,28 +45,28 @@ class MonederoRepositorySQLAlchemy(ITransactionalRepository, MonederoRepository)
             traceback.print_exc()
         return None
 
-    def update(self, params: dict) -> Monedero:
+    def update(self, monedero: Monedero) -> bool:
         try:
             query_builder = SQLAlchemyQueryBuilder(MonederoEntity, self._session).build_base_query()
-            entity = query_builder.filter_by(id=params["id"]).one_or_none()
+            entity = query_builder.filter_by(id=monedero.get_id()).one_or_none()
             if entity is None:
-                raise NotFoundError("No se encuentra la cuenta con id:  {}".format(params["id"]))
+                raise NotFoundError("No se encuentra el monedero con id:  {}".format(monedero.get_id()))
             else:
-                entity.update(params)
-                return entity.convert_to_object_domain()
+                entity.update(monedero)
+                return True
         except NotFoundError as e:
             logger.info(e)
             raise e
         except Exception as e:
             traceback.print_exc()
-        return None
+        return False
 
-    def get(self, id_cuenta: int) -> Monedero:
+    def get(self, id_monedero: int) -> Monedero:
         try:
             query_builder = SQLAlchemyQueryBuilder(MonederoEntity, self._session).build_base_query()
-            entity = query_builder.filter_by(id=id_cuenta).one_or_none()
+            entity = query_builder.filter_by(id=id_monedero).one_or_none()
             if entity is None:
-                raise NotFoundError("No se encuentra la cuenta con id:  {}".format(id_cuenta))
+                raise NotFoundError("No se encuentra el monedero con id:  {}".format(id_monedero))
             else:
                 return entity.convert_to_object_domain()
         except NotFoundError as e:

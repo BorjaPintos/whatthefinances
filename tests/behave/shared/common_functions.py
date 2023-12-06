@@ -48,7 +48,7 @@ def retrieve_context_table(context):
 def check_list_elements_by_keys(l1, l2):
     if len(l1) != len(l2):
         raise AssertionError(
-            f'Expected {len(l2)} elements, found {len(l1)}'
+            f'Expected {len(l1)} elements, found {len(l2)}'
         )
     for e1, e2 in zip(l1, l2):
         for key in e1.keys():
