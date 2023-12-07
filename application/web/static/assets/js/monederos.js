@@ -1,43 +1,3 @@
-$('#add-button').on( "click", function() {
-    $("#addTypeNombreX").val('')
-    $("#addTypeCantidadInicialX").val('')
-    $("#addTypeMessageX").text('')
-    $('#add').modal('show')
-} );
-
-$('#add-close-button').on( "click", function() {
-    $('#add').modal('hide')
-} );
-
-$('#add-submit-button').on( "click", function() {
-   add_monedero();
-});
-
-$('.edit-element').on( "click", function() {
-
-    var id = $(this).attr("data-element")
-    var nombre = $.trim($('#nombre-'+id).text())
-    var cantidad_inicial = $('#cantidad_inicial-'+id).text()
-
-    $("#editTypeNombreX").val(nombre)
-    $("#editTypeCantidadInicialX").val(cantidad_inicial)
-    $("#editTypeIdX").val(id)
-
-    $('#edit').modal('show')
-});
-
-$('#edit-close-button').on( "click", function() {
-    $('#edit').modal('hide')
-} );
-
-$('#edit-submit-button').on( "click", function() {
-   update_monedero()
-});
-
-$('.delete-element').on( "click", function() {
-   delete_monedero($(this).attr("data-element"))
-});
-
 function add_monedero() {
     var nombre = $.trim($("#addTypeNombreX").val());
     var cantidad_inicial = $("#addTypeCantidadInicialX").val();
@@ -115,3 +75,139 @@ function update_monedero() {
     };
     xhttp.send(JSON.stringify(data));
 }
+
+get_local_number = function(num){
+    return $.fn.dataTable.render.number('', ',', 2).display(num);
+}
+
+render_dinero = function (data, type) {
+    var number = get_local_number(data);
+    var add_class = ""
+    if (type === 'display') {
+        if (data > 0)
+            add_class = "text-success"
+        else if (data < 0)
+            add_class = "text-danger"
+        return "<span class='ms-2 "+add_class+"'>"+number+"</span><span class='ms-2 "+add_class+"'>€</span>"
+    }
+    return data
+}
+
+render_actions = function (data, type) {
+    if (type === 'display') {
+        edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
+        del = '<a class="delete-element font-18 text-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete" data-bs-original-title="Borrar" data-element="'+data+'"><i class="uil uil-trash"></i></a>'
+        return edit + del
+    }
+    return data
+}
+
+$( document).ready(function() {
+
+    table = $('#lista_tabla').DataTable({
+        ajax: {
+            url:'/finanzas/monedero',
+            dataSrc: '',
+        },
+        columns: [
+            {
+                data:'nombre',
+                type: "string"
+            },
+            {
+                data:'cantidad_inicial',
+                render: render_dinero,
+                type: "num"
+            },
+            {
+                data:'diferencia',
+                render: render_dinero,
+                type: "num"
+            },
+            {
+                data:'total',
+                render: render_dinero,
+                type: "num"
+            },
+            {
+                className: 'text-end',
+                data:'id',
+                render: render_actions,
+                type: "num",
+                orderSequence:[]
+            }
+        ],
+        order: [[0, 'asc']],
+        info: true,
+        paging: false,
+        searching: false,
+        scrollX: false,
+        language: {
+            info: 'Total _MAX_ monederos',
+            infoEmpty: 'No hay monederos',
+            loadingRecords: "Cargando...",
+            decimal:",",
+        }
+    });
+
+    table.on( 'draw', function () {
+        activar_tooltip();
+        $('.edit-element').on( "click", function() {
+            var data = table.row($(this).parents('tr')).data()
+                var id = data.id
+                var nombre = data.nombre
+                var cantidad_inicial = get_local_number(data.cantidad_inicial)
+
+                $("#editTypeNombreX").val(nombre)
+                $("#editTypeCantidadInicialX").val(cantidad_inicial)
+                $("#editTypeIdX").val(id)
+
+                $('#edit').modal('show')
+        });
+        $('.delete-element').on( "click", function() {
+           delete_monedero($(this).attr("data-element"))
+        });
+    });
+
+
+    $('#add-button').on( "click", function() {
+        $("#addTypeNombreX").val('')
+        $("#addTypeCantidadInicialX").val('')
+        $("#addTypeMessageX").text('')
+        $('#add').modal('show')
+    } );
+
+    $('#add-close-button').on( "click", function() {
+        $('#add').modal('hide')
+    } );
+
+    $('#add-submit-button').on( "click", function() {
+       add_monedero();
+    });
+
+    $('.edit-element').on( "click", function() {
+
+        var id = $(this).attr("data-element")
+        var nombre = $.trim($('#nombre-'+id).text())
+        var cantidad_inicial = $('#cantidad_inicial-'+id).text()
+
+        $("#editTypeNombreX").val(nombre)
+        $("#editTypeCantidadInicialX").val(cantidad_inicial)
+        $("#editTypeIdX").val(id)
+
+        $('#edit').modal('show')
+    });
+
+    $('#edit-close-button').on( "click", function() {
+        $('#edit').modal('hide')
+    } );
+
+    $('#edit-submit-button').on( "click", function() {
+       update_monedero()
+    });
+
+    $('.delete-element').on( "click", function() {
+       delete_monedero($(this).attr("data-element"))
+    });
+
+});

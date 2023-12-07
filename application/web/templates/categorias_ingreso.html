@@ -1,51 +1,5 @@
 {% extends 'lista.html'%}
 
-{% block lista %}
-{% for categoria_ingreso in lista %}
-<tr>
-    <td>
-        <div class="d-flex align-items-center">
-            <div id="descripcion-{{categoria_ingreso.id}}" class="flex-grow-1 ms-2">
-                {{categoria_ingreso.descripcion}}
-            </div>
-        </div>
-    </td>
-    <td>
-        {% if categoria_ingreso.id_cuenta_abono_defecto %}
-        <span id="cuenta-defecto-{{categoria_ingreso.id}}" class="badge badge-success-lighten">{{categoria_ingreso.nombre_cuenta_abono_defecto}}</span>
-        <input id="id-cuenta-defecto-{{categoria_ingreso.id}}" type="hidden"
-               value="{{categoria_ingreso.id_cuenta_abono_defecto}}"/>
-        {% else %}
-        <span id="cuenta-defecto-{{categoria_ingreso.id}}" class="badge badge-success-lighten">Todas</span>
-        <input id="id-cuenta-defecto-{{categoria_ingreso.id}}" type="hidden" value=""/>
-        {% endif %}
-    </td>
-    <td>
-        {% if categoria_ingreso.id_monedero_defecto %}
-        <span id="monedero-defecto-{{categoria_ingreso.id}}" class="badge badge-success-lighten">{{categoria_ingreso.nombre_monedero_defecto}}</span>
-        <input id="id-monedero-defecto-{{categoria_ingreso.id}}" type="hidden"
-               value="{{categoria_ingreso.id_monedero_defecto}}"/>
-        {% else %}
-        <span id="monedero-defecto-{{categoria_ingreso.id}}" class="badge badge-success-lighten">Ninguno</span>
-        <input id="id-monedero-defecto-{{categoria_ingreso.id}}" type="hidden" value=""/>
-        {% endif %}
-    </td>
-
-    <td class="text-end">
-        <a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip"
-           data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit"
-           data-element="{{categoria_ingreso.id}}"><i
-                class="uil uil-pen"></i></a>
-        <a class="delete-element font-18 text-danger" data-bs-toggle="tooltip"
-           data-bs-placement="top" aria-label="Delete" data-bs-original-title="Delete"
-           data-element="{{categoria_ingreso.id}}">
-            <i class="uil uil-trash"></i>
-        </a>
-    </td>
-</tr>
-{% endfor %}
-{% endblock%}
-
 {% block titulo_add %}
 Añadir Categoría Ingreso
 {% endblock %}
@@ -102,6 +56,6 @@ Editar Categoría Ingreso
 {% endblock %}
 
 
-{% block script %}
+{% block listaextendsscript %}
 <script type="text/javascript" src="assets/js/categoria-ingreso.js"></script>
 {% endblock%}

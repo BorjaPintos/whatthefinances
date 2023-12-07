@@ -1,50 +1,5 @@
 {% extends 'lista.html'%}
 
-{% block lista %}
-{% for monederos in lista %}
-<tr>
-    <td>
-        <div class="d-flex align-items-center">
-            <div id="nombre-{{monederos.id}}" class="flex-grow-1 ms-2">
-                {{monederos.nombre}}
-            </div>
-        </div>
-    </td>
-    <td>
-        {% if monederos.cantidad_inicial >=0 %}
-        <span id="cantidad_inicial-{{monederos.id}}" class="ms-2 text-success fw-semibold">{{monederos.cantidad_inicial | formato_decimal }}</span> <span class="ms-2 text-success">€</span>
-        {% else %}
-        <span id="cantidad_inicial-{{monederos.id}}" class="ms-2 text-danger fw-semibold">{{monederos.cantidad_inicial | formato_decimal}}</span> <span class="ms-2 text-danger">€</span>
-        {% endif %}
-    </td>
-    <td>
-        {% if monederos.diferencia >=0 %}
-        <span id="diferencia-{{monederos.id}}" class="ms-2 text-success fw-semibold">{{monederos.diferencia | formato_decimal}}</span> <span class="ms-2 text-success">€</span>
-        {% else %}
-        <span id="diferencia-{{monederos.id}}" class="ms-2 text-danger fw-semibold">{{monederos.diferencia | formato_decimal}}</span> <span class="ms-2 text-danger">€</span>
-        {% endif %}
-    </td>
-    <td>
-        {% if monederos.total >=0 %}
-        <span id="total-{{monederos.id}}" class="ms-2 text-success fw-semibold">{{monederos.total | formato_decimal}}</span><span class="ms-2 text-success">€</span>
-        {% else %}
-        <span id="total-{{monederos.id}}" class="ms-2 text-danger fw-semibold">{{monederos.total | formato_decimal}}</span><span class="ms-2 text-danger">€</span>
-        {% endif %}
-    </td>
-
-    <td class="text-end">
-        <a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip"
-           data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="{{monederos.id}}"><i
-                class="uil uil-pen"></i></a>
-        <a class="delete-element font-18 text-danger" data-bs-toggle="tooltip"
-           data-bs-placement="top" aria-label="Delete" data-bs-original-title="Delete" data-element="{{monederos.id}}">
-            <i class="uil uil-trash"></i>
-        </a>
-    </td>
-</tr>
-{% endfor %}
-{% endblock%}
-
 {% block titulo_add %}
 Añadir monederos
 {% endblock %}
@@ -77,6 +32,6 @@ Editar monederos
 {% endblock %}
 
 
-{% block script %}
+{% block listaextendsscript %}
 <script type="text/javascript" src="assets/js/monederos.js"></script>
 {% endblock%}

@@ -35,3 +35,6 @@ background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 
     border-color:#727cf5;
     -webkit-box-shadow: var(--ct-btn-box-shadow) #727cf5;
 }
+.lista_tabla{
+    width:100%;
+}

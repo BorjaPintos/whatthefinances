@@ -1,54 +1,5 @@
 {% extends 'lista.html'%}
 
-{% block lista %}
-{% for cuenta in lista %}
-<tr>
-    <td>
-        <div class="d-flex align-items-center">
-            <div id="nombre-{{cuenta.id}}" class="flex-grow-1 ms-2">
-                {{cuenta.nombre}}
-            </div>
-        </div>
-    </td>
-    <td>
-        <span id="ponderacion-{{cuenta.id}}" class="flex-grow-1 ms-2">{{cuenta.ponderacion | formato_decimal }}</span>
-    </td>
-    <td>
-        {% if cuenta.cantidad_inicial >=0 %}
-        <span id="cantidad_inicial-{{cuenta.id}}" class="ms-2 text-success fw-semibold">{{cuenta.cantidad_inicial | formato_decimal }}</span> <span class="ms-2 text-success">€</span>
-        {% else %}
-        <span id="cantidad_inicial-{{cuenta.id}}" class="ms-2 text-danger fw-semibold">{{cuenta.cantidad_inicial | formato_decimal}}</span> <span class="ms-2 text-danger">€</span>
-        {% endif %}
-    </td>
-    <td>
-        {% if cuenta.diferencia >=0 %}
-        <span id="diferencia-{{cuenta.id}}" class="ms-2 text-success fw-semibold">{{cuenta.diferencia | formato_decimal}}</span> <span class="ms-2 text-success">€</span>
-        {% else %}
-        <span id="diferencia-{{cuenta.id}}" class="ms-2 text-danger fw-semibold">{{cuenta.diferencia | formato_decimal}}</span> <span class="ms-2 text-danger">€</span>
-        {% endif %}
-    </td>
-    <td>
-        {% if cuenta.total >=0 %}
-        <span id="total-{{cuenta.id}}" class="ms-2 text-success fw-semibold">{{cuenta.total | formato_decimal}}</span> <span class="ms-2 text-success">€</span>
-        {% else %}
-        <span id="total-{{cuenta.id}}" class="ms-2 text-danger fw-semibold">{{cuenta.total | formato_decimal}}</span> <span class="ms-2 text-danger">€</span>
-        {% endif %}
-    </td>
-
-
-    <td class="text-end">
-        <a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip"
-           data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="{{cuenta.id}}"><i
-                class="uil uil-pen"></i></a>
-        <a class="delete-element font-18 text-danger" data-bs-toggle="tooltip"
-           data-bs-placement="top" aria-label="Delete" data-bs-original-title="Delete" data-element="{{cuenta.id}}">
-            <i class="uil uil-trash"></i>
-        </a>
-    </td>
-</tr>
-{% endfor %}
-{% endblock%}
-
 {% block titulo_add %}
 Añadir cuenta
 {% endblock %}
@@ -89,6 +40,6 @@ Editar cuenta
 {% endblock %}
 
 
-{% block script %}
+{% block listaextendsscript %}
 <script type="text/javascript" src="assets/js/cuentas.js"></script>
 {% endblock%}

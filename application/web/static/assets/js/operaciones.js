@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+$(document).ready(function() {
     $('#addFechaDataPicker').datepicker({
         format: 'dd/mm/yyyy',
         language: 'es-ES'
