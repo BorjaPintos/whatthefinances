@@ -1,0 +1,16 @@
+{% extends 'lista.html'%}
+
+{% block extend_lista %}
+<nav aria-label="Page navigation example" class="d-flex justify-content-center">
+    <ul class="pagination">
+
+        {% for pagina in paginas %}
+            {% if pagina.is_current_page %}
+                <li class="page-item active"><a class="page-link" href="./operaciones.html?offset={{pagina.offset_element}}&count={{pagina.page_size}}">{{pagina.page_n}}</a></li>
+            {% else %}
+                <li class="page-item "><a class="page-link" href="./operaciones.html?offset={{pagina.offset_element}}&count={{pagina.page_size}}">{{pagina.page_n}}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</nav>
+{% endblock %}

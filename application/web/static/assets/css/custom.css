@@ -8,3 +8,30 @@ background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 11
 /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
 }
+
+.ingreso{
+    background-color:#82E0AA;
+    --ct-table-hover-bg: #CCD1D1;
+}
+.transferencia{
+    background-color:#AED6F1;
+    --ct-table-hover-bg: #CCD1D1;
+}
+.gasto{
+    background-color:#F5B7B1;
+    --ct-table-hover-bg: #CCD1D1;
+}
+.custom-badge{
+    --ct-badge-color: #313a46;
+    font-size: 0.80em;
+}
+.btn-radios{
+    background-color:#ABB2B9;
+    border-color:#ABB2B9;
+    -webkit-box-shadow: var(--ct-btn-box-shadow) #ABB2B9;
+}
+.btn-radios:checked+.btn{
+    background-color:#727cf5;
+    border-color:#727cf5;
+    -webkit-box-shadow: var(--ct-btn-box-shadow) #727cf5;
+}

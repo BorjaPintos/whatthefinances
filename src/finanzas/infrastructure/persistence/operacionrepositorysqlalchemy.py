@@ -45,6 +45,10 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
                   isouter=True) \
             .join(CuentaAbono, OperacionEntity.id_cuenta_abono == CuentaAbono.id, isouter=True) \
             .join(MonederoAbono, OperacionEntity.id_monedero_abono == MonederoAbono.id, isouter=True)
+        return query
+
+    def __get_complete_pagination_join_query(self, criteria: Criteria) -> Query:
+        query = self.__get_complete_join_query(criteria)
         return query.offset(criteria.offset()).limit(criteria.limit() + 1)
 
     @staticmethod
@@ -68,20 +72,20 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
                   }
         return Operacion(params)
 
-    def list(self, criteria: Criteria) -> Tuple[List[Operacion], Union[bool, Any]]:
+    def list(self, criteria: Criteria) -> Tuple[List[Operacion], int]:
         elements = []
         try:
-            query = self.__get_complete_join_query(criteria)
-            result = query.all()
+            query_elements = self.__get_complete_pagination_join_query(criteria)
+            result = query_elements.all()
             n_elements = min(len(result), criteria.limit())
             if result is not None:
                 for i in range(n_elements):
                     elements.append(self.__get_operation_from_complete_join_row(result[i]))
-            return elements, len(result) > criteria.limit()
+            return elements, self.__get_complete_join_query(criteria).count()
         except Exception as e:
             traceback.print_exc()
 
-        return elements, False
+        return elements, 0
 
     def get(self, id_operacion: int) -> Operacion:
         try:
