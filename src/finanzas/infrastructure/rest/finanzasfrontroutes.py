@@ -1,6 +1,7 @@
 import locale
 
 from src.shared.infraestructure.rest.pagefront import PageFront
+from src.shared.infraestructure.rest.response import serialize_response
 from src.shared.utils.frontutils import calculate_pages_front
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
@@ -34,7 +35,6 @@ def import_routes(rootpath, app):
         return render_template('/cuentas.html', username=user.get_name(),
                                title="Cuentas",
                                lista_headers=lista_headers)
-
 
     @app.route(rootpath + "monederos.html", methods=['GET'])
     @login_required
@@ -79,29 +79,34 @@ def import_routes(rootpath, app):
         lista_categorias_ingreso, code = finanzascontroller.list_categorias_ingreso(request)
         lista_cuentas, code = finanzascontroller.list_cuentas(request)
         lista_monederos, code = finanzascontroller.list_monederos(request)
-        lista_paginada_operaciones, code = finanzascontroller.list_operaciones(request)
         lista_headers = ["Fecha", "Cantidad", "Descripcion",
                          "Categoría Gasto", "Categoría Ingreso",
                          "Cuenta Cargo", "Cuenta Abono",
                          "Monedero Cargo", "Monedero abono"]
 
-        offset = lista_paginada_operaciones.get_offset()
-        pagination_size = lista_paginada_operaciones.get_pagination_size()
-        total_elements = lista_paginada_operaciones.total_elements
-
-
-        paginas = calculate_pages_front(offset, pagination_size, total_elements, 20)
-
         return render_template('/operaciones.html', username=user.get_name(),
                                title="Operaciones",
                                lista_headers=lista_headers,
-                               lista=lista_paginada_operaciones.get_elements(),
                                lista_categorias_gasto=lista_categorias_gasto,
                                lista_categorias_ingreso=lista_categorias_ingreso,
                                lista_cuentas=lista_cuentas,
                                lista_monederos=lista_monederos,
-                               paginas=paginas
                                )
+
+    @app.route(rootpath + "/finanzas/front-operacion", methods=['GET'])
+    @login_required
+    @serialize_response
+    def list_front_operaciones():
+        operaciones_paginadas, code = finanzascontroller.list_operaciones(request)
+        for element in operaciones_paginadas.get_elements():
+            if element.get("id_categoria_ingreso") is not None and element.get("id_categoria_gasto") is not None:
+                element["DT_RowClass"] = "transferencia"
+            elif element.get("id_categoria_ingreso") is not None:
+                element["DT_RowClass"] = "ingreso"
+            else:
+                element["DT_RowClass"] = "gasto"
+
+        return operaciones_paginadas, code
 
     @app.route(rootpath + "operaciones2.html", methods=['GET'])
     @login_required
@@ -121,10 +126,9 @@ def import_routes(rootpath, app):
         pagination_size = lista_paginada_operaciones.get_pagination_size()
         total_elements = lista_paginada_operaciones.total_elements
 
-
         paginas = calculate_pages_front(offset, pagination_size, total_elements, 20)
 
-        return render_template('/operaciones.html', username=user.get_name(),
+        return render_template('/operaciones2.html', username=user.get_name(),
                                title="Operaciones",
                                lista_headers=lista_headers,
                                lista=lista_paginada_operaciones.get_elements(),
@@ -134,4 +138,3 @@ def import_routes(rootpath, app):
                                lista_monederos=lista_monederos,
                                paginas=paginas
                                )
-

@@ -1,224 +1,3 @@
-$(document).ready(function() {
-    $('#addFechaDataPicker').datepicker({
-        format: 'dd/mm/yyyy',
-        language: 'es-ES'
-    });
-    $('#editFechaDataPicker').datepicker({
-        format: 'dd/mm/yyyy',
-        language: 'es-ES'
-    });
-});
-
-
-$('#add-button').on( "click", function() {
-    $("#addTypeNombreX").val('')
-    $("#addTypeCantidadInicialX").val('')
-    $("#addTypePonderacionX").val('')
-    $("#addTypeMessageX").text('')
-    $('#addFechaDataPicker').datepicker('update',  new Date());
-    $('#add').modal('show')
-} );
-
-$('#add-close-button').on( "click", function() {
-    $('#add').modal('hide')
-});
-
-$('#add-submit-button').on( "click", function() {
-   add_operacion();
-});
-
-$('.edit-element').on( "click", function() {
-
-    var id = $(this).attr("data-element")
-
-    var fecha = $.trim($('#fecha-'+id).text())
-    var descripcion = $.trim($('#descripcion-'+id).text());
-    var cantidad = $.trim($('#cantidad-'+id).text());
-    var id_cuenta_cargo= $.trim($('#id_cuenta_cargo-'+id).val());
-    var id_monedero_cargo= $.trim($('#id_monedero_cargo-'+id).val());
-    var id_categoria_gasto= $.trim($('#id_categoria_gasto-'+id).val());
-    var id_cuenta_abono= $.trim($('#id_cuenta_abono-'+id).val());
-    var id_monedero_abono= $.trim($('#id_monedero_abono-'+id).val());
-    var id_categoria_ingreso= $.trim($('#id_categoria_ingreso-'+id).val());
-
-    $("#editTypeIdX").val(id)
-    $('#editFechaDataPicker').datepicker('update',  fecha);
-    $("#editTypeDescripcionX").val(descripcion)
-    $("#editTypeCantidadX").val(cantidad)
-
-
-   var div_gasto = $("#edit-div-gasto")
-   var div_ingreso = $("#edit-div-ingreso")
-   var div_transferencia = $("#edit-div-transferencia")
-   var radio_transferencia = $("#edit-tipo-transferencia")
-   var radio_gasto = $("#edit-tipo-gasto")
-   var radio_ingreso = $("#edit-tipo-ingreso")
-
-   div_gasto.collapse('hide');
-   div_ingreso.collapse('hide');
-   div_transferencia.collapse('hide');
-   radio_transferencia.prop("checked", false)
-   radio_gasto.prop("checked", false)
-   radio_ingreso.prop("checked", false)
-
-
-   if ((id_categoria_gasto) && (id_categoria_ingreso)){
-        $("#edit-transferencia-categoria-ingreso-select").val(id_categoria_ingreso).change();
-        $("#edit-transferencia-cuenta-abono-select").val(id_cuenta_abono).change();
-        $("#edit-transferencia-monedero-abono-select").val(id_monedero_abono).change();
-        $("#edit-transferencia-categoria-gasto-select").val(id_categoria_gasto).change();
-        $("#edit-transferencia-cuenta-cargo-select").val(id_cuenta_cargo).change();
-        $("#edit-transferencia-monedero-cargo-select").val(id_monedero_cargo).change();
-        radio_transferencia.prop("checked", true)
-        div_transferencia.collapse('show');
-
-   } else if (id_categoria_gasto){
-        $("#edit-gasto-categoria-gasto-select").val(id_categoria_gasto).change();
-        $("#edit-gasto-cuenta-cargo-select").val(id_cuenta_cargo).change();
-        $("#edit-gasto-monedero-cargo-select").val(id_monedero_cargo).change();
-        radio_gasto.prop("checked", true)
-        div_gasto.collapse('show');
-
-   } else if(id_categoria_ingreso){
-        $("#edit-ingreso-categoria-ingreso-select").val(id_categoria_ingreso).change();
-        $("#edit-ingreso-cuenta-abono-select").val(id_cuenta_abono).change();
-        $("#edit-ingreso-monedero-abono-select").val(id_monedero_abono).change();
-        radio_ingreso.prop("checked", true)
-        div_ingreso.collapse('show');
-
-   }
-
-   $('#edit').modal('show')
-});
-
-$('#edit-close-button').on( "click", function() {
-    $('#edit').modal('hide')
-} );
-
-$('#edit-submit-button').on( "click", function() {
-   update_operacion()
-});
-
-$('.delete-element').on( "click", function() {
-   delete_operacion($(this).attr("data-element"))
-});
-
-$('#add-ingreso-categoria-ingreso-select').on("change", function() {
-   var option = $('#add-ingreso-categoria-ingreso-select option:selected')
-   var id_cuenta = option.attr("data-id-cuenta-defecto")
-   var id_monedero = option.attr("data-id-monedero-defecto")
-
-   $("#add-ingreso-cuenta-abono-select").val(id_cuenta).change();
-   $("#add-ingreso-monedero-abono-select").val(id_monedero).change();
-});
-
-$('#add-gasto-categoria-gasto-select').on("change", function() {
-   var option = $('#add-gasto-categoria-gasto-select option:selected')
-   var id_cuenta = option.attr("data-id-cuenta-defecto")
-
-   var id_monedero = option.attr("data-id-monedero-defecto")
-   $("#add-gasto-cuenta-cargo-select").val(id_cuenta).change();
-   $("#add-gasto-monedero-cargo-select").val(id_monedero).change();
-});
-
-$('#add-transferencia-categoria-ingreso-select').on("change", function() {
-   var option = $('#add-transferencia-categoria-ingreso-select option:selected')
-   var id_cuenta = option.attr("data-id-cuenta-defecto")
-   var id_monedero = option.attr("data-id-monedero-defecto")
-
-   $("#add-transferencia-cuenta-abono-select").val(id_cuenta).change();
-   $("#add-transferencia-monedero-abono-select").val(id_monedero).change();
-});
-
-$('#add-transferencia-categoria-gasto-select').on("change", function() {
-   var option = $('#add-transferencia-categoria-gasto-select option:selected')
-   var id_cuenta = option.attr("data-id-cuenta-defecto")
-
-   id_monedero = option.attr("data-id-monedero-defecto")
-   $("#add-transferencia-cuenta-cargo-select").val(id_cuenta).change();
-   $("#add-transferencia-monedero-cargo-select").val(id_monedero).change();
-});
-
-$('#edit-ingreso-categoria-ingreso-select').on("change", function() {
-   var option = $('#edit-ingreso-categoria-ingreso-select option:selected')
-   var id_cuenta = option.attr("data-id-cuenta-defecto")
-   var id_monedero = option.attr("data-id-monedero-defecto")
-
-   $("#edit-ingreso-cuenta-abono-select").val(id_cuenta).change();
-   $("#edit-ingreso-monedero-abono-select").val(id_monedero).change();
-});
-
-$('#edit-gasto-categoria-gasto-select').on("change", function() {
-   var option = $('#edit-gasto-categoria-gasto-select option:selected')
-   var id_cuenta = option.attr("data-id-cuenta-defecto")
-
-   var id_monedero = option.attr("data-id-monedero-defecto")
-   $("#edit-gasto-cuenta-cargo-select").val(id_cuenta).change();
-   $("#edit-gasto-monedero-cargo-select").val(id_monedero).change();
-});
-
-$('#edit-transferencia-categoria-ingreso-select').on("change", function() {
-   var option = $('#edit-transferencia-categoria-ingreso-select option:selected')
-   var id_cuenta = option.attr("data-id-cuenta-defecto")
-   var id_monedero = option.attr("data-id-monedero-defecto")
-
-   $("#edit-transferencia-cuenta-abono-select").val(id_cuenta).change();
-   $("#edit-transferencia-monedero-abono-select").val(id_monedero).change();
-});
-
-$('#edit-transferencia-categoria-gasto-select').on("change", function() {
-   var option = $('#edit-transferencia-categoria-gasto-select option:selected')
-   var id_cuenta = option.attr("data-id-cuenta-defecto")
-
-   id_monedero = option.attr("data-id-monedero-defecto")
-   $("#edit-transferencia-cuenta-cargo-select").val(id_cuenta).change();
-   $("#edit-transferencia-monedero-cargo-select").val(id_monedero).change();
-});
-
-$('#add-seleccion_tipo input:radio[name=add_tipo]').on('change', function() {
-   var tipo_opcion = $('#add-seleccion_tipo input:radio[name=add_tipo]:checked').attr('id')
-   var div_gasto = $("#add-div-gasto")
-   var div_ingreso = $("#add-div-ingreso")
-   var div_transferencia = $("#add-div-transferencia")
-   if (tipo_opcion == "add-tipo-gasto"){
-        div_gasto.collapse('show');
-        div_ingreso.collapse('hide');
-        div_transferencia.collapse('hide');
-   }
-   else if (tipo_opcion == "add-tipo-ingreso"){
-        div_gasto.collapse('hide');
-        div_ingreso.collapse('show');
-        div_transferencia.collapse('hide');
-   }
-   else if (tipo_opcion == "add-tipo-transferencia"){
-        div_gasto.collapse('hide');
-        div_ingreso.collapse('hide');
-        div_transferencia.collapse('show');
-   }
-});
-
-$('#edit-seleccion_tipo input:radio[name=edit_tipo]').on('change', function() {
-   var tipo_opcion = $('#edit-seleccion_tipo input:radio[name=edit_tipo]:checked').attr('id')
-   var div_gasto = $("#edit-div-gasto")
-   var div_ingreso=$("#edit-div-ingreso")
-   var div_transferencia=$("#edit-div-transferencia")
-   if (tipo_opcion == "edit-tipo-gasto"){
-        div_gasto.collapse('show');
-        div_ingreso.collapse('hide');
-        div_transferencia.collapse('hide');
-   }
-   else if (tipo_opcion == "edit-tipo-ingreso"){
-        div_gasto.collapse('hide');
-        div_ingreso.collapse('show');
-        div_transferencia.collapse('hide');
-   }
-   else if (tipo_opcion == "edit-tipo-transferencia"){
-        div_gasto.collapse('hide');
-        div_ingreso.collapse('hide');
-        div_transferencia.collapse('show');
-   }
-});
-
 function add_operacion() {
     var fecha = $("#addFechaDataPicker").val()
     var descripcion = $("#addTypeDescripcionX").val();
@@ -270,7 +49,8 @@ function add_operacion() {
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4)
             if (xhttp.status === 201) {
-                window.location = '/operaciones.html';
+                $('#add').modal('hide')
+                table.ajax.reload( null, false );
             } else if (xhttp.status != 201){
                 var respuesta = JSON.parse(xhttp.responseText).message;
                 $("#addTypeMessageX").text(respuesta)
@@ -289,7 +69,7 @@ function delete_operacion(id) {
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4)
             if (xhttp.status === 200) {
-                window.location = '/operaciones.html';
+                table.ajax.reload( null, false );
             } else if (xhttp.status != 200){
                 try {
                     var respuesta = JSON.parse(xhttp.responseText).message;
@@ -355,7 +135,8 @@ function update_operacion() {
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4)
             if (xhttp.status === 200) {
-                window.location = '/operaciones.html';
+                $('#edit').modal('hide')
+                table.ajax.reload( null, false );
             } else if (xhttp.status != 201){
                 var respuesta = JSON.parse(xhttp.responseText).message;
                 $("#editTypeMessageX").text(respuesta)
@@ -363,3 +144,385 @@ function update_operacion() {
     };
     xhttp.send(JSON.stringify(data));
 }
+
+get_local_number = function(num){
+    return $.fn.dataTable.render.number('', ',', 2).display(num);
+}
+
+render_dinero = function (data, type) {
+    var number = get_local_number(data);
+    if (type === 'display') {
+        return '<span class="badge custom-badge flex-grow-1 ms-2">'+number+'</span><span class="badge custom-badge flex-grow-1 ms-2">€</span>'
+    }
+    return data
+}
+
+render_actions = function (data, type) {
+    if (type === 'display') {
+        edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
+        del = '<a class="delete-element font-18 text-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete" data-bs-original-title="Borrar" data-element="'+data+'"><i class="uil uil-trash"></i></a>'
+        return edit + del
+    }
+    return data
+}
+
+render_nombre_cuenta_abono = function (data, type, row) {
+    var new_data = data
+    if (data == undefined)
+        if ((row.id_categoria_ingreso != undefined) &&  (row.id_categoria_gasto==undefined))
+            new_data = "Todas"
+        else
+            new_data = "-"
+    if (type === 'display'){
+        return '<span class="badge custom-badge">'+new_data+'</span>'
+    }
+    return new_data
+}
+
+render_nombre_cuenta_cargo = function (data, type, row) {
+    var new_data = data
+    if (data == undefined)
+        if ((row.id_categoria_gasto != undefined) &&  (row.id_categoria_ingreso==undefined))
+            new_data = "Todas"
+        else
+            new_data = "-"
+    if (type === 'display'){
+        return '<span class="badge custom-badge">'+new_data+'</span>'
+    }
+    return new_data
+}
+
+render_nombre = function (data, type) {
+    var new_data = data
+    if (data == undefined)
+        new_data = "-"
+    if (type === 'display'){
+        return '<span class="badge custom-badge">'+new_data+'</span>'
+    }
+    return new_data
+}
+
+render_texto = function(data, type){
+
+    if (type == 'display'){
+        return '<div class="badge custom-badge flex-grow-1 ms-2">'+data+'</div>'
+
+    }
+    return data
+}
+
+$(document).ready(function() {
+    $('#addFechaDataPicker').datepicker({
+        format: 'dd/mm/yyyy',
+        language: 'es-ES'
+    });
+    $('#editFechaDataPicker').datepicker({
+        format: 'dd/mm/yyyy',
+        language: 'es-ES'
+    });
+
+        table = $('#lista_tabla').DataTable({
+        ajax: {
+            url:'/finanzas/front-operacion?',
+            data: function (d) {
+                d.count=3
+            },
+            serverSide:true,
+            dataSrc: 'elements',
+            dataFilter: function(data){
+                var json = jQuery.parseJSON(data);
+                json.recordsTotal = json.total_elements;
+                json.recordsFiltered = json.total_elements;
+                json.draw = json.pagination_size;
+                json.data = json.elements;
+
+                return JSON.stringify( json ); // return JSON string
+            }
+        },
+        columns: [
+            {
+                data:'fecha',
+                type: "string",
+                render: render_texto
+            },
+            {
+                data:'cantidad',
+                type: "num",
+                render: render_dinero,
+            },
+            {
+                data:'descripcion',
+                type: "string",
+                render: render_texto
+            },
+            {
+                data:'descripcion_categoria_gasto',
+                render: render_nombre,
+                type: "string"
+            },
+            {
+                data:'descripcion_categoria_ingreso',
+                render: render_nombre,
+                type: "string"
+            },
+            {
+                data:'nombre_cuenta_cargo',
+                render: render_nombre_cuenta_cargo,
+                type: "string"
+            },
+            {
+                data:'nombre_cuenta_abono',
+                render: render_nombre_cuenta_abono,
+                type: "string"
+            },
+            {
+                data:'nombre_monedero_cargo',
+                render: render_nombre,
+                type: "string"
+            },
+            {
+                data:'nombre_monedero_abono',
+                render: render_nombre,
+                type: "string"
+            },
+            {
+                className: 'text-end',
+                data:'id',
+                render: render_actions,
+                type: "num",
+                orderSequence:[]
+            }
+        ],
+        order: [[0, 'desc']],
+        info: true,
+        lengthChange: false,
+        paging: true,
+        pageLength: 5,
+        searching: false,
+        scrollX: false,
+        language: {
+            info: 'Total _MAX_ Operaciones',
+            infoEmpty: 'No hay Operaciones',
+            loadingRecords: "Cargando...",
+            decimal:",",
+        }
+    });
+
+
+    table.on('draw', function () {
+        console.log("redibujando")
+        activar_tooltip();
+        $('.edit-element').on( "click", function() {
+
+            var operacion = table.row($(this).parents('tr')).data()
+            var id = operacion.id
+            var fecha = operacion.fecha
+            var descripcion = operacion.descripcion;
+            var cantidad = get_local_number(operacion.cantidad)
+
+            var id_cuenta_cargo=operacion.id_cuenta_cargo
+            var id_monedero_cargo= operacion.id_monedero_cargo
+            var id_categoria_gasto=operacion.id_categoria_gasto
+            var id_cuenta_abono= operacion.id_cuenta_abono
+            var id_monedero_abono=operacion.id_monedero_abono
+            var id_categoria_ingreso= operacion.id_categoria_ingreso
+
+
+            $("#editTypeIdX").val(id)
+            $('#editFechaDataPicker').datepicker('update',  fecha);
+            $("#editTypeDescripcionX").val(descripcion)
+            $("#editTypeCantidadX").val(cantidad)
+
+
+           var div_gasto = $("#edit-div-gasto")
+           var div_ingreso = $("#edit-div-ingreso")
+           var div_transferencia = $("#edit-div-transferencia")
+           var radio_transferencia = $("#edit-tipo-transferencia")
+           var radio_gasto = $("#edit-tipo-gasto")
+           var radio_ingreso = $("#edit-tipo-ingreso")
+
+           div_gasto.collapse('hide');
+           div_ingreso.collapse('hide');
+           div_transferencia.collapse('hide');
+           radio_transferencia.prop("checked", false)
+           radio_gasto.prop("checked", false)
+           radio_ingreso.prop("checked", false)
+
+
+           if ((id_categoria_gasto) && (id_categoria_ingreso)){
+                $("#edit-transferencia-categoria-ingreso-select").val(id_categoria_ingreso).change();
+                $("#edit-transferencia-cuenta-abono-select").val(id_cuenta_abono).change();
+                $("#edit-transferencia-monedero-abono-select").val(id_monedero_abono).change();
+                $("#edit-transferencia-categoria-gasto-select").val(id_categoria_gasto).change();
+                $("#edit-transferencia-cuenta-cargo-select").val(id_cuenta_cargo).change();
+                $("#edit-transferencia-monedero-cargo-select").val(id_monedero_cargo).change();
+                radio_transferencia.prop("checked", true)
+                div_transferencia.collapse('show');
+
+           } else if (id_categoria_gasto){
+                $("#edit-gasto-categoria-gasto-select").val(id_categoria_gasto).change();
+                $("#edit-gasto-cuenta-cargo-select").val(id_cuenta_cargo).change();
+                $("#edit-gasto-monedero-cargo-select").val(id_monedero_cargo).change();
+                radio_gasto.prop("checked", true)
+                div_gasto.collapse('show');
+
+           } else if(id_categoria_ingreso){
+                $("#edit-ingreso-categoria-ingreso-select").val(id_categoria_ingreso).change();
+                $("#edit-ingreso-cuenta-abono-select").val(id_cuenta_abono).change();
+                $("#edit-ingreso-monedero-abono-select").val(id_monedero_abono).change();
+                radio_ingreso.prop("checked", true)
+                div_ingreso.collapse('show');
+
+           }
+
+           $('#edit').modal('show')
+        });
+        $('.delete-element').on( "click", function() {
+           delete_operacion($(this).attr("data-element"))
+        });
+    });
+
+
+    $('#add-button').on( "click", function() {
+        $("#addTypeNombreX").val('')
+        $("#addTypeCantidadInicialX").val('')
+        $("#addTypePonderacionX").val('')
+        $("#addTypeMessageX").text('')
+        $('#addFechaDataPicker').datepicker('update',  new Date());
+        $('#add').modal('show')
+    } );
+
+    $('#add-close-button').on( "click", function() {
+        $('#add').modal('hide')
+    });
+
+    $('#add-submit-button').on( "click", function() {
+       add_operacion();
+    });
+
+    $('#edit-close-button').on( "click", function() {
+        $('#edit').modal('hide')
+    } );
+
+    $('#edit-submit-button').on( "click", function() {
+       update_operacion()
+    });
+
+
+    $('#add-ingreso-categoria-ingreso-select').on("change", function() {
+       var option = $('#add-ingreso-categoria-ingreso-select option:selected')
+       var id_cuenta = option.attr("data-id-cuenta-defecto")
+       var id_monedero = option.attr("data-id-monedero-defecto")
+
+       $("#add-ingreso-cuenta-abono-select").val(id_cuenta).change();
+       $("#add-ingreso-monedero-abono-select").val(id_monedero).change();
+    });
+
+    $('#add-gasto-categoria-gasto-select').on("change", function() {
+       var option = $('#add-gasto-categoria-gasto-select option:selected')
+       var id_cuenta = option.attr("data-id-cuenta-defecto")
+
+       var id_monedero = option.attr("data-id-monedero-defecto")
+       $("#add-gasto-cuenta-cargo-select").val(id_cuenta).change();
+       $("#add-gasto-monedero-cargo-select").val(id_monedero).change();
+    });
+
+    $('#add-transferencia-categoria-ingreso-select').on("change", function() {
+       var option = $('#add-transferencia-categoria-ingreso-select option:selected')
+       var id_cuenta = option.attr("data-id-cuenta-defecto")
+       var id_monedero = option.attr("data-id-monedero-defecto")
+
+       $("#add-transferencia-cuenta-abono-select").val(id_cuenta).change();
+       $("#add-transferencia-monedero-abono-select").val(id_monedero).change();
+    });
+
+    $('#add-transferencia-categoria-gasto-select').on("change", function() {
+       var option = $('#add-transferencia-categoria-gasto-select option:selected')
+       var id_cuenta = option.attr("data-id-cuenta-defecto")
+
+       id_monedero = option.attr("data-id-monedero-defecto")
+       $("#add-transferencia-cuenta-cargo-select").val(id_cuenta).change();
+       $("#add-transferencia-monedero-cargo-select").val(id_monedero).change();
+    });
+
+    $('#edit-ingreso-categoria-ingreso-select').on("change", function() {
+       var option = $('#edit-ingreso-categoria-ingreso-select option:selected')
+       var id_cuenta = option.attr("data-id-cuenta-defecto")
+       var id_monedero = option.attr("data-id-monedero-defecto")
+
+       $("#edit-ingreso-cuenta-abono-select").val(id_cuenta).change();
+       $("#edit-ingreso-monedero-abono-select").val(id_monedero).change();
+    });
+
+    $('#edit-gasto-categoria-gasto-select').on("change", function() {
+       var option = $('#edit-gasto-categoria-gasto-select option:selected')
+       var id_cuenta = option.attr("data-id-cuenta-defecto")
+
+       var id_monedero = option.attr("data-id-monedero-defecto")
+       $("#edit-gasto-cuenta-cargo-select").val(id_cuenta).change();
+       $("#edit-gasto-monedero-cargo-select").val(id_monedero).change();
+    });
+
+    $('#edit-transferencia-categoria-ingreso-select').on("change", function() {
+       var option = $('#edit-transferencia-categoria-ingreso-select option:selected')
+       var id_cuenta = option.attr("data-id-cuenta-defecto")
+       var id_monedero = option.attr("data-id-monedero-defecto")
+
+       $("#edit-transferencia-cuenta-abono-select").val(id_cuenta).change();
+       $("#edit-transferencia-monedero-abono-select").val(id_monedero).change();
+    });
+
+    $('#edit-transferencia-categoria-gasto-select').on("change", function() {
+       var option = $('#edit-transferencia-categoria-gasto-select option:selected')
+       var id_cuenta = option.attr("data-id-cuenta-defecto")
+
+       id_monedero = option.attr("data-id-monedero-defecto")
+       $("#edit-transferencia-cuenta-cargo-select").val(id_cuenta).change();
+       $("#edit-transferencia-monedero-cargo-select").val(id_monedero).change();
+    });
+
+    $('#add-seleccion_tipo input:radio[name=add_tipo]').on('change', function() {
+       var tipo_opcion = $('#add-seleccion_tipo input:radio[name=add_tipo]:checked').attr('id')
+       var div_gasto = $("#add-div-gasto")
+       var div_ingreso = $("#add-div-ingreso")
+       var div_transferencia = $("#add-div-transferencia")
+       if (tipo_opcion == "add-tipo-gasto"){
+            div_gasto.collapse('show');
+            div_ingreso.collapse('hide');
+            div_transferencia.collapse('hide');
+       }
+       else if (tipo_opcion == "add-tipo-ingreso"){
+            div_gasto.collapse('hide');
+            div_ingreso.collapse('show');
+            div_transferencia.collapse('hide');
+       }
+       else if (tipo_opcion == "add-tipo-transferencia"){
+            div_gasto.collapse('hide');
+            div_ingreso.collapse('hide');
+            div_transferencia.collapse('show');
+       }
+    });
+
+    $('#edit-seleccion_tipo input:radio[name=edit_tipo]').on('change', function() {
+       var tipo_opcion = $('#edit-seleccion_tipo input:radio[name=edit_tipo]:checked').attr('id')
+       var div_gasto = $("#edit-div-gasto")
+       var div_ingreso=$("#edit-div-ingreso")
+       var div_transferencia=$("#edit-div-transferencia")
+       if (tipo_opcion == "edit-tipo-gasto"){
+            div_gasto.collapse('show');
+            div_ingreso.collapse('hide');
+            div_transferencia.collapse('hide');
+       }
+       else if (tipo_opcion == "edit-tipo-ingreso"){
+            div_gasto.collapse('hide');
+            div_ingreso.collapse('show');
+            div_transferencia.collapse('hide');
+       }
+       else if (tipo_opcion == "edit-tipo-transferencia"){
+            div_gasto.collapse('hide');
+            div_ingreso.collapse('hide');
+            div_transferencia.collapse('show');
+       }
+    });
+});
+
