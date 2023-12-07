@@ -374,11 +374,11 @@ def list_operaciones(request: Request) -> Tuple[Pagination, int]:
         "id_categoria_ingreso": request.args.get('id_categoria_ingreso', None),
     }
     __cast_params(params)
-    elements, more_elements = list_operaciones_use_case.execute(params)
-    response = []
+    elements, total_elements = list_operaciones_use_case.execute(params)
+    response_elements = []
     for element in elements:
-        response.append(element.get_dto())
-    return Pagination(response, more_elements, params["offset"]), code
+        response_elements.append(element.get_dto())
+    return Pagination(response_elements, params["offset"], params["count"], total_elements), code
 
 
 def get_operacion(request: Request, id_operacion: int) -> Tuple[Any, int]:
@@ -461,9 +461,12 @@ def __cast_params(params: dict):
         params["id"] = apply_locale_int(params["id"])
     if params.get("count") is not None:
         params["count"] = apply_locale_int(params["count"])
+        if params["count"] <= 0:
+            params["count"] = 1
     if params.get("offset") is not None:
         params["offset"] = apply_locale_int(params["offset"])
-
+        if params["offset"] < 0:
+            params["offset"] = 0
     if params.get("id_monedero_defecto") is not None:
         params["id_monedero_defecto"] = apply_locale_int(params["id_monedero_defecto"])
     if params.get("id_cuenta_abono_defecto") is not None:
@@ -486,14 +489,18 @@ def __cast_params(params: dict):
     if params.get("id_categoria_ingreso") is not None:
         params["id_categoria_ingreso"] = apply_locale_int(params["id_categoria_ingreso"])
 
+    if params.get("cantidad_inicial") is not None:
+        params["cantidad_inicial"] = apply_locale_float(params["cantidad_inicial"])
+
+    if params.get("cantidad") is not None:
+        params["cantidad"] = apply_locale_float(params["cantidad"])
     if params.get("begin_cantidad") is not None:
         params["begin_cantidad"] = apply_locale_float(params["begin_cantidad"])
     if params.get("end_cantidad") is not None:
         params["end_cantidad"] = apply_locale_float(params["end_cantidad"])
+
     if params.get("ponderacion") is not None:
         params["ponderacion"] = apply_locale_float(params["ponderacion"])
-    if params.get("cantidad_inicial") is not None:
-        params["cantidad_inicial"] = apply_locale_float(params["cantidad_inicial"])
 
     if params.get("fecha") is not None:
         params["fecha"] = apply_locale_date(params["fecha"])

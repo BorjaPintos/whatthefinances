@@ -28,7 +28,7 @@ class Operacion:
         return self._fecha
 
     def set_fecha(self, fecha: date):
-        self._fecha: fecha
+        self._fecha= fecha
 
     def get_cantidad(self) -> float:
         return self._cantidad

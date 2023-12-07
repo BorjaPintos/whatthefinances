@@ -8,7 +8,7 @@ from src.persistence.domain.criteria import Criteria
 class OperacionRepository(ABC):
 
     @abstractmethod
-    def list(self, criteria: Criteria) -> Tuple[List[Operacion], Union[bool, Any]]:
+    def list(self, criteria: Criteria) -> Tuple[List[Operacion], int]:
         pass
 
     @abstractmethod

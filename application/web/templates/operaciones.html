@@ -1,26 +1,29 @@
-{% extends 'lista.html'%}
+{% extends 'paginacion.html'%}
 
 {% block lista %}
 {% for operacion in lista %}
-<tr>
+
+{% if operacion.id_categoria_gasto and operacion.id_categoria_ingreso %}
+<tr class="transferencia">
+    {% else %}
+    {% if operacion.id_categoria_gasto %}
+<tr class="gasto">
+    {% else %}
+<tr class="ingreso">
+    {% endif %}
+    {% endif %}
     <td>
         <div class="d-flex align-items-center">
-            <div class="ms-2">
-                <i id="fecha-{{operacion.id}}">{{operacion.fecha}}</i>
-            </div>
+            <span id="fecha-{{operacion.id}}" class="badge custom-badge">{{operacion.fecha}}</span>
         </div>
     </td>
     <td>
-        {% if operacion.cantidad >=0 %}
-        <span id="cantidad-{{operacion.id}}" class="ms-2 text-success fw-semibold">{{operacion.cantidad | formato_decimal}}</span>
-        <span class="ms-2 text-success">€</span>
-        {% else %}
-        <span id="cantidad-{{operacion.id}}" class="ms-2 text-danger fw-semibold">{{operacion.cantidad | formato_decimal}}</span>
-        <span class="ms-2 text-danger">€</span>
-        {% endif %}
+        <span id="cantidad-{{operacion.id}}"
+              class="badge custom-badge">{{operacion.cantidad | formato_decimal}}</span>
+        <span class="badge custom-badge">€</span>
     </td>
     <td>
-        <div class="d-flex align-items-center">
+        <div class="badge custom-badge">
             <div id="descripcion-{{operacion.id}}" class="flex-grow-1 ms-2">
                 {{operacion.descripcion}}
             </div>
@@ -28,62 +31,74 @@
     </td>
     <td>
         {% if operacion.id_categoria_gasto %}
-
-        <span id="descripcion_categoria_gasto-{{operacion.id}}" class="badge badge-danger-lighten">{{operacion.descripcion_categoria_gasto}}</span>
+        <span id="descripcion_categoria_gasto-{{operacion.id}}" class="badge custom-badge">{{operacion.descripcion_categoria_gasto}}</span>
         <input id="id_categoria_gasto-{{operacion.id}}" type="hidden" value="{{operacion.id_categoria_gasto}}"/>
-
         {% else %}
-        <span id="descripcion_categoria_gasto-{{operacion.id}}" class="badge badge-lighten">-</span>
+        <span id="descripcion_categoria_gasto-{{operacion.id}}" class="badge custom-badge">-</span>
         <input id="id_categoria_gasto-{{operacion.id}}" type="hidden" value=""/>
         {% endif %}
     </td>
 
     <td>
-        {% if operacion.id_cuenta_cargo %}
-        <span id="nombre_cuenta_cargo-{{operacion.id}}" class="badge badge-danger-lighten">{{operacion.nombre_cuenta_cargo}}</span>
-        <input id="id_cuenta_cargo-{{operacion.id}}" type="hidden" value="{{operacion.id_cuenta_cargo}}"/>
-        {% else %}
-        <span id="nombre_cuenta_cargo-{{operacion.id}}" class="badge badge-lighten">-</span>
-        <input id="id_cuenta_cargo-{{operacion.id}}" type="hidden" value=""/>
-        {% endif %}
-    </td>
-
-    <td>
-        {% if operacion.id_monedero_cargo %}
-        <span id="nombre_monedero_cargo-{{operacion.id}}" class="badge badge-danger-lighten">{{operacion.nombre_monedero_cargo}}</span>
-        <input id="id_monedero_cargo-{{operacion.id}}" type="hidden" value="{{operacion.id_monedero_cargo}}"/>
-        {% else %}
-        <span id="nombre_monedero_cargo-{{operacion.id}}" class="badge badge-lighten">-</span>
-        <input id="id_monedero_cargo-{{operacion.id}}" type="hidden" value=""/>
-        {% endif %}
-    </td>
-
-    <td>
         {% if operacion.id_categoria_ingreso %}
-        <span id="descripcion_categoria_ingreso-{{operacion.id}}" class="badge badge-success-lighten">{{operacion.descripcion_categoria_ingreso}}</span>
+        <span id="descripcion_categoria_ingreso-{{operacion.id}}" class="badge custom-badge">{{operacion.descripcion_categoria_ingreso}}</span>
         <input id="id_categoria_ingreso-{{operacion.id}}" type="hidden" value="{{operacion.id_categoria_ingreso}}"/>
         {% else %}
-        <span id="descripcion_categoria_ingreso-{{operacion.id}}" class="badge badge-lighten">-</span>
+        <span id="descripcion_categoria_ingreso-{{operacion.id}}" class="badge custom-badge">-</span>
         <input id="id_categoria_ingreso-{{operacion.id}}" type="hidden" value=""/>
         {% endif %}
     </td>
 
     <td>
-        {% if operacion.id_cuenta_abono %}
-        <span id="nombre_cuenta_abono-{{operacion.id}}" class="badge badge-success-lighten">{{operacion.nombre_cuenta_abono}}</span>
-        <input id="id_cuenta_abono-{{operacion.id}}" type="hidden" value="{{operacion.id_cuenta_abono}}"/>
+        {% if operacion.id_cuenta_cargo %}
+        <span id="nombre_cuenta_cargo-{{operacion.id}}"
+              class="badge custom-badge">{{operacion.nombre_cuenta_cargo}}</span>
+        <input id="id_cuenta_cargo-{{operacion.id}}" type="hidden" value="{{operacion.id_cuenta_cargo}}"/>
         {% else %}
-        <span id="nombre_cuenta_abono-{{operacion.id}}" class="badge badge-lighten">-</span>
-        <input id="id_cuenta_abono-{{operacion.id}}" type="hidden" value=""/>
+        {% if operacion.id_categoria_gasto and not operacion.id_categoria_ingreso %}
+        <span id="nombre_cuenta_cargo-{{operacion.id}}" class="badge custom-badge">Todas</span>
+        {% else %}
+        <span id="nombre_cuenta_cargo-{{operacion.id}}" class="badge custom-badge">-</span>
+        {% endif %}
+        <input id="id_cuenta_cargo-{{operacion.id}}" type="hidden" value=""/>
         {% endif %}
     </td>
 
     <td>
+        {% if operacion.id_cuenta_abono %}
+        <span id="nombre_cuenta_abono-{{operacion.id}}"
+              class="badge custom-badge">{{operacion.nombre_cuenta_abono}}</span>
+        <input id="id_cuenta_abono-{{operacion.id}}" type="hidden" value="{{operacion.id_cuenta_abono}}"/>
+        {% else %}
+        {% if operacion.id_categoria_ingreso and not operacion.id_categoria_gasto %}
+        <span id="nombre_cuenta_abono-{{operacion.id}}" class="badge custom-badge">Todas</span>
+        {% else %}
+        <span id="nombre_cuenta_abono-{{operacion.id}}" class="badge custom-badge">-</span>
+        {% endif %}
+        <input id="id_cuenta_abono-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+
+    <td>
+        {% if operacion.id_monedero_cargo %}
+        <span id="nombre_monedero_cargo-{{operacion.id}}"
+              class="badge custom-badge">{{operacion.nombre_monedero_cargo}}</span>
+        <input id="id_monedero_cargo-{{operacion.id}}" type="hidden" value="{{operacion.id_monedero_cargo}}"/>
+        {% else %}
+        <span id="nombre_monedero_cargo-{{operacion.id}}" class="badge custom-badge">-</span>
+        <input id="id_monedero_cargo-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+
+    <td>
         {% if operacion.id_monedero_abono %}
-        <span id="nombre_monedero_abono-{{operacion.id}}" class="badge badge-success-lighten">{{operacion.nombre_monedero_abono}}</span>
+        <span id="nombre_monedero_abono-{{operacion.id}}"
+              class="badge custom-badge">{{operacion.nombre_monedero_abono}}</span>
         <input id="id_monedero_abono-{{operacion.id}}" type="hidden" value="{{operacion.id_monedero_abono}}"/>
         {% else %}
-        <span id="nombre_monedero_abono-{{operacion.id}}" class="badge badge-lighten">-</span>
+        <span id="nombre_monedero_abono-{{operacion.id}}" class="badge custom-badge">-</span>
         <input id="id_monedero_abono-{{operacion.id}}" type="hidden" value=""/>
         {% endif %}
     </td>
@@ -109,20 +124,124 @@ Añadir operación
 {% block contenido_add %}
 <div class="form-outline form-white mb-4">
     <div class="input-group date">
-        <input id="addFechaDataPicker" type="text" class="form-control">
+        <input id="addFechaDataPicker" type="text" class="form-control form-control-lg">
         <div class="input-group-addon">
             <span class="glyphicon glyphicon-th"></span>
         </div>
+
     </div>
+    <label class="form-label" for="addFechaDataPicker">Fecha</label>
 
     <input type="text" id="addTypeDescripcionX" class="form-control form-control-lg"/>
     <label class="form-label" for="addTypeDescripcionX">Descripción</label>
-</div>
-<div class="form-outline form-white mb-4">
 
-</div>
-<div class="form-outline form-white mb-4">
+    <input type="text" id="addTypeCantidadX" class="form-control form-control-lg"/>
+    <label class="form-label" for="addTypeCantidadX">Cantidad</label>
 
+    <div id="add-seleccion_tipo" class="form-control form-check form-check-inline">
+        <input type="radio" class="btn-check" name="add_tipo" id="add-tipo-gasto" autocomplete="off" checked>
+        <label class="btn btn-primary btn-radios" for="add-tipo-gasto">Gasto</label>
+
+        <input type="radio" class="btn-check" name="add_tipo" id="add-tipo-ingreso" autocomplete="off">
+        <label class="btn btn-primary btn-radios" for="add-tipo-ingreso">Ingreso</label>
+
+        <input type="radio" class="btn-check" name="add_tipo" id="add-tipo-transferencia" autocomplete="off">
+        <label class="btn btn-primary btn-radios" for="add-tipo-transferencia">Transferencia</label>
+    </div>
+
+    <div id="add-div-gasto" class="collapse show">
+        <select class="form-select" id="add-gasto-categoria-gasto-select">
+            <option value="">Seleccione un Gasto</option>
+            {% for categoria_gasto in lista_categorias_gasto %}
+            <option value="{{categoria_gasto.id}}" data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
+                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">{{categoria_gasto.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="add-gasto-cuenta-cargo-select">
+            <option value="None">Todas</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="add-gasto-monedero-cargo-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div id="add-div-ingreso" class="collapse">
+        <select class="form-select" id="add-ingreso-categoria-ingreso-select">
+            <option value="">Seleccione un ingreso</option>
+            {% for categoria_ingreso in lista_categorias_ingreso %}
+            <option value="{{categoria_ingreso.id}}"
+                    data-id-cuenta-defecto="{{categoria_ingreso.id_cuenta_abono_defecto}}"
+                    data-id-monedero-defecto="{{categoria_ingreso.id_monedero_defecto}}">
+                {{categoria_ingreso.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="add-ingreso-cuenta-abono-select">
+            <option value="">Ninguna</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="add-ingreso-monedero-abono-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+    <div id="add-div-transferencia" class="collapse">
+        <select class="form-select" id="add-transferencia-categoria-gasto-select">
+            <option value="">Seleccione un gasto</option>
+            {% for categoria_gasto in lista_categorias_gasto %}
+            <option value="{{categoria_gasto.id}}" data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
+                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">{{categoria_gasto.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="add-transferencia-categoria-ingreso-select">
+            <option value="">Seleccione un ingreso</option>
+            {% for categoria_ingreso in lista_categorias_ingreso %}
+            <option value="{{categoria_ingreso.id}}"
+                    data-id-cuenta-defecto="{{categoria_ingreso.id_cuenta_abono_defecto}}"
+                    data-id-monedero-defecto="{{categoria_ingreso.id_monedero_defecto}}">
+                {{categoria_ingreso.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="add-transferencia-cuenta-cargo-select">
+            <option value="">Ninguna</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="add-transferencia-cuenta-abono-select">
+            <option value="">Ninguna</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="add-transferencia-monedero-cargo-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="add-transferencia-monedero-abono-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
 </div>
 {% endblock %}
 
@@ -132,21 +251,125 @@ Editar Operacion
 
 {% block contenido_edit %}
 <div class="form-outline form-white mb-4">
-
     <div class="input-group date">
-        <input id="editFechaDataPicker" type="text" class="form-control">
+        <input id="editFechaDataPicker" type="text" class="form-control form-control-lg">
         <div class="input-group-addon">
             <span class="glyphicon glyphicon-th"></span>
         </div>
+
     </div>
+    <label class="form-label" for="editFechaDataPicker">Fecha</label>
+
     <input type="text" id="editTypeDescripcionX" class="form-control form-control-lg"/>
     <label class="form-label" for="editTypeDescripcionX">Descripción</label>
-</div>
-<div class="form-outline form-white mb-4">
 
-</div>
-<div class="form-outline form-white mb-4">
+    <input type="text" id="editTypeCantidadX" class="form-control form-control-lg"/>
+    <label class="form-label" for="editTypeCantidadX">Cantidad</label>
 
+    <div id="edit-seleccion_tipo" class="form-control form-check form-check-inline">
+        <input type="radio" class="btn-check" name="edit_tipo" id="edit-tipo-gasto" autocomplete="off">
+        <label class="btn btn-primary btn-radios" for="edit-tipo-gasto">Gasto</label>
+
+        <input type="radio" class="btn-check" name="edit_tipo" id="edit-tipo-ingreso" autocomplete="off">
+        <label class="btn btn-primary btn-radios" for="edit-tipo-ingreso">Ingreso</label>
+
+        <input type="radio" class="btn-check" name="edit_tipo" id="edit-tipo-transferencia" autocomplete="off">
+        <label class="btn btn-primary btn-radios" for="edit-tipo-transferencia">Transferencia</label>
+    </div>
+
+    <div id="edit-div-gasto" class="collapse">
+        <select class="form-select" id="edit-gasto-categoria-gasto-select">
+            <option value="">Seleccione un Gasto</option>
+            {% for categoria_gasto in lista_categorias_gasto %}
+            <option value="{{categoria_gasto.id}}" data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
+                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">{{categoria_gasto.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="edit-gasto-cuenta-cargo-select">
+            <option value="None">Todas</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="edit-gasto-monedero-cargo-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div id="edit-div-ingreso" class="collapse">
+        <select class="form-select" id="edit-ingreso-categoria-ingreso-select">
+            <option value="">Seleccione un ingreso</option>
+            {% for categoria_ingreso in lista_categorias_ingreso %}
+            <option value="{{categoria_ingreso.id}}"
+                    data-id-cuenta-defecto="{{categoria_ingreso.id_cuenta_abono_defecto}}"
+                    data-id-monedero-defecto="{{categoria_ingreso.id_monedero_defecto}}">
+                {{categoria_ingreso.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="edit-ingreso-cuenta-abono-select">
+            <option value="">Ninguna</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="edit-ingreso-monedero-abono-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+    <div id="edit-div-transferencia" class="collapse">
+        <select class="form-select" id="edit-transferencia-categoria-gasto-select">
+            <option value="">Seleccione un gasto</option>
+            {% for categoria_gasto in lista_categorias_gasto %}
+            <option value="{{categoria_gasto.id}}" data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
+                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">{{categoria_gasto.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="edit-transferencia-categoria-ingreso-select">
+            <option value="">Seleccione un ingreso</option>
+            {% for categoria_ingreso in lista_categorias_ingreso %}
+            <option value="{{categoria_ingreso.id}}"
+                    data-id-cuenta-defecto="{{categoria_ingreso.id_cuenta_abono_defecto}}"
+                    data-id-monedero-defecto="{{categoria_ingreso.id_monedero_defecto}}">
+                {{categoria_ingreso.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="edit-transferencia-cuenta-cargo-select">
+            <option value="">Ninguna</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="edit-transferencia-cuenta-abono-select">
+            <option value="">Ninguna</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="edit-transferencia-monedero-cargo-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select" id="edit-transferencia-monedero-abono-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
 </div>
 <input type="hidden" id="editTypeIdX"/>
 {% endblock %}
