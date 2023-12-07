@@ -1,8 +1,123 @@
-{% extends 'lista.html'%}
+{% extends 'paginacion.html'%}
 
-{% block listaextendscssstyle %}
-<link href="assets/bootstrap/css/bootstrap-datepicker.min.css" rel="stylesheet">
-{% endblock %}
+
+
+{% block lista %}
+{% for operacion in lista %}
+
+{% if operacion.id_categoria_gasto and operacion.id_categoria_ingreso %}
+<tr class="transferencia">
+    {% else %}
+    {% if operacion.id_categoria_gasto %}
+<tr class="gasto">
+    {% else %}
+<tr class="ingreso">
+    {% endif %}
+    {% endif %}
+    <td>
+        <div class="d-flex align-items-center">
+            <span id="fecha-{{operacion.id}}" class="badge custom-badge">{{operacion.fecha}}</span>
+        </div>
+    </td>
+    <td>
+        <span id="cantidad-{{operacion.id}}"
+              class="badge custom-badge">{{operacion.cantidad | formato_decimal}}</span>
+        <span class="badge custom-badge">€</span>
+    </td>
+    <td>
+        <div class="badge custom-badge">
+            <div id="descripcion-{{operacion.id}}" class="flex-grow-1 ms-2">
+                {{operacion.descripcion}}
+            </div>
+        </div>
+    </td>
+    <td>
+        {% if operacion.id_categoria_gasto %}
+        <span id="descripcion_categoria_gasto-{{operacion.id}}" class="badge custom-badge">{{operacion.descripcion_categoria_gasto}}</span>
+        <input id="id_categoria_gasto-{{operacion.id}}" type="hidden" value="{{operacion.id_categoria_gasto}}"/>
+        {% else %}
+        <span id="descripcion_categoria_gasto-{{operacion.id}}" class="badge custom-badge">-</span>
+        <input id="id_categoria_gasto-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if operacion.id_categoria_ingreso %}
+        <span id="descripcion_categoria_ingreso-{{operacion.id}}" class="badge custom-badge">{{operacion.descripcion_categoria_ingreso}}</span>
+        <input id="id_categoria_ingreso-{{operacion.id}}" type="hidden" value="{{operacion.id_categoria_ingreso}}"/>
+        {% else %}
+        <span id="descripcion_categoria_ingreso-{{operacion.id}}" class="badge custom-badge">-</span>
+        <input id="id_categoria_ingreso-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if operacion.id_cuenta_cargo %}
+        <span id="nombre_cuenta_cargo-{{operacion.id}}"
+              class="badge custom-badge">{{operacion.nombre_cuenta_cargo}}</span>
+        <input id="id_cuenta_cargo-{{operacion.id}}" type="hidden" value="{{operacion.id_cuenta_cargo}}"/>
+        {% else %}
+        {% if operacion.id_categoria_gasto and not operacion.id_categoria_ingreso %}
+        <span id="nombre_cuenta_cargo-{{operacion.id}}" class="badge custom-badge">Todas</span>
+        {% else %}
+        <span id="nombre_cuenta_cargo-{{operacion.id}}" class="badge custom-badge">-</span>
+        {% endif %}
+        <input id="id_cuenta_cargo-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+    <td>
+        {% if operacion.id_cuenta_abono %}
+        <span id="nombre_cuenta_abono-{{operacion.id}}"
+              class="badge custom-badge">{{operacion.nombre_cuenta_abono}}</span>
+        <input id="id_cuenta_abono-{{operacion.id}}" type="hidden" value="{{operacion.id_cuenta_abono}}"/>
+        {% else %}
+        {% if operacion.id_categoria_ingreso and not operacion.id_categoria_gasto %}
+        <span id="nombre_cuenta_abono-{{operacion.id}}" class="badge custom-badge">Todas</span>
+        {% else %}
+        <span id="nombre_cuenta_abono-{{operacion.id}}" class="badge custom-badge">-</span>
+        {% endif %}
+        <input id="id_cuenta_abono-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+
+    <td>
+        {% if operacion.id_monedero_cargo %}
+        <span id="nombre_monedero_cargo-{{operacion.id}}"
+              class="badge custom-badge">{{operacion.nombre_monedero_cargo}}</span>
+        <input id="id_monedero_cargo-{{operacion.id}}" type="hidden" value="{{operacion.id_monedero_cargo}}"/>
+        {% else %}
+        <span id="nombre_monedero_cargo-{{operacion.id}}" class="badge custom-badge">-</span>
+        <input id="id_monedero_cargo-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+
+    <td>
+        {% if operacion.id_monedero_abono %}
+        <span id="nombre_monedero_abono-{{operacion.id}}"
+              class="badge custom-badge">{{operacion.nombre_monedero_abono}}</span>
+        <input id="id_monedero_abono-{{operacion.id}}" type="hidden" value="{{operacion.id_monedero_abono}}"/>
+        {% else %}
+        <span id="nombre_monedero_abono-{{operacion.id}}" class="badge custom-badge">-</span>
+        <input id="id_monedero_abono-{{operacion.id}}" type="hidden" value=""/>
+        {% endif %}
+    </td>
+
+    <td class="text-end">
+        <a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip"
+           data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit"
+           data-element="{{operacion.id}}"><i class="uil uil-pen"></i></a>
+        <a class="delete-element font-18 text-danger" data-bs-toggle="tooltip"
+           data-bs-placement="top" aria-label="Delete" data-bs-original-title="Delete"
+           data-element="{{operacion.id}}">
+            <i class="uil uil-trash"></i>
+        </a>
+    </td>
+</tr>
+{% endfor %}
+{% endblock%}
 
 {% block titulo_add %}
 Añadir operación
@@ -263,7 +378,8 @@ Editar Operacion
 
 
 {% block listaextendsscript %}
+<link href="assets/bootstrap/css/bootstrap-datepicker.min.css" rel="stylesheet">
 <script type="text/javascript" src="assets/bootstrap/js/bootstrap-datepicker.min.js"></script>
 <script type="text/javascript" src="assets/bootstrap/js/bootstrap-datepicker.es.min.js"></script>
-<script type="text/javascript" src="assets/js/operaciones.js"></script>
+<script type="text/javascript" src="assets/js/operaciones2.js"></script>
 {% endblock%}

@@ -18,7 +18,8 @@ function add_cuenta() {
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4)
             if (xhttp.status === 201) {
-                window.location = '/cuentas.html';
+                $('#add').modal('hide')
+                table.ajax.reload( null, false );
             } else if (xhttp.status != 201){
                 var respuesta = JSON.parse(xhttp.responseText).message;
                 $("#addTypeMessageX").text(respuesta)
@@ -37,7 +38,7 @@ function delete_cuenta(id) {
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4)
             if (xhttp.status === 200) {
-                window.location = '/cuentas.html';
+                table.ajax.reload( null, false );
             } else if (xhttp.status != 200){
                 try {
                     var respuesta = JSON.parse(xhttp.responseText).message;
@@ -71,7 +72,8 @@ function update_cuenta() {
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4)
             if (xhttp.status === 200) {
-                window.location = '/cuentas.html';
+                $('#edit').modal('hide')
+                table.ajax.reload( null, false );
             } else if (xhttp.status != 200){
                 var respuesta = JSON.parse(xhttp.responseText).message;
                 $("#editTypeMessageX").text(respuesta)
@@ -162,17 +164,17 @@ $( document ).ready(function() {
         activar_tooltip();
         $('.edit-element').on( "click", function() {
             var data = table.row($(this).parents('tr')).data()
-                var id = data.id
-                var nombre = data.nombre
-                var cantidad_inicial = get_local_number(data.cantidad_inicial)
-                var ponderacion = get_local_number(data.ponderacion)
+            var id = data.id
+            var nombre = data.nombre
+            var cantidad_inicial = get_local_number(data.cantidad_inicial)
+            var ponderacion = get_local_number(data.ponderacion)
 
-                $("#editTypeNombreX").val(nombre)
-                $("#editTypeCantidadInicialX").val(cantidad_inicial)
-                $("#editTypePonderacionX").val(ponderacion)
-                $("#editTypeIdX").val(id)
+            $("#editTypeNombreX").val(nombre)
+            $("#editTypeCantidadInicialX").val(cantidad_inicial)
+            $("#editTypePonderacionX").val(ponderacion)
+            $("#editTypeIdX").val(id)
 
-                $('#edit').modal('show')
+            $('#edit').modal('show')
         });
         $('.delete-element').on( "click", function() {
            delete_cuenta($(this).attr("data-element"))

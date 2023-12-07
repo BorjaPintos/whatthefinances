@@ -16,7 +16,8 @@ function add_monedero() {
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4)
             if (xhttp.status === 201) {
-                window.location = '/monederos.html';
+                $('#add').modal('hide')
+                table.ajax.reload( null, false );
             } else if (xhttp.status != 201){
                 var respuesta = JSON.parse(xhttp.responseText).message;
                 $("#addTypeMessageX").text(respuesta)
@@ -35,7 +36,7 @@ function delete_monedero(id) {
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4)
             if (xhttp.status === 200) {
-                window.location = '/monederos.html';
+                table.ajax.reload( null, false );
             } else if (xhttp.status != 200){
                 try {
                     var respuesta = JSON.parse(xhttp.responseText).message;
@@ -67,7 +68,7 @@ function update_monedero() {
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4)
             if (xhttp.status === 200) {
-                window.location = '/monederos.html';
+                table.ajax.reload( null, false );
             } else if (xhttp.status != 200){
                 var respuesta = JSON.parse(xhttp.responseText).message;
                 $("#editTypeMessageX").text(respuesta)
