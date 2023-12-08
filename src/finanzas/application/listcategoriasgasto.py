@@ -19,11 +19,11 @@ class ListCategoriasGasto(TransactionalUseCase):
     @transactional(readonly=True)
     def execute(self, params: dict) -> List[CategoriaGasto]:
 
-        criteria = Criteria(order=Order(OrderBy(params["order_property"]), OrderType(params["order_type"])),
+        criteria = Criteria(order=Order(OrderBy(params.get("order_property", "descripcion")), OrderType(params.get("order_type", "asc"))),
                             filter=self._create_filters(params)
                             )
-        cuentas = self._categoria_gasto_repository.list(criteria)
-        return cuentas
+        categorias = self._categoria_gasto_repository.list(criteria)
+        return categorias
 
     @staticmethod
     def _create_filters(params: dict) -> Filter:
