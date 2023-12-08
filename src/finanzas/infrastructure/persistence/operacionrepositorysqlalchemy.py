@@ -7,6 +7,7 @@ from sqlalchemy.orm import aliased, Query
 
 from src.finanzas.domain.operacion import Operacion
 from src.finanzas.domain.operacionrepository import OperacionRepository
+from src.finanzas.infrastructure.persistence.operationsorderdefault import OperationsOrderDefault
 from src.finanzas.infrastructure.persistence.orm.categoriagastoentity import CategoriaGastoEntity
 from src.finanzas.infrastructure.persistence.orm.categoriaingresoentity import CategoriaIngresoEntity
 from src.finanzas.infrastructure.persistence.orm.cuentaentity import CuentaEntity
@@ -37,7 +38,7 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
             OperacionEntity.id_monedero_abono, MonederoAbono.nombre)
 
         query_builder = SQLAlchemyQueryBuilder(OperacionEntity, self._session, selected_columns=columnas)
-        query = query_builder.build_order_query(criteria) \
+        query = query_builder.build_order_query(criteria, defaultOrder=OperationsOrderDefault()) \
             .join(CategoriaGastoEntity, OperacionEntity.id_categoria_gasto == CategoriaGastoEntity.id, isouter=True) \
             .join(CuentaCargo, OperacionEntity.id_cuenta_cargo == CuentaCargo.id, isouter=True) \
             .join(MonederoCargo, OperacionEntity.id_monedero_cargo == MonederoCargo.id, isouter=True) \
@@ -49,7 +50,7 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
 
     def __get_complete_pagination_join_query(self, criteria: Criteria) -> Query:
         query = self.__get_complete_join_query(criteria)
-        return query.offset(criteria.offset()).limit(criteria.limit() + 1)
+        return query.offset(criteria.offset()).limit(criteria.limit())
 
     @staticmethod
     def __get_operation_from_complete_join_row(row) -> Operacion:

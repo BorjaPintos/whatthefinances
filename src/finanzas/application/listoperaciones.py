@@ -19,7 +19,7 @@ class ListOperaciones(TransactionalUseCase):
     @transactional(readonly=True)
     def execute(self, params: dict) -> Tuple[List[Operacion], Union[bool, Any]]:
 
-        criteria = Criteria(order=Order(OrderBy(params["order_property"]), OrderType(params["order_type"])),
+        criteria = Criteria(order=Order(OrderBy(params.get("order_property", "fecha")), OrderType(params.get("order_type", "desc"))),
                             filter=self._create_filters(params),
                             offset=params["offset"],
                             limit=params["count"]

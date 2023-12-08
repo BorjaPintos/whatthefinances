@@ -5,6 +5,7 @@ class Pagination:
         self.offset = offset
         self.total_elements = total_elements
         self.pagination_size = pagination_size
+        self.has_more_elements = self.get_has_more_elements()
 
     def get_elements(self):
         return self.elements

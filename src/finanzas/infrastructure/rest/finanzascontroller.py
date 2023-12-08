@@ -6,7 +6,6 @@ from src.shared.infraestructure.rest.pagination import Pagination
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
 
 from typing import Any, Tuple
-from flask import Request
 from loguru import logger
 from src.finanzas.application.createcategoriagasto import CreateCategoriaGasto
 from src.finanzas.application.createcategoriaingreso import CreateCategoriaIngreso
@@ -80,13 +79,8 @@ delete_operacion_use_case = DeleteOperacion(operacion_repository=operacion_repos
                                             cuenta_repository=cuenta_repository)
 
 
-def list_cuentas(request: Request) -> Tuple[Any, int]:
+def list_cuentas(params: dict) -> Tuple[Any, int]:
     code = 200
-    params = {
-        "order_property": request.args.get('order_property', 'nombre'),
-        "order_type": request.args.get('order_type', 'asc'),
-        "nombre": request.args.get('nombre', None)
-    }
     __cast_params(params)
     elements = list_cuentas_use_case.execute(params)
     response = []
@@ -95,7 +89,7 @@ def list_cuentas(request: Request) -> Tuple[Any, int]:
     return response, code
 
 
-def get_cuenta(request: Request, id_cuenta: int) -> Tuple[Any, int]:
+def get_cuenta(id_cuenta: int) -> Tuple[Any, int]:
     code = 200
     cuenta = get_cuenta_use_case.execute(apply_locale_int(id_cuenta))
     if cuenta:
@@ -108,13 +102,9 @@ def get_cuenta(request: Request, id_cuenta: int) -> Tuple[Any, int]:
     return response, code
 
 
-def create_cuenta(request: Request) -> Tuple[Any, int]:
+def create_cuenta(params: dict) -> Tuple[Any, int]:
     code = 201
-    params = {
-        "nombre": request.json.get('nombre'),
-        "cantidad_inicial": request.json.get('cantidad_inicial', 0.00),
-        "ponderacion": request.json.get('ponderacion', 0.00),
-    }
+
     __cast_params(params)
     cuenta = create_cuenta_use_case.execute(params)
     if cuenta:
@@ -126,14 +116,9 @@ def create_cuenta(request: Request) -> Tuple[Any, int]:
     return response, code
 
 
-def update_cuenta(request: Request, id_cuenta: int) -> Tuple[Any, int]:
+def update_cuenta(params: dict) -> Tuple[Any, int]:
     code = 200
-    params = {
-        "id": id_cuenta,
-        "nombre": request.json.get('nombre', None),
-        "cantidad_inicial": request.json.get('cantidad_inicial', None),
-        "ponderacion": request.json.get('ponderacion', None),
-    }
+
     __cast_params(params)
     cuenta = update_cuenta_use_case.execute(params)
     if cuenta:
@@ -146,13 +131,8 @@ def update_cuenta(request: Request, id_cuenta: int) -> Tuple[Any, int]:
     return response, code
 
 
-def list_monederos(request: Request) -> Tuple[Any, int]:
+def list_monederos(params: dict) -> Tuple[Any, int]:
     code = 200
-    params = {
-        "order_property": request.args.get('order_property', 'nombre'),
-        "order_type": request.args.get('order_type', 'asc'),
-        "nombre": request.args.get('nombre', None)
-    }
     __cast_params(params)
     elements = list_monederos_use_case.execute(params)
     response = []
@@ -161,7 +141,7 @@ def list_monederos(request: Request) -> Tuple[Any, int]:
     return response, code
 
 
-def get_monedero(request: Request, id_monedero: int) -> Tuple[Any, int]:
+def get_monedero(id_monedero: int) -> Tuple[Any, int]:
     code = 200
     monedero = get_monedero_use_case.execute(apply_locale_int(id_monedero))
     if monedero:
@@ -174,12 +154,9 @@ def get_monedero(request: Request, id_monedero: int) -> Tuple[Any, int]:
     return response, code
 
 
-def create_monedero(request: Request) -> Tuple[Any, int]:
+def create_monedero(params: dict) -> Tuple[Any, int]:
     code = 201
-    params = {
-        "nombre": request.json.get('nombre'),
-        "cantidad_inicial": request.json.get('cantidad_inicial', 0.00)
-    }
+
     __cast_params(params)
     monedero = create_monedero_use_case.execute(params)
     if monedero:
@@ -191,13 +168,9 @@ def create_monedero(request: Request) -> Tuple[Any, int]:
     return response, code
 
 
-def update_monedero(request: Request, id_monedero: int) -> Tuple[Any, int]:
+def update_monedero(params: dict) -> Tuple[Any, int]:
     code = 200
-    params = {
-        "id": id_monedero,
-        "nombre": request.json.get('nombre', None),
-        "cantidad_inicial": request.json.get('cantidad_inicial', None)
-    }
+
     __cast_params(params)
     monedero = update_monedero_use_case.execute(params)
     if monedero:
@@ -209,15 +182,9 @@ def update_monedero(request: Request, id_monedero: int) -> Tuple[Any, int]:
     return response, code
 
 
-def list_categorias_ingreso(request: Request) -> Tuple[Any, int]:
+def list_categorias_ingreso(params: dict) -> Tuple[Any, int]:
     code = 200
-    params = {
-        "order_property": request.args.get('order_property', 'descripcion'),
-        "order_type": request.args.get('order_type', 'asc'),
-        "descripcion": request.args.get('descripcion', None),
-        "id_monedero_defecto": request.args.get('id_monedero_defecto', None),
-        "id_cuenta_abono_defecto": request.args.get('id_cuenta_abono_defecto', None),
-    }
+
     __cast_params(params)
     elements = list_categorias_ingreso_use_case.execute(params)
     response = []
@@ -226,7 +193,7 @@ def list_categorias_ingreso(request: Request) -> Tuple[Any, int]:
     return response, code
 
 
-def get_categoria_ingreso(request: Request, id_categoria_ingreso: int) -> Tuple[Any, int]:
+def get_categoria_ingreso(id_categoria_ingreso: int) -> Tuple[Any, int]:
     code = 200
     categoria_ingreso = get_categoria_ingreso_use_case.execute(apply_locale_int(id_categoria_ingreso))
     if categoria_ingreso:
@@ -241,13 +208,8 @@ def get_categoria_ingreso(request: Request, id_categoria_ingreso: int) -> Tuple[
     return response, code
 
 
-def create_categoria_ingreso(request: Request) -> Tuple[Any, int]:
+def create_categoria_ingreso(params: dict) -> Tuple[Any, int]:
     code = 201
-    params = {
-        "descripcion": request.json.get('descripcion', None),
-        "id_cuenta_abono_defecto": request.json.get('id_cuenta_abono_defecto', None),
-        "id_monedero_defecto": request.json.get('id_monedero_defecto', None)
-    }
     __cast_params(params)
     categoria_ingreso = create_categoria_ingreso_use_case.execute(params)
     if categoria_ingreso:
@@ -261,14 +223,8 @@ def create_categoria_ingreso(request: Request) -> Tuple[Any, int]:
     return response, code
 
 
-def update_categoria_ingreso(request: Request, id_categoria_ingreso: int) -> Tuple[Any, int]:
+def update_categoria_ingreso(params: dict) -> Tuple[Any, int]:
     code = 200
-    params = {
-        "id": id_categoria_ingreso,
-        "descripcion": request.json.get('descripcion', None),
-        "id_cuenta_abono_defecto": request.json.get('id_cuenta_abono_defecto', None),
-        "id_monedero_defecto": request.json.get('id_monedero_defecto', None)
-    }
     __cast_params(params)
     categoria_ingreso = update_categoria_ingreso_use_case.execute(params)
     if categoria_ingreso:
@@ -282,15 +238,8 @@ def update_categoria_ingreso(request: Request, id_categoria_ingreso: int) -> Tup
     return response, code
 
 
-def list_categorias_gasto(request: Request) -> Tuple[Any, int]:
+def list_categorias_gasto(params: dict) -> Tuple[Any, int]:
     code = 200
-    params = {
-        "order_property": request.args.get('order_property', 'descripcion'),
-        "order_type": request.args.get('order_type', 'asc'),
-        "descripcion": request.args.get('descripcion', None),
-        "id_monedero_defecto": request.args.get('id_monedero_defecto', None),
-        "id_cuenta_cargo_defecto": request.args.get('id_cuenta_cargo_defecto', None),
-    }
     __cast_params(params)
     elements = list_categorias_gasto_use_case.execute(params)
     response = []
@@ -299,7 +248,7 @@ def list_categorias_gasto(request: Request) -> Tuple[Any, int]:
     return response, code
 
 
-def get_categoria_gasto(request: Request, id_categoria_gasto: int) -> Tuple[Any, int]:
+def get_categoria_gasto(id_categoria_gasto: int) -> Tuple[Any, int]:
     code = 200
     categoria_gasto = get_categoria_gasto_use_case.execute(apply_locale_int(id_categoria_gasto))
     if categoria_gasto:
@@ -313,13 +262,8 @@ def get_categoria_gasto(request: Request, id_categoria_gasto: int) -> Tuple[Any,
     return response, code
 
 
-def create_categoria_gasto(request: Request) -> Tuple[Any, int]:
+def create_categoria_gasto(params: dict) -> Tuple[Any, int]:
     code = 201
-    params = {
-        "descripcion": request.json.get('descripcion', None),
-        "id_cuenta_cargo_defecto": request.json.get('id_cuenta_cargo_defecto', None),
-        "id_monedero_defecto": request.json.get('id_monedero_defecto', None)
-    }
     __cast_params(params)
     categoria_gasto = create_categoria_gasto_use_case.execute(params)
     if categoria_gasto:
@@ -333,14 +277,8 @@ def create_categoria_gasto(request: Request) -> Tuple[Any, int]:
     return response, code
 
 
-def update_categoria_gasto(request: Request, id_categoria_gasto: int) -> Tuple[Any, int]:
+def update_categoria_gasto(params: dict) -> Tuple[Any, int]:
     code = 200
-    params = {
-        "id": id_categoria_gasto,
-        "descripcion": request.json.get('descripcion', None),
-        "id_cuenta_cargo_defecto": request.json.get('id_cuenta_cargo_defecto', None),
-        "id_monedero_defecto": request.json.get('id_monedero_defecto', None)
-    }
     __cast_params(params)
     categoria_gasto = update_categoria_gasto_use_case.execute(params)
     if categoria_gasto:
@@ -354,25 +292,8 @@ def update_categoria_gasto(request: Request, id_categoria_gasto: int) -> Tuple[A
     return response, code
 
 
-def list_operaciones(request: Request) -> Tuple[Pagination, int]:
+def list_operaciones(params: dict) -> Tuple[Pagination, int]:
     code = 200
-    params = {
-        "order_property": request.args.get('order_property', 'fecha'),
-        "order_type": request.args.get('order_type', 'desc'),
-        "count": request.args.get('count', 30),
-        "offset": request.args.get('offset', 0),
-        "begin_fecha": request.args.get('begin_fecha', None),
-        "end_fecha": request.args.get('end_fecha', None),
-        "begin_cantidad": request.args.get('begin_cantidad', None),
-        "end_cantidad": request.args.get('end_cantidad', None),
-        "descripcion": request.args.get('descripcion', None),
-        "id_monedero_cargo": request.args.get('id_monedero_cargo', None),
-        "id_cuenta_cargo": request.args.get('id_cuenta_cargo', None),
-        "id_monedero_abono": request.args.get('id_monedero_abono', None),
-        "id_cuenta_abono": request.args.get('id_cuenta_abono', None),
-        "id_categoria_gasto": request.args.get('id_categoria_gasto', None),
-        "id_categoria_ingreso": request.args.get('id_categoria_ingreso', None),
-    }
     __cast_params(params)
     elements, total_elements = list_operaciones_use_case.execute(params)
     response_elements = []
@@ -381,7 +302,7 @@ def list_operaciones(request: Request) -> Tuple[Pagination, int]:
     return Pagination(response_elements, params["offset"], params["count"], total_elements), code
 
 
-def get_operacion(request: Request, id_operacion: int) -> Tuple[Any, int]:
+def get_operacion(id_operacion: int) -> Tuple[Any, int]:
     code = 200
     operacion = get_operacion_use_case.execute(apply_locale_int(id_operacion))
     if operacion:
@@ -395,19 +316,8 @@ def get_operacion(request: Request, id_operacion: int) -> Tuple[Any, int]:
     return response, code
 
 
-def create_operacion(request: Request) -> Tuple[Any, int]:
+def create_operacion(params: dict) -> Tuple[Any, int]:
     code = 201
-    params = {
-        "descripcion": request.json.get('descripcion', None),
-        "fecha": request.json.get('fecha', None),
-        "cantidad": request.json.get('cantidad', None),
-        "id_monedero_cargo": request.json.get('id_monedero_cargo', None),
-        "id_cuenta_cargo": request.json.get('id_cuenta_cargo', None),
-        "id_monedero_abono": request.json.get('id_monedero_abono', None),
-        "id_cuenta_abono": request.json.get('id_cuenta_abono', None),
-        "id_categoria_gasto": request.json.get('id_categoria_gasto', None),
-        "id_categoria_ingreso": request.json.get('id_categoria_ingreso', None),
-    }
     __cast_params(params)
     created = create_operacion_use_case.execute(params)
     if created:
@@ -419,32 +329,20 @@ def create_operacion(request: Request) -> Tuple[Any, int]:
     return response, code
 
 
-def update_operacion(request: Request, id_operacion: int) -> Tuple[Any, int]:
+def update_operacion(params: dict) -> Tuple[Any, int]:
     code = 200
-    params = {
-        "id": id_operacion,
-        "descripcion": request.json.get('descripcion', None),
-        "fecha": request.json.get('fecha', None),
-        "cantidad": request.json.get('cantidad', None),
-        "id_monedero_cargo": request.json.get('id_monedero_cargo', None),
-        "id_cuenta_cargo": request.json.get('id_cuenta_cargo', None),
-        "id_monedero_abono": request.json.get('id_monedero_abono', None),
-        "id_cuenta_abono": request.json.get('id_cuenta_abono', None),
-        "id_categoria_gasto": request.json.get('id_categoria_gasto', None),
-        "id_categoria_ingreso": request.json.get('id_categoria_ingreso', None),
-    }
     __cast_params(params)
     updated = update_operacion_use_case.execute(params)
     if updated:
         response = {}
     else:
         code = 400
-        logger.warning("Error al actualizar la operación con id: {}".format(id_operacion))
-        raise MessageError("Error al actualizar la operación con id: {}".format(id_operacion), code)
+        logger.warning("Error al actualizar la operación con id: {}".format(params.get("id")))
+        raise MessageError("Error al actualizar la operación con id: {}".format(params.get("id")), code)
     return response, code
 
 
-def delete_operacion(request: Request, id_operacion: int) -> Tuple[Any, int]:
+def delete_operacion(id_operacion: int) -> Tuple[Any, int]:
     code = 200
     operacion = delete_operacion_use_case.execute(apply_locale_int(id_operacion))
     if operacion:

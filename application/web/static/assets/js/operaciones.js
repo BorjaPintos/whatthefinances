@@ -221,88 +221,90 @@ $(document).ready(function() {
         language: 'es-ES'
     });
 
-        table = $('#lista_tabla').DataTable({
+    table = $('#lista_tabla').DataTable({
+        dom: '<flrt<"#table_fotter"ip>',
+        serverSide:true,
         ajax: {
             url:'/finanzas/front-operacion?',
             data: function (d) {
-                d.count=3
             },
-            serverSide:true,
             dataSrc: 'elements',
-            dataFilter: function(data){
-                var json = jQuery.parseJSON(data);
-                json.recordsTotal = json.total_elements;
-                json.recordsFiltered = json.total_elements;
-                json.draw = json.pagination_size;
-                json.data = json.elements;
-
-                return JSON.stringify( json ); // return JSON string
-            }
         },
         columns: [
             {
                 data:'fecha',
                 type: "string",
-                render: render_texto
+                render: render_texto,
+                width: "5%"
             },
             {
                 data:'cantidad',
                 type: "num",
                 render: render_dinero,
+                width: "10%"
             },
             {
                 data:'descripcion',
                 type: "string",
-                render: render_texto
+                render: render_texto,
+                width: "15%"
             },
             {
                 data:'descripcion_categoria_gasto',
                 render: render_nombre,
-                type: "string"
+                type: "string",
+                width: "10%"
             },
             {
                 data:'descripcion_categoria_ingreso',
                 render: render_nombre,
-                type: "string"
+                type: "string",
+                width: "10%"
             },
             {
                 data:'nombre_cuenta_cargo',
                 render: render_nombre_cuenta_cargo,
-                type: "string"
+                type: "string",
+                width: "10%"
             },
             {
                 data:'nombre_cuenta_abono',
                 render: render_nombre_cuenta_abono,
-                type: "string"
+                type: "string",
+                width: "10%"
             },
             {
                 data:'nombre_monedero_cargo',
                 render: render_nombre,
-                type: "string"
+                type: "string",
+                width: "10%"
             },
             {
                 data:'nombre_monedero_abono',
                 render: render_nombre,
-                type: "string"
+                type: "string",
+                width: "10%"
             },
             {
                 className: 'text-end',
                 data:'id',
                 render: render_actions,
                 type: "num",
-                orderSequence:[]
+                orderSequence:[],
+                width: "10%"
             }
         ],
         order: [[0, 'desc']],
         info: true,
         lengthChange: false,
         paging: true,
-        pageLength: 5,
+        pageLength: 30,
         searching: false,
         scrollX: false,
         language: {
             info: 'Total _MAX_ Operaciones',
             infoEmpty: 'No hay Operaciones',
+            zeroRecords: "No hay Operaciones",
             loadingRecords: "Cargando...",
             decimal:",",
         }
@@ -310,7 +312,6 @@ $(document).ready(function() {
 
 
     table.on('draw', function () {
-        console.log("redibujando")
         activar_tooltip();
         $('.edit-element').on( "click", function() {
 

@@ -18,7 +18,7 @@ class ListCuentas(TransactionalUseCase):
 
     @transactional(readonly=True)
     def execute(self, params: dict) -> List[Cuenta]:
-        criteria = Criteria(order=Order(OrderBy(params["order_property"]), OrderType(params["order_type"])),
+        criteria = Criteria(order=Order(OrderBy(params.get("order_property", "nombre")), OrderType(params.get("order_type", "asc"))),
                             filter=self._create_filters(params)
                             )
         cuentas = self._cuenta_repository.list(criteria)
