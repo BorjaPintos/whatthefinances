@@ -9,3 +9,15 @@ activar_tooltip = function(){
       return new bootstrap.Tooltip(tooltipTriggerEl)
     })
 }
+
+activar_collapse = function(){
+    var collapseElementList = [].slice.call(document.querySelectorAll('.collapse'))
+    var collapseList = collapseElementList.map(function (collapseEl) {
+      return new bootstrap.Collapse(collapseEl)
+    })
+}
+
+activar_elements = function(){
+    activar_tooltip();
+    activar_collapse();
+}

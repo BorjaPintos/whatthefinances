@@ -35,27 +35,27 @@ class ListOperaciones(TransactionalUseCase):
             filter = combine_filters(filter, CompositeOperator.AND, description_filter)
         if "id_monedero_cargo" in params and params["id_monedero_cargo"]:
             monedero_filter = SimpleFilter(
-                "monedero_cargo", WhereOperator.IS, params["id_monedero_cargo"])
+                "id_monedero_cargo", WhereOperator.IS, params["id_monedero_cargo"])
             filter = combine_filters(filter, CompositeOperator.AND, monedero_filter)
         if "id_monedero_abono" in params and params["id_monedero_abono"]:
             monedero_filter = SimpleFilter(
-                "monedero_abono", WhereOperator.IS, params["id_monedero_abono"])
+                "id_monedero_abono", WhereOperator.IS, params["id_monedero_abono"])
             filter = combine_filters(filter, CompositeOperator.AND, monedero_filter)
         if "id_cuenta_cargo" in params and params["id_cuenta_cargo"]:
             cuenta_filter = SimpleFilter(
-                "cuenta_cargo", WhereOperator.IS, params["id_cuenta_cargo"])
+                "id_cuenta_cargo", WhereOperator.IS, params["id_cuenta_cargo"])
             filter = combine_filters(filter, CompositeOperator.AND, cuenta_filter)
         if "id_cuenta_abono" in params and params["id_cuenta_abono"]:
             cuenta_filter = SimpleFilter(
-                "cuenta_abono", WhereOperator.IS, params["id_cuenta_abono"])
+                "id_cuenta_abono", WhereOperator.IS, params["id_cuenta_abono"])
             filter = combine_filters(filter, CompositeOperator.AND, cuenta_filter)
         if "id_categoria_ingreso" in params and params["id_categoria_ingreso"]:
             categoria_filter = SimpleFilter(
-                "categoria_ingreso", WhereOperator.IS, params["id_categoria_ingreso"])
+                "id_categoria_ingreso", WhereOperator.IS, params["id_categoria_ingreso"])
             filter = combine_filters(filter, CompositeOperator.AND, categoria_filter)
         if "id_categoria_gasto" in params and params["id_categoria_gasto"]:
             categoria_filter = SimpleFilter(
-                "categoria_gasto", WhereOperator.IS, params["id_categoria_gasto"])
+                "id_categoria_gasto", WhereOperator.IS, params["id_categoria_gasto"])
             filter = combine_filters(filter, CompositeOperator.AND, categoria_filter)
         if "begin_fecha" in params and params["begin_fecha"]:
             fecha_filter = SimpleFilter(

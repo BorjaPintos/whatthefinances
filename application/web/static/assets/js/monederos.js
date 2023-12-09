@@ -152,7 +152,7 @@ $( document).ready(function() {
     });
 
     table.on( 'draw', function () {
-        activar_tooltip();
+        activar_elements();
         $('.edit-element').on( "click", function() {
             var data = table.row($(this).parents('tr')).data()
                 var id = data.id
