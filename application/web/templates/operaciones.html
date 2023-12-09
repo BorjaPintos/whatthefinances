@@ -8,6 +8,88 @@
 Añadir operación
 {% endblock %}
 
+
+{% block tabletopmenu %}
+
+<div>
+
+    <label class="mt-2 px-2 search-label" for="search-fecha-begin-datapicker">Desde:</label>
+    <input id="search-fecha-begin-datapicker" type="text" class="form-control filtro-search">
+
+
+    <label class="mt-2 px-2 search-label" for="search-fecha-end-datapicker">Hasta:</label>
+    <input id="search-fecha-end-datapicker" type="text" class="form-control filtro-search">
+
+
+    <label class="mt-2 px-2 search-label" for="search-categoria-gasto-select">Categoria Gasto</label>
+
+    <select class="mt-2 px-2 form-control filtro-search" id="search-categoria-gasto-select">
+        <option value="">-</option>
+        {% for categoria_gasto in lista_categorias_gasto %}
+        <option value="{{categoria_gasto.id}}">{{categoria_gasto.descripcion}}
+        </option>
+        {% endfor %}
+    </select>
+
+    <label class="mt-2 px-2 search-label" for="search-categoria-ingreso-select">Categoria Ingreso</label>
+
+    <select class="mt-2 px-2 form-control filtro-search" id="search-categoria-ingreso-select">
+        <option value="">-</option>
+        {% for categoria_ingreso in lista_categorias_ingreso %}
+        <option value="{{categoria_ingreso.id}}">{{categoria_ingreso.descripcion}}
+        </option>
+        {% endfor %}
+    </select>
+
+
+</div>
+<div>
+    <label class="mt-2 px-2 search-label" for="search-cuenta-cargo-select">Cuenta Cargo</label>
+    <select class="mt-2 px-2 form-control filtro-search" id="search-cuenta-cargo-select">
+        <option value="">-</option>
+        {% for cuenta in lista_cuentas %}
+        <option value="{{cuenta.id}}">{{cuenta.nombre}}
+        </option>
+        {% endfor %}
+    </select>
+
+    <label class="mt-2 px-2 search-label" for="search-cuenta-abono-select">Cuenta Abono</label>
+    <select class="mt-2 px-2 form-control filtro-search" id="search-cuenta-abono-select">
+        <option value="">-</option>
+        {% for cuenta in lista_cuentas %}
+        <option value="{{cuenta.id}}">{{cuenta.nombre}}
+        </option>
+        {% endfor %}
+    </select>
+
+    <label class="mt-2 px-2 search-label" for="search-monedero-cargo-select">Monedero cargo</label>
+
+    <select class="mt-2 px-2 form-control filtro-search" id="search-monedero-cargo-select">
+        <option value="">-</option>
+        {% for monedero in lista_monederos %}
+        <option value="{{monedero.id}}">{{monedero.nombre}}
+        </option>
+        {% endfor %}
+    </select>
+
+    <label class="mt-2 px-2 search-label" for="search-monedero-abono-select">Monedero abono</label>
+
+    <select class="mt-2 px-2 form-control filtro-search" id="search-monedero-abono-select">
+        <option value="">-</option>
+        {% for monedero in lista_monederos %}
+        <option value="{{monedero.id}}">{{monedero.nombre}}
+        </option>
+        {% endfor %}
+    </select>
+
+    <button type="button" class="btn btn-info px-2" id="search-button"><i
+            class="uil-search"></i> Buscar
+    </button>
+</div>
+
+{% endblock %}
+
+
 {% block contenido_add %}
 <div class="form-outline form-white mb-4">
     <div class="input-group date">
@@ -143,7 +225,6 @@ Editar Operacion
         <div class="input-group-addon">
             <span class="glyphicon glyphicon-th"></span>
         </div>
-
     </div>
     <label class="form-label" for="editFechaDataPicker">Fecha</label>
 

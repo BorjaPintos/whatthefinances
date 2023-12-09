@@ -205,7 +205,10 @@ render_nombre = function (data, type) {
 render_texto = function(data, type){
 
     if (type == 'display'){
-        return '<div class="badge custom-badge flex-grow-1 ms-2">'+data+'</div>'
+        if (data.length>75)
+            return '<span class="badge custom-badge" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+data+'">'+  (data.substring(0, 75) + "...") +'</span>'
+        else
+          return '<span class="badge custom-badge">'+ data +'</span>'
 
     }
     return data
@@ -220,6 +223,14 @@ $(document).ready(function() {
         format: 'dd/mm/yyyy',
         language: 'es-ES'
     });
+     $('#search-fecha-begin-datapicker').datepicker({
+        format: 'dd/mm/yyyy',
+        language: 'es-ES'
+    });
+    $('#search-fecha-end-datapicker').datepicker({
+        format: 'dd/mm/yyyy',
+        language: 'es-ES'
+    });
 
     table = $('#lista_tabla').DataTable({
         dom: '<flrt<"#table_fotter"ip>',
@@ -227,6 +238,32 @@ $(document).ready(function() {
         ajax: {
             url:'/finanzas/front-operacion?',
             data: function (d) {
+                var begin_fecha = $('#search-fecha-begin-datapicker').val()
+                var end_fecha = $('#search-fecha-end-datapicker').val()
+                var id_categoria_ingreso = $("#search-categoria-ingreso-select").val();
+                var id_categoria_gasto = $("#search-categoria-gasto-select").val();
+                var id_cuenta_cargo = $("#search-cuenta-cargo-select").val();
+                var id_monedero_cargo = $("#search-monedero-cargo-select").val();
+                var id_cuenta_abono = $("#search-cuenta-abono-select").val();
+                var id_monedero_abono = $("#search-monedero-abono-select").val();
+
+                if (begin_fecha != '')
+                    d.begin_fecha = begin_fecha
+                if (end_fecha != '')
+                    d.end_fecha = end_fecha
+                if (id_categoria_gasto != '')
+                    d.id_categoria_gasto = id_categoria_gasto
+                if (id_categoria_ingreso != '')
+                    d.id_categoria_ingreso = id_categoria_ingreso
+                if (id_cuenta_cargo != '')
+                    d.id_cuenta_cargo = id_cuenta_cargo
+                if (id_monedero_cargo != '')
+                    d.id_monedero_cargo = id_monedero_cargo
+                if (id_cuenta_abono != '')
+                    d.id_cuenta_abono = id_cuenta_abono
+                if (id_monedero_abono != '')
+                    d.id_monedero_abono = id_monedero_abono
+
             },
             dataSrc: 'elements',
         },
@@ -241,48 +278,55 @@ $(document).ready(function() {
                 data:'cantidad',
                 type: "num",
                 render: render_dinero,
-                width: "10%"
+                width: "12%"
             },
             {
                 data:'descripcion',
                 type: "string",
                 render: render_texto,
-                width: "15%"
+                orderSequence:[],
+                width: "13%"
             },
             {
                 data:'descripcion_categoria_gasto',
                 render: render_nombre,
                 type: "string",
+                orderSequence:[],
                 width: "10%"
             },
             {
                 data:'descripcion_categoria_ingreso',
                 render: render_nombre,
                 type: "string",
+                orderSequence:[],
                 width: "10%"
             },
             {
                 data:'nombre_cuenta_cargo',
                 render: render_nombre_cuenta_cargo,
                 type: "string",
+                orderSequence:[],
                 width: "10%"
             },
             {
                 data:'nombre_cuenta_abono',
                 render: render_nombre_cuenta_abono,
                 type: "string",
+                orderSequence:[],
                 width: "10%"
             },
             {
                 data:'nombre_monedero_cargo',
                 render: render_nombre,
                 type: "string",
+                orderSequence:[],
                 width: "10%"
             },
             {
                 data:'nombre_monedero_abono',
                 render: render_nombre,
                 type: "string",
+                orderSequence:[],
                 width: "10%"
             },
             {
@@ -312,7 +356,7 @@ $(document).ready(function() {
 
 
     table.on('draw', function () {
-        activar_tooltip();
+        activar_elements();
         $('.edit-element').on( "click", function() {
 
             var operacion = table.row($(this).parents('tr')).data()
@@ -382,6 +426,10 @@ $(document).ready(function() {
            delete_operacion($(this).attr("data-element"))
         });
     });
+
+    $('#search-button').on( "click", function() {
+        table.ajax.reload(null, false);
+    } );
 
 
     $('#add-button').on( "click", function() {

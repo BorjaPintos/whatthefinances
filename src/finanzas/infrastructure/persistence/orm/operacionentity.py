@@ -1,9 +1,11 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import Any
 
 from sqlalchemy import Column, Date, Float, Text, Integer
 
+from src.finanzas.domain.categoriagasto import CategoriaGasto
 from src.finanzas.domain.operacion import Operacion
+from src.finanzas.infrastructure.persistence.orm.categoriagastoentity import CategoriaGastoEntity
 from src.persistence.domain.init_table import InitTable
 from src.persistence.infrastructure.orm.baseentity import BaseEntity
 
@@ -27,7 +29,6 @@ class OperacionEntity(BaseEntity):
             "id": OperacionEntity.id,
             "fecha": OperacionEntity.fecha,
             "cantidad": OperacionEntity.cantidad,
-            "descripcion": OperacionEntity.descripcion
         }
         return switcher.get(str_property, OperacionEntity.id)
 
@@ -51,19 +52,22 @@ class OperacionEntity(BaseEntity):
 
     @staticmethod
     def cast_to_column_type(column: Column, value: str) -> Any:
-        caster = {
-            OperacionEntity.id: int,
-            OperacionEntity.fecha: datetime,
-            OperacionEntity.cantidad: float,
-            OperacionEntity.descripcion: str,
-            OperacionEntity.id_categoria_gasto: int,
-            OperacionEntity.id_cuenta_cargo: int,
-            OperacionEntity.id_monedero_cargo: int,
-            OperacionEntity.id_categoria_ingreso: int,
-            OperacionEntity.id_cuenta_abono: int,
-            OperacionEntity.id_monedero_abono: int
-        }
-        return caster.get(column)(value)
+        if isinstance(value, str):
+            caster = {
+                OperacionEntity.id: int,
+                OperacionEntity.fecha: date,
+                OperacionEntity.cantidad: float,
+                OperacionEntity.descripcion: str,
+                OperacionEntity.id_categoria_gasto: int,
+                OperacionEntity.id_cuenta_cargo: int,
+                OperacionEntity.id_monedero_cargo: int,
+                OperacionEntity.id_categoria_ingreso: int,
+                OperacionEntity.id_cuenta_abono: int,
+                OperacionEntity.id_monedero_abono: int
+            }
+            return caster.get(column)(value)
+        else:
+            return value
 
     def update(self, operacion: Operacion):
         self.fecha = operacion.get_fecha()

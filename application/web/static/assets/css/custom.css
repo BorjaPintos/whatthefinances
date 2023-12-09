@@ -47,3 +47,12 @@ ul.pagination{
 .lista_tabla{
     width:100%;
 }
+
+.filtro-search{
+    display:inline;
+    width:auto;
+}
+
+.search-label{
+font-weight: bold;
+}
