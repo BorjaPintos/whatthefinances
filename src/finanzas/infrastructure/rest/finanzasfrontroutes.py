@@ -1,6 +1,7 @@
 import locale
 
 from src.shared.infraestructure.rest.response import serialize_response
+
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
 from flask import request, render_template
 from flask_login import login_required
@@ -89,60 +90,3 @@ def import_routes(rootpath, app):
                                lista_cuentas=lista_cuentas,
                                lista_monederos=lista_monederos,
                                )
-
-    @app.route(rootpath + "/finanzas/front-operacion", methods=['GET'])
-    @login_required
-    @serialize_response
-    def list_front_operaciones():
-
-        identificador = request.args.get("draw")
-        request_params = request.args
-
-        order_property = "fecha"
-        order_type = "desc"
-        for key, value in request_params.items():
-            if key.startswith("order[") and key.endswith("][column]"):
-                order_property = request_params["columns[{}][data]".format(value)]
-            if key.startswith("order[") and key.endswith("][dir]"):
-                order_type = value
-
-
-        params = {
-            "order_property": order_property,
-            "order_type": order_type,
-            "count": request.args.get('length', 30),
-            "offset": request.args.get('start', 0),
-
-            "begin_fecha": request.args.get('begin_fecha', None),
-            "end_fecha": request.args.get('end_fecha', None),
-            "begin_cantidad": request.args.get('begin_cantidad', None),
-            "end_cantidad": request.args.get('end_cantidad', None),
-            "descripcion": request.args.get('descripcion', None),
-            "id_monedero_cargo": request.args.get('id_monedero_cargo', None),
-            "id_cuenta_cargo": request.args.get('id_cuenta_cargo', None),
-            "id_monedero_abono": request.args.get('id_monedero_abono', None),
-            "id_cuenta_abono": request.args.get('id_cuenta_abono', None),
-            "id_categoria_gasto": request.args.get('id_categoria_gasto', None),
-            "id_categoria_ingreso": request.args.get('id_categoria_ingreso', None),
-        }
-
-        operaciones_paginadas, code = finanzascontroller.list_operaciones(params)
-
-        elements = []
-        for element in operaciones_paginadas.get_elements():
-            if element.get("id_categoria_ingreso") is not None and element.get("id_categoria_gasto") is not None:
-                element["DT_RowClass"] = "transferencia"
-            elif element.get("id_categoria_ingreso") is not None:
-                element["DT_RowClass"] = "ingreso"
-            else:
-                element["DT_RowClass"] = "gasto"
-            elements.append(element)
-
-        dataTables_page_object = {
-            "recordsTotal": operaciones_paginadas.get_total_elements(),
-            "recordsFiltered": operaciones_paginadas.get_total_elements(),
-            "elements": elements,
-            "draw": identificador
-        }
-
-        return dataTables_page_object, code

@@ -232,11 +232,30 @@ $(document).ready(function() {
         language: 'es-ES'
     });
 
-    table = $('#lista_tabla').DataTable({
+    table = $('#lista_tabla')
+         .on('preXhr.dt', function ( e, settings, data ) {
+               data.count = data.length
+               data.offset = data.start
+               data.order_property = data.columns[data.order[0].column].data
+               data.order_type = data.order[0].dir
+         })
+         .on('xhr.dt', function ( e, settings, json, xhr ) {
+            for (var i=0; i<json.elements.length; i++) {
+                if (json.elements[i].id_categoria_ingreso != undefined && json.elements[i].id_categoria_gasto != undefined)
+                    json.elements[i].DT_RowClass = "transferencia"
+                else if (json.elements[i].id_categoria_ingreso != undefined)
+                    json.elements[i].DT_RowClass = "ingreso"
+                else
+                    json.elements[i].DT_RowClass = "gasto"
+            }
+            json.recordsTotal = json.total_elements
+            json.recordsFiltered = json.total_elements
+         })
+        .DataTable({
         dom: '<flrt<"#table_fotter"ip>',
         serverSide:true,
         ajax: {
-            url:'/finanzas/front-operacion?',
+            url:'/finanzas/operacion',
             data: function (d) {
                 var begin_fecha = $('#search-fecha-begin-datapicker').val()
                 var end_fecha = $('#search-fecha-end-datapicker').val()
@@ -357,6 +376,7 @@ $(document).ready(function() {
 
     table.on('draw', function () {
         activar_elements();
+
         $('.edit-element').on( "click", function() {
 
             var operacion = table.row($(this).parents('tr')).data()
@@ -421,10 +441,13 @@ $(document).ready(function() {
            }
 
            $('#edit').modal('show')
+
         });
         $('.delete-element').on( "click", function() {
            delete_operacion($(this).attr("data-element"))
         });
+
+
     });
 
     $('#search-button').on( "click", function() {
@@ -438,6 +461,9 @@ $(document).ready(function() {
         $("#addTypePonderacionX").val('')
         $("#addTypeMessageX").text('')
         $('#addFechaDataPicker').datepicker('update',  new Date());
+        $("#add-div-gasto").collapse('show');
+        $("#add-div-ingreso").collapse('hide');
+        $("#add-div-transferencia").collapse('hide');
         $('#add').modal('show')
     } );
 
