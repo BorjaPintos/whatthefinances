@@ -236,3 +236,23 @@ def import_routes(rootpath, app):
     @serialize_response
     def delete_operacion(id_operacion: int):
         return finanzascontroller.delete_operacion(id_operacion)
+
+    @app.route(rootpath + "/resumen/ingresos", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_ingresos():
+        params = {
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzascontroller.resumen_ingresos(params)
+
+    @app.route(rootpath + "/resumen/gastos", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_gastos():
+        params = {
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzascontroller.resumen_gastos(params)

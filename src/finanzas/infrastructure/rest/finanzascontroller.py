@@ -1,6 +1,9 @@
 import locale
 from datetime import datetime
 
+from src.finanzas.application.resumengastos import ResumenGastos
+from src.finanzas.application.resumeningresos import ResumenIngresos
+from src.finanzas.infrastructure.persistence.resumenrepositorysqlalchemy import ResumenRepositorySQLAlchemy
 from src.shared.infraestructure.rest.pagination import Pagination
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
@@ -42,6 +45,7 @@ monedero_repository = MonederoRepositorySQLAlchemy()
 categorias_ingreso_repository = CategoriaIngresoRepositorySQLAlchemy()
 categorias_gasto_repository = CategoriaGastoRepositorySQLAlchemy()
 operacion_repository = OperacionRepositorySQLAlchemy()
+resumen_repository = ResumenRepositorySQLAlchemy()
 
 list_cuentas_use_case = ListCuentas(cuenta_repository=cuenta_repository)
 get_cuenta_use_case = GetCuenta(cuenta_repository=cuenta_repository)
@@ -77,6 +81,9 @@ update_operacion_use_case = UpdateOperacion(operacion_repository=operacion_repos
 delete_operacion_use_case = DeleteOperacion(operacion_repository=operacion_repository,
                                             monedero_repository=monedero_repository,
                                             cuenta_repository=cuenta_repository)
+
+resumen_ingresos_use_case = ResumenIngresos(resumen_repository=resumen_repository)
+resumen_gastos_use_case = ResumenGastos(resumen_repository=resumen_repository)
 
 
 def list_cuentas(params: dict) -> Tuple[Any, int]:
@@ -351,6 +358,26 @@ def delete_operacion(id_operacion: int) -> Tuple[Any, int]:
         code = 400
         logger.warning("Error al eliminar la operación con id: {}".format(id_operacion))
         raise MessageError("Error al eliminar la operación con id: {}".format(id_operacion), code)
+    return response, code
+
+
+def resumen_ingresos(params: dict) -> Tuple[Any, int]:
+    code = 200
+    __cast_params(params)
+    response = resumen_ingresos_use_case.execute(params)
+    response_elements = []
+    # for element in elements:
+    #    response_elements.append(element.get_dto())
+    return response, code
+
+
+def resumen_gastos(params: dict) -> Tuple[Any, int]:
+    code = 200
+    __cast_params(params)
+    response = resumen_gastos_use_case.execute(params)
+    response_elements = []
+    # for element in elements:
+    #    response_elements.append(element.get_dto())
     return response, code
 
 
