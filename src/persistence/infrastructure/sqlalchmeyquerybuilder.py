@@ -86,12 +86,13 @@ class SQLAlchemyQueryBuilder:
                     value=filter.get_value()
                 )
                 return and_(function(property, value))
-            else:
-                if filter.get_operator() == WhereOperator.NOT or filter.get_operator() == WhereOperator.IS:
-                    entity = self.__entity_class
-                    property = entity.get_filter_column(filter.get_key())
-                    value = None
-                    return and_(function(property, value))
+            elif (filter.get_operator() == WhereOperator.NOT
+                  or filter.get_operator() == WhereOperator.IS
+                  or filter.get_operator() == WhereOperator.NOTEQUAL):
+                entity = self.__entity_class
+                property = entity.get_filter_column(filter.get_key())
+                value = None
+                return and_(function(property, value))
 
         if isinstance(filter, FilterComposite):
             condition_left = self._get_conditions(filter.get_left())
@@ -112,7 +113,6 @@ class SQLAlchemyQueryBuilder:
         order_by_clauses = self.__get_order_by_clauses(criteria, defaultOrder)
         query = query.order_by(*order_by_clauses)
         return query
-
 
     def __get_order_by_clauses(self, criteria: Criteria, defaultOrder: SQLAlchemyOrderDefault):
         if criteria.order() is None:
