@@ -120,7 +120,6 @@ $( document ).ready(function() {
                 $("#ponderacion-label").text("La ponderación no suma 100, esto puede traer problemas con las operaciones que involucren todas las cuentas")
             } else
                 $("#ponderacion-label").text("")
-            console.log(ponderacion)
          })
         .DataTable({
         ajax: {
