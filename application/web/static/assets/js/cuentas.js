@@ -110,7 +110,19 @@ render_actions = function (data, type) {
 
 $( document ).ready(function() {
 
-    table = $('#lista_tabla').DataTable({
+    table = $('#lista_tabla')
+        .on('xhr.dt', function ( e, settings, json, xhr ) {
+            var ponderacion = 0;
+            for (var i=0; i<json.length; i++) {
+                ponderacion+=json[i].ponderacion
+            }
+            if (ponderacion != 100){
+                $("#ponderacion-label").text("La ponderación no suma 100, esto puede traer problemas con las operaciones que involucren todas las cuentas")
+            } else
+                $("#ponderacion-label").text("")
+            console.log(ponderacion)
+         })
+        .DataTable({
         ajax: {
             url:'/finanzas/cuenta',
             dataSrc: '',
