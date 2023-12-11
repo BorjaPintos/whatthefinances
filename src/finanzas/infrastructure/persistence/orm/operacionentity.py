@@ -3,9 +3,7 @@ from typing import Any
 
 from sqlalchemy import Column, Date, Float, Text, Integer
 
-from src.finanzas.domain.categoriagasto import CategoriaGasto
 from src.finanzas.domain.operacion import Operacion
-from src.finanzas.infrastructure.persistence.orm.categoriagastoentity import CategoriaGastoEntity
 from src.persistence.domain.init_table import InitTable
 from src.persistence.infrastructure.orm.baseentity import BaseEntity
 

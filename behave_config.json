@@ -1,18 +1,10 @@
 {
-  "endpoint" : "https://localhost:9090",
+  "endpoint" : "http://localhost:9090",
   "database": {
     "type": "sqlite",
     "sqlite": {
       "file": "database.sqlite3",
       "debug": false
-    },
-    "postgres": {
-      "host": "localhost",
-      "port": 5432,
-      "database": "mydatabase",
-      "user": "postgres",
-      "password": "postgresqlpassword",
-      "debug": true
     }
   }
 }

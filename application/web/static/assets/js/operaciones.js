@@ -1,3 +1,5 @@
+
+
 function add_operacion() {
     var fecha = $("#addFechaDataPicker").val()
     var descripcion = $("#addTypeDescripcionX").val();
@@ -461,6 +463,24 @@ $(document).ready(function() {
         $("#addTypePonderacionX").val('')
         $("#addTypeMessageX").text('')
         $('#addFechaDataPicker').datepicker('update',  new Date());
+
+        $("#add-gasto-categoria-gasto-select").val('');
+        $("#add-gasto-cuenta-cargo-select").val('None');
+        $("#add-gasto-monedero-cargo-select").val('');
+
+        $("#add-ingreso-categoria-ingreso-select").val('');
+        $("#add-ingreso-cuenta-abono-select").val('None');
+        $("#add-ingreso-monedero-abono-select").val('');
+
+        $("#add-transferencia-categoria-ingreso-select").val('');
+        $("#add-transferencia-cuenta-abono-select").val('');
+        $("#add-transferencia-monedero-abono-select").val('');
+        $("#add-transferencia-categoria-gasto-select").val('');
+        $("#add-transferencia-cuenta-cargo-select").val('');
+        $("#add-transferencia-monedero-cargo-select").val('');
+
+        $("#add-tipo-gasto").prop('checked', true);
+
         $("#add-div-gasto").collapse('show');
         $("#add-div-ingreso").collapse('hide');
         $("#add-div-transferencia").collapse('hide');

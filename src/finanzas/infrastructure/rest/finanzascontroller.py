@@ -1,8 +1,14 @@
 import locale
 from datetime import datetime
 
+from src.finanzas.application.resumencuentas import ResumenCuentas
 from src.finanzas.application.resumengastos import ResumenGastos
 from src.finanzas.application.resumeningresos import ResumenIngresos
+from src.finanzas.application.resumenmonederos import ResumenMonederos
+from src.finanzas.infrastructure.persistence.movimientocuentarepositorysqlalchemy import \
+    MovimientoCuentaRepositorySQLAlchemy
+from src.finanzas.infrastructure.persistence.movimientomonederorepositorysqlalchemy import \
+    MovimientoMonederoRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.resumenrepositorysqlalchemy import ResumenRepositorySQLAlchemy
 from src.shared.infraestructure.rest.pagination import Pagination
 
@@ -41,7 +47,9 @@ from src.finanzas.infrastructure.persistence.operacionrepositorysqlalchemy impor
 from src.shared.domain.exceptions.messageerror import MessageError
 
 cuenta_repository = CuentaRepositorySQLAlchemy()
+movimiento_cuenta_repository = MovimientoCuentaRepositorySQLAlchemy()
 monedero_repository = MonederoRepositorySQLAlchemy()
+movimiento_monedero_repository = MovimientoMonederoRepositorySQLAlchemy()
 categorias_ingreso_repository = CategoriaIngresoRepositorySQLAlchemy()
 categorias_gasto_repository = CategoriaGastoRepositorySQLAlchemy()
 operacion_repository = OperacionRepositorySQLAlchemy()
@@ -74,16 +82,24 @@ list_operaciones_use_case = ListOperaciones(operacion_repository=operacion_repos
 get_operacion_use_case = GetOperacion(operacion_repository=operacion_repository)
 create_operacion_use_case = CreateOperacion(operacion_repository=operacion_repository,
                                             monedero_repository=monedero_repository,
-                                            cuenta_repository=cuenta_repository)
+                                            movimiento_monedero_repository=movimiento_monedero_repository,
+                                            cuenta_repository=cuenta_repository,
+                                            movimiento_cuenta_repository=movimiento_cuenta_repository)
 update_operacion_use_case = UpdateOperacion(operacion_repository=operacion_repository,
                                             monedero_repository=monedero_repository,
-                                            cuenta_repository=cuenta_repository)
+                                            movimiento_monedero_repository=movimiento_monedero_repository,
+                                            cuenta_repository=cuenta_repository,
+                                            movimiento_cuenta_repository=movimiento_cuenta_repository)
 delete_operacion_use_case = DeleteOperacion(operacion_repository=operacion_repository,
                                             monedero_repository=monedero_repository,
-                                            cuenta_repository=cuenta_repository)
+                                            movimiento_monedero_repository=movimiento_monedero_repository,
+                                            cuenta_repository=cuenta_repository,
+                                            movimiento_cuenta_repository=movimiento_cuenta_repository)
 
 resumen_ingresos_use_case = ResumenIngresos(resumen_repository=resumen_repository)
 resumen_gastos_use_case = ResumenGastos(resumen_repository=resumen_repository)
+resumen_cuentas_use_case = ResumenCuentas(resumen_repository=resumen_repository)
+resumen_monederos_use_case = ResumenMonederos(resumen_repository=resumen_repository)
 
 
 def list_cuentas(params: dict) -> Tuple[Any, int]:
@@ -366,9 +382,9 @@ def resumen_ingresos(params: dict) -> Tuple[Any, int]:
     __cast_params(params)
     response = resumen_ingresos_use_case.execute(params)
     response_elements = []
-    # for element in elements:
-    #    response_elements.append(element.get_dto())
-    return response, code
+    for element in response:
+        response_elements.append(element.get_dto())
+    return response_elements, code
 
 
 def resumen_gastos(params: dict) -> Tuple[Any, int]:
@@ -376,9 +392,29 @@ def resumen_gastos(params: dict) -> Tuple[Any, int]:
     __cast_params(params)
     response = resumen_gastos_use_case.execute(params)
     response_elements = []
-    # for element in elements:
-    #    response_elements.append(element.get_dto())
-    return response, code
+    for element in response:
+        response_elements.append(element.get_dto())
+    return response_elements, code
+
+
+def resumen_cuentas(params: dict) -> Tuple[Any, int]:
+    code = 200
+    __cast_params(params)
+    response = resumen_cuentas_use_case.execute(params)
+    response_elements = []
+    for element in response:
+        response_elements.append(element.get_dto())
+    return response_elements, code
+
+def resumen_monederos(params: dict) -> Tuple[Any, int]:
+    code = 200
+    __cast_params(params)
+    response = resumen_monederos_use_case.execute(params)
+    response_elements = []
+    for element in response:
+        response_elements.append(element.get_dto())
+    return response_elements, code
+
 
 
 def __cast_params(params: dict):

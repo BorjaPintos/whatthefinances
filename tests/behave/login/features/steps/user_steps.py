@@ -7,7 +7,7 @@ def create_users(context):
     for row in context.table:
         name = row["name"]
         password = row["password"]
-        context.database.exec_sql('INSERT into user ("name", "password") values ("{}","{}");'.format(name, password))
+        context.database.exec_sql('INSERT into users ("name", "password") values ("{}","{}");'.format(name, password))
 
 @when('Obtengo el usuario con id {id}')
 def get_user(context, id):

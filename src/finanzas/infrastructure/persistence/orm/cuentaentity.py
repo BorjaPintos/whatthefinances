@@ -1,6 +1,4 @@
 from sqlalchemy import Column, Text, Float, Integer
-from sqlalchemy.orm import column_property
-from sqlalchemy.sql import functions
 from typing_extensions import Any
 
 from src.finanzas.domain.cuenta import Cuenta

@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from typing import List
-from sqlalchemy import inspect, MetaData, text
+from sqlalchemy import inspect, MetaData, text, func, Column
 from sqlalchemy import create_engine, Connection
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, create_database
@@ -25,7 +25,6 @@ class SQLAlchemyDatabase(Database):
         self._session_maker = sessionmaker(bind=self._engine)
         return connection
 
-
     def commit(self):
         self._connection.commit()
 
@@ -45,7 +44,7 @@ class SQLAlchemyDatabase(Database):
         return self._inspect.has_table(table_name)
 
     def check_if_table_has_data(self, table_name: str) -> bool:
-        result = self.exec_sql("select * from {} limit 1".format(table_name, commit=False))
+        result = self.exec_sql("select * from {} limit 1".format(table_name), commit=False)
         if result.first():
             return True
         else:
@@ -59,7 +58,8 @@ class SQLAlchemyDatabase(Database):
         return self._metadata.drop_all(self._engine, [entity.__table__])
 
     def clear_table(self, table_name: str):
-        return self.exec_sql("Delete from {}".format(table_name))
+        result = self.exec_sql("Delete from {}".format(table_name))
+        self._connection.commit()
 
     def exec_sql(self, query: str, commit: bool = True):
         res = self._connection.execute(text(query))
@@ -70,3 +70,10 @@ class SQLAlchemyDatabase(Database):
     def new_session(self):
         return self._session_maker()
 
+    @abstractmethod
+    def year(self, colum: Column):
+        pass
+
+    @abstractmethod
+    def month(self, colum: Column):
+        pass
