@@ -1,7 +1,8 @@
 from typing import List
 
-from src.finanzas.domain.resumencuenta import ResumenCuenta
+
 from src.finanzas.domain.resumenrepository import ResumenRepository
+from src.finanzas.domain.resumentotal import ResumenTotal
 from src.persistence.application.transactionalusecase import transactional, TransactionalUseCase
 from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.filter import Filter
@@ -10,17 +11,17 @@ from src.persistence.domain.filterutils import combine_filters
 from src.persistence.domain.simplefilter import SimpleFilter, WhereOperator
 
 
-class ResumenCuentas(TransactionalUseCase):
+class ResumenTotales(TransactionalUseCase):
 
     def __init__(self, resumen_repository: ResumenRepository):
         super().__init__([resumen_repository])
         self._resumen_repository = resumen_repository
 
     @transactional(readonly=True)
-    def execute(self, params: dict) -> List[ResumenCuenta]:
+    def execute(self, params: dict) -> List[ResumenTotal]:
         criteria = Criteria(filter=self._create_filters(params))
-        resumen_cuentas = (self._resumen_repository.cuentas(criteria))
-        return resumen_cuentas
+        resumen_totales = (self._resumen_repository.total(criteria))
+        return resumen_totales
 
     @staticmethod
     def _create_filters(params: dict) -> Filter:
