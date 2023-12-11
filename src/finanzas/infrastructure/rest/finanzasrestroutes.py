@@ -320,3 +320,36 @@ def import_routes(rootpath, app):
             "end_fecha": request.args.get('end_fecha', None),
         }
         return finanzascontroller.resumen_monederos(params)
+
+
+    @app.route(rootpath + "/resumen/total", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_total():
+        params = {
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzascontroller.resumen_total(params)
+
+    @app.route(rootpath + "/resumen/total-ingresos", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_total_ingresos():
+        params = {
+            "tipo": "ingresos",
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzascontroller.resumen_total(params)
+
+    @app.route(rootpath + "/resumen/total-gastos", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_total_gastos():
+        params = {
+            "tipo": "gastos",
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzascontroller.resumen_total(params)

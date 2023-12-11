@@ -6,6 +6,7 @@ from src.finanzas.domain.resumencuenta import ResumenCuenta
 from src.finanzas.domain.resumengasto import ResumenGasto
 from src.finanzas.domain.resumeningreso import ResumenIngreso
 from src.finanzas.domain.resumenmonedero import ResumenMonedero
+from src.finanzas.domain.resumentotal import ResumenTotal
 from src.persistence.domain.criteria import Criteria
 
 
@@ -22,6 +23,11 @@ class ResumenRepository(ABC):
     @abstractmethod
     def cuentas(self, criteria) -> List[ResumenCuenta]:
         pass
+
     @abstractmethod
     def monederos(self, criteria) -> List[ResumenMonedero]:
+        pass
+
+    @abstractmethod
+    def total(self, criteria) -> List[ResumenTotal]:
         pass

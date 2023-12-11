@@ -26,6 +26,7 @@ class ResumenMonederos(TransactionalUseCase):
     def _create_filters(params: dict) -> Filter:
         filter = None
         if "tipo" in params and params["tipo"]:
+            filter_tipo = None
             if params["tipo"] == "ingresos":
                 filter_tipo = SimpleFilter("cantidad", WhereOperator.GREATER, 0)
             elif params["tipo"] == "gastos":

@@ -3,7 +3,7 @@ from typing import List
 from src.finanzas.domain.resumeningreso import ResumenIngreso
 from src.finanzas.domain.resumenrepository import ResumenRepository
 from src.persistence.application.transactionalusecase import transactional, TransactionalUseCase
-from src.persistence.domain.criteria import Criteria, Order, OrderBy, OrderType
+from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.filter import Filter
 from src.persistence.domain.filtercomposite import CompositeOperator
 from src.persistence.domain.filterutils import combine_filters

@@ -7,6 +7,7 @@ from src.finanzas.domain.resumengasto import ResumenGasto
 from src.finanzas.domain.resumeningreso import ResumenIngreso
 from src.finanzas.domain.resumenmonedero import ResumenMonedero
 from src.finanzas.domain.resumenrepository import ResumenRepository
+from src.finanzas.domain.resumentotal import ResumenTotal
 from src.finanzas.infrastructure.persistence.orm.categoriagastoentity import CategoriaGastoEntity
 from src.finanzas.infrastructure.persistence.orm.categoriaingresoentity import CategoriaIngresoEntity
 from src.finanzas.infrastructure.persistence.orm.cuentaentity import CuentaEntity
@@ -172,6 +173,38 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
                                "nombre_monedero": row[4]
                                }
                     elements.append(ResumenMonedero(element))
+        except Exception as e:
+            traceback.print_exc()
+
+        return elements
+
+
+    def total(self, criteria) -> List[ResumenTotal]:
+        elements = []
+        try:
+            columnas = (
+                DatabaseManager.get_database().year(OperacionEntity.fecha),
+                DatabaseManager.get_database().month(OperacionEntity.fecha),
+                func.sum(MovimientoCuentaEntity.cantidad)
+            )
+
+            query_builder = SQLAlchemyQueryBuilder(MovimientoCuentaEntity, self._session, selected_columns=columnas)
+            query = query_builder.build_query(criteria) \
+                .join(OperacionEntity, MovimientoCuentaEntity.id_operacion == OperacionEntity.id, isouter=True)
+            query = query.group_by(
+                DatabaseManager.get_database().year(OperacionEntity.fecha),
+                DatabaseManager.get_database().month(OperacionEntity.fecha))
+            query = query.order_by(DatabaseManager.get_database().year(OperacionEntity.fecha).desc(),
+                                   DatabaseManager.get_database().month(OperacionEntity.fecha).desc())
+
+            result = query.all()
+            if result is not None:
+                for row in result:
+                    element = {"año": row[0],
+                               "mes": row[1],
+                               "total": row[2]
+                               }
+                    elements.append(ResumenTotal(element))
         except Exception as e:
             traceback.print_exc()
 

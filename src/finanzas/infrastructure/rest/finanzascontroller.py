@@ -5,6 +5,7 @@ from src.finanzas.application.resumencuentas import ResumenCuentas
 from src.finanzas.application.resumengastos import ResumenGastos
 from src.finanzas.application.resumeningresos import ResumenIngresos
 from src.finanzas.application.resumenmonederos import ResumenMonederos
+from src.finanzas.application.resumentotales import ResumenTotales
 from src.finanzas.infrastructure.persistence.movimientocuentarepositorysqlalchemy import \
     MovimientoCuentaRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.movimientomonederorepositorysqlalchemy import \
@@ -100,7 +101,7 @@ resumen_ingresos_use_case = ResumenIngresos(resumen_repository=resumen_repositor
 resumen_gastos_use_case = ResumenGastos(resumen_repository=resumen_repository)
 resumen_cuentas_use_case = ResumenCuentas(resumen_repository=resumen_repository)
 resumen_monederos_use_case = ResumenMonederos(resumen_repository=resumen_repository)
-
+resumen_total_use_case = ResumenTotales(resumen_repository=resumen_repository)
 
 def list_cuentas(params: dict) -> Tuple[Any, int]:
     code = 200
@@ -406,6 +407,7 @@ def resumen_cuentas(params: dict) -> Tuple[Any, int]:
         response_elements.append(element.get_dto())
     return response_elements, code
 
+
 def resumen_monederos(params: dict) -> Tuple[Any, int]:
     code = 200
     __cast_params(params)
@@ -415,6 +417,15 @@ def resumen_monederos(params: dict) -> Tuple[Any, int]:
         response_elements.append(element.get_dto())
     return response_elements, code
 
+
+def resumen_total(params: dict) -> Tuple[Any, int]:
+    code = 200
+    __cast_params(params)
+    response = resumen_total_use_case.execute(params)
+    response_elements = []
+    for element in response:
+        response_elements.append(element.get_dto())
+    return response_elements, code
 
 
 def __cast_params(params: dict):
