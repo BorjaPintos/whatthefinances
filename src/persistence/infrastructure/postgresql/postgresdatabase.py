@@ -1,3 +1,5 @@
+from sqlalchemy import Column, func
+
 from src.persistence.infrastructure.sqlalchemydatabase import SQLAlchemyDatabase
 
 
@@ -10,3 +12,9 @@ class PostgresDatabase(SQLAlchemyDatabase):
         return """postgresql://{0}:{1}@{2}:{3}/{4}""".format(self._config["user"], self._config["password"],
                                                              self._config["host"], self._config["port"],
                                                              self._config["database"])
+
+    def year(self, colum: Column):
+        return func.extract("Year", colum)
+
+    def month(self, colum: Column):
+        return func.extract("Month", colum)

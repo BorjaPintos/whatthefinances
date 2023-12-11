@@ -1,6 +1,7 @@
 from abc import abstractmethod
 from typing import List
 
+from sqlalchemy import Column
 from sqlalchemy.orm import DeclarativeMeta
 
 from src.persistence.infrastructure.orm.baseentity import BaseEntity
@@ -67,4 +68,12 @@ class Database:
 
     @abstractmethod
     def new_session(self):
+        pass
+
+    @abstractmethod
+    def year(self, colum: Column):
+        pass
+
+    @abstractmethod
+    def month(self, colum: Column):
         pass

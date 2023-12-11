@@ -6,7 +6,7 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 
 @InitTable()
 class UserEntity(BaseEntity):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(Text, nullable=False)
     password = Column(Text, nullable=False)

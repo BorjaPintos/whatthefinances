@@ -12,7 +12,7 @@ class OperacionRepository(ABC):
         pass
 
     @abstractmethod
-    def new(self, params: dict) -> bool:
+    def new(self, params: dict) -> int:
         pass
 
     @abstractmethod

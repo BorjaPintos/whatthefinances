@@ -256,3 +256,67 @@ def import_routes(rootpath, app):
             "end_fecha": request.args.get('end_fecha', None),
         }
         return finanzascontroller.resumen_gastos(params)
+
+    @app.route(rootpath + "/resumen/cuentas-ingreso", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_cuentas_ingreso():
+        params = {
+            "tipo": "ingresos",
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzascontroller.resumen_cuentas(params)
+
+    @app.route(rootpath + "/resumen/cuentas-gasto", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_cuentas_gasto():
+        params = {
+            "tipo": "gastos",
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzascontroller.resumen_cuentas(params)
+
+    @app.route(rootpath + "/resumen/cuentas-total", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_cuentas_total():
+        params = {
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzascontroller.resumen_cuentas(params)
+
+    @app.route(rootpath + "/resumen/monederos-ingreso", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_monederos_ingreso():
+        params = {
+            "tipo": "ingresos",
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzascontroller.resumen_monederos(params)
+
+    @app.route(rootpath + "/resumen/monederos-gasto", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_monederos_gasto():
+        params = {
+            "tipo": "gastos",
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzascontroller.resumen_monederos(params)
+
+    @app.route(rootpath + "/resumen/monederos-total", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_monederos_total():
+        params = {
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzascontroller.resumen_monederos(params)

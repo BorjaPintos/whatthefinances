@@ -1,6 +1,6 @@
 from typing import List
 
-
+from src.finanzas.domain.resumeningreso import ResumenIngreso
 from src.finanzas.domain.resumenrepository import ResumenRepository
 from src.persistence.application.transactionalusecase import transactional, TransactionalUseCase
 from src.persistence.domain.criteria import Criteria, Order, OrderBy, OrderType
@@ -17,7 +17,7 @@ class ResumenIngresos(TransactionalUseCase):
         self._resumen_repository = resumen_repository
 
     @transactional(readonly=True)
-    def execute(self, params: dict) -> List[dict]:
+    def execute(self, params: dict) -> List[ResumenIngreso]:
         criteria = Criteria(filter=self._create_filters(params))
         resumen_ingresos = self._resumen_repository.ingresos(criteria)
         return resumen_ingresos

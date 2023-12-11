@@ -104,7 +104,7 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
             traceback.print_exc()
         return None
 
-    def new(self, params: dict) -> bool:
+    def new(self, params: dict) -> int:
         try:
 
             self.check_cuenta(params.get("id_cuenta_cargo"))
@@ -125,7 +125,7 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
                                      id_monedero_abono=params.get("id_monedero_abono"))
             self._session.add(entity)
             self._session.flush()
-            return True
+            return entity.id
         except IntegrityError as e:
             logger.info(e)
         except NotFoundError as e:
@@ -133,7 +133,7 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
             raise e
         except Exception as e:
             traceback.print_exc()
-        return False
+        return None
 
     def update(self, operacion: Operacion) -> bool:
         try:
