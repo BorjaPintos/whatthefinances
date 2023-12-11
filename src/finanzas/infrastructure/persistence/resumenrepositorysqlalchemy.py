@@ -49,10 +49,10 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
             result = query.all()
             if result is not None:
                 for row in result:
-                    element = {"año": row[0],
-                               "mes": row[1],
-                               "total": row[2],
-                               "id_categoria_ingreso": row[3],
+                    element = {"año": int(row[0]),
+                               "mes": int(row[1]),
+                               "total": float(row[2]),
+                               "id_categoria_ingreso": int(row[3]),
                                "descripcion_categoria_ingreso": row[4]
                                }
                     elements.append(ResumenIngreso(element))
@@ -88,10 +88,10 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
             result = query.all()
             if result is not None:
                 for row in result:
-                    element = {"año": row[0],
-                               "mes": row[1],
-                               "total": row[2],
-                               "id_categoria_gasto": row[3],
+                    element = {"año": int(row[0]),
+                               "mes": int(row[1]),
+                               "total": float(row[2]),
+                               "id_categoria_gasto": int(row[3]),
                                "descripcion_categoria_gasto": row[4]
                                }
                     elements.append(ResumenGasto(element))
@@ -127,10 +127,10 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
             result = query.all()
             if result is not None:
                 for row in result:
-                    element = {"año": row[0],
-                               "mes": row[1],
-                               "total": row[2],
-                               "id_cuenta": row[3],
+                    element = {"año": int(row[0]),
+                               "mes": int(row[1]),
+                               "total": float(row[2]),
+                               "id_cuenta": int(row[3]),
                                "nombre_cuenta": row[4]
                                }
                     elements.append(ResumenCuenta(element))
@@ -166,10 +166,10 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
             result = query.all()
             if result is not None:
                 for row in result:
-                    element = {"año": row[0],
-                               "mes": row[1],
-                               "total": row[2],
-                               "id_monedero": row[3],
+                    element = {"año": int(row[0]),
+                               "mes": int(row[1]),
+                               "total": float(row[2]),
+                               "id_monedero": int(row[3]),
                                "nombre_monedero": row[4]
                                }
                     elements.append(ResumenMonedero(element))
@@ -200,9 +200,9 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
             result = query.all()
             if result is not None:
                 for row in result:
-                    element = {"año": row[0],
-                               "mes": row[1],
-                               "total": row[2]
+                    element = {"año": int(row[0]),
+                               "mes": int(row[1]),
+                               "total": float(row[2])
                                }
                     elements.append(ResumenTotal(element))
         except Exception as e:

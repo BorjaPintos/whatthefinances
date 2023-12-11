@@ -32,7 +32,8 @@ class MovimientoMonederoEntity(BaseEntity):
     def get_filter_column(str_property: str) -> Column:
         switcher = {
             "id": MovimientoMonederoEntity.id,
-            "fecha": OperacionEntity.fecha,
+            "begin_fecha": OperacionEntity.fecha,
+            "end_fecha": OperacionEntity.fecha,
             "id_operacion": MovimientoMonederoEntity.id_operacion,
             "id_monedero": MovimientoMonederoEntity.id_monedero,
             "cantidad": MovimientoMonederoEntity.cantidad

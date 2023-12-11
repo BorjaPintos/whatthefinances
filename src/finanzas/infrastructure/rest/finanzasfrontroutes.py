@@ -19,11 +19,11 @@ def import_routes(rootpath, app):
         date = datetime.datetime.fromtimestamp(value)
         return date.strftime("%Y-%m-%d")
 
-    @app.route(rootpath + "home.html", methods=['GET'])
+    @app.route(rootpath + "resumen.html", methods=['GET'])
     @login_required
     def home():
         user = request.user
-        return render_template('/home.html', username=user.get_name())
+        return render_template('/resumen.html', username=user.get_name())
 
     @app.route(rootpath + "cuentas.html", methods=['GET'])
     @login_required
