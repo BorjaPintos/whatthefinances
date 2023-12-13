@@ -25,7 +25,22 @@ tr.gasto.odd, tr.gasto.even, .gasto{
 }
 
 tr.resumen-total.odd, tr.resumen-total.even, .resumen-total{
-    background-color:#999999;
+    background-color:#AED6F1;
+}
+
+tr.resumen-ingreso.odd, tr.resumen-ingreso.even, .resumen-ingreso{
+    background-color:#82E0AA;
+   --ct-table-hover-bg: #CCD1D1;
+}
+
+tr.resumen-gasto.odd, tr.resumen-gasto.even, .resumen-gasto{
+    background-color:#F5B7B1;
+    --ct-table-hover-bg: #CCD1D1;
+}
+
+.resumen-ingreso .text-success {
+    --ct-text-opacity: 1;
+    color: green!important;
 }
 
 ul.pagination{
