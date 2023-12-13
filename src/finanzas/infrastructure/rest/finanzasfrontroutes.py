@@ -29,7 +29,7 @@ def import_routes(rootpath, app):
     @login_required
     def cuentas():
         user = request.user
-        lista_headers = ["Nombre", "Ponderación", "Capital Inicial", "Diferencia", "Total"]
+        lista_headers = ["tipo_row", "Nombre", "Ponderación", "Capital Inicial", "Diferencia", "Total"]
         return render_template('/cuentas.html', username=user.get_name(),
                                title="Cuentas",
                                lista_headers=lista_headers)
@@ -38,7 +38,7 @@ def import_routes(rootpath, app):
     @login_required
     def monederos():
         user = request.user
-        lista_headers = ["Nombre", "Capital Inicial", "Diferencia", "Total"]
+        lista_headers = ["tipo_row", "Nombre", "Capital Inicial", "Diferencia", "Total"]
         return render_template('/monederos.html', username=user.get_name(),
                                title="Monederos",
                                lista_headers=lista_headers)

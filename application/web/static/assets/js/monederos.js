@@ -89,7 +89,7 @@ render_dinero = function (data, type) {
             add_class = "text-success"
         else if (data < 0)
             add_class = "text-danger"
-        return "<span class='ms-2 "+add_class+"'>"+number+"</span><span class='ms-2 "+add_class+"'>€</span>"
+        return "<span class='ms-2 font-weight-bold "+add_class+"'>"+number+"</span><span class='ms-2 font-weight-bold "+add_class+"'>€</span>"
     }
     return data
 }
@@ -105,12 +105,38 @@ render_actions = function (data, type) {
 
 $( document).ready(function() {
 
-    table = $('#lista_tabla').DataTable({
+    table = $('#lista_tabla')
+    .on('xhr.dt', function ( e, settings, json, xhr ) {
+        var total_inicial = 0
+        var total_diferencia = 0
+        var total = 0
+        for (var i=0; i<json.length; i++) {
+            total_inicial+=json[i].cantidad_inicial
+            total_diferencia+=json[i].diferencia,
+            json[i].tipo_row = "Monederos"
+        }
+        total = total_inicial+total_diferencia;
+        json.push({
+        "id":0,
+        "nombre":"Total",
+        "cantidad_inicial":total_inicial,
+        "diferencia":total_diferencia,
+        "total": total,
+        "DT_RowClass" : "resumen-total",
+        "tipo_row" : "Resumen"
+        })
+    })
+    .DataTable({
         ajax: {
             url:'/finanzas/monedero',
             dataSrc: '',
         },
         columns: [
+            {
+                data:'tipo_row',
+                type: "string",
+                visible: false
+            },
             {
                 data:'nombre',
                 type: "string"
@@ -138,7 +164,8 @@ $( document).ready(function() {
                 orderSequence:[]
             }
         ],
-        order: [[0, 'asc']],
+        orderFixed: [0, 'asc'],
+        order: [[1, 'asc']],
         info: true,
         paging: false,
         searching: false,
@@ -148,10 +175,14 @@ $( document).ready(function() {
             infoEmpty: 'No hay monederos',
             loadingRecords: "Cargando...",
             decimal:",",
+        },
+        rowGroup: {
+            dataSrc: 'tipo_row'
         }
     });
 
     table.on( 'draw', function () {
+        $('.dtrg-group').remove();
         activar_elements();
         $('.edit-element').on( "click", function() {
             var data = table.row($(this).parents('tr')).data()

@@ -24,6 +24,10 @@ tr.gasto.odd, tr.gasto.even, .gasto{
     --ct-table-hover-bg: #CCD1D1;
 }
 
+tr.resumen-total.odd, tr.resumen-total.even, .resumen-total{
+    background-color:#999999;
+}
+
 ul.pagination{
     margin: 2px 0;
     white-space: nowrap;
@@ -55,4 +59,8 @@ ul.pagination{
 
 .search-label{
 font-weight: bold;
+}
+
+.font-weight-bold{
+    font-weight: bold;
 }
