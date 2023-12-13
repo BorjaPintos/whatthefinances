@@ -91,19 +91,22 @@ render_dinero = function (data, type) {
     var add_class = ""
     if (type === 'display') {
         if (data > 0)
-            add_class = "text-success"
+            add_class = "text-success "
         else if (data < 0)
-            add_class = "text-danger"
-        return "<span class='ms-2 "+add_class+"'>"+number+"</span><span class='ms-2 "+add_class+"'>€</span>"
+            add_class = "text-danger "
+        return "<span class='ms-2 font-weight-bold "+add_class+"'>"+number+"</span><span class='ms-2 font-weight-bold "+add_class+"'>€</span>"
     }
     return data
 }
 
 render_actions = function (data, type) {
     if (type === 'display') {
-        edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
-        del = '<a class="delete-element font-18 text-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete" data-bs-original-title="Borrar" data-element="'+data+'"><i class="uil uil-trash"></i></a>'
-        return edit + del
+        if (data != 0) {
+            edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
+            del = '<a class="delete-element font-18 text-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete" data-bs-original-title="Borrar" data-element="'+data+'"><i class="uil uil-trash"></i></a>'
+            return edit + del
+        }
+        return ""
     }
     return data
 }
@@ -113,13 +116,30 @@ $( document ).ready(function() {
     table = $('#lista_tabla')
         .on('xhr.dt', function ( e, settings, json, xhr ) {
             var ponderacion = 0;
+            var total_inicial = 0
+            var total_diferencia = 0
+            var total = 0
             for (var i=0; i<json.length; i++) {
                 ponderacion+=json[i].ponderacion
+                total_inicial+=json[i].cantidad_inicial
+                total_diferencia+=json[i].diferencia
+                json[i]["tipo_row"] = "Cuentas"
             }
+            total = total_inicial+total_diferencia;
             if (ponderacion != 100){
                 $("#ponderacion-label").text("La ponderación no suma 100, esto puede traer problemas con las operaciones que involucren todas las cuentas")
             } else
                 $("#ponderacion-label").text("")
+            json.push({
+            "id":0,
+            "nombre":"Total",
+            "ponderacion":ponderacion,
+            "cantidad_inicial":total_inicial,
+            "diferencia":total_diferencia,
+            "total": total,
+            "DT_RowClass" : "resumen-total",
+            "tipo_row" : "Resumen"
+            })
          })
         .DataTable({
         ajax: {
@@ -127,6 +147,11 @@ $( document ).ready(function() {
             dataSrc: '',
         },
         columns: [
+            {
+                data:'tipo_row',
+                type: "string",
+                visible: false
+            },
             {
                 data:'nombre',
                 type: "string"
@@ -158,7 +183,11 @@ $( document ).ready(function() {
                 orderSequence:[]
             }
         ],
-        order: [[0, 'asc']],
+        rowGroup: {
+            dataSrc: "tipo_row"
+        },
+        orderFixed: [0, 'asc'],
+        order: [[1, 'asc']],
         info: true,
         paging: false,
         searching: false,
@@ -172,6 +201,7 @@ $( document ).ready(function() {
     });
 
     table.on( 'draw', function () {
+        $('.dtrg-group').remove();
         activar_elements();
         $('.edit-element').on( "click", function() {
             var data = table.row($(this).parents('tr')).data()

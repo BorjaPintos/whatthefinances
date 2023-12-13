@@ -67,7 +67,7 @@ $(document).ready(function() {
                       borderColor: '#82E0AA',
                       backgroundColor: '#82E0AA',
                       borderWidth: 2,
-                      yAxisID: 'y1',
+                      yAxisID: 'y',
                     },
                     {
                       label: 'Gastos',
@@ -75,7 +75,7 @@ $(document).ready(function() {
                       borderColor: '#F5B7B1',
                       backgroundColor: '#F5B7B1',
                       borderWidth: 2,
-                      yAxisID: 'y2',
+                      yAxisID: 'y',
                     }]
                   },
                   options: {
@@ -90,14 +90,6 @@ $(document).ready(function() {
                         type: 'linear',
                         display: true,
                         position: 'left',
-                      },
-                      y1: {
-                        type: 'linear',
-                        display: false,
-                      },
-                      y2: {
-                        type: 'linear',
-                        display: false,
                       }
                     }
                   }
@@ -105,7 +97,4 @@ $(document).ready(function() {
             });
         });
     });
-
-
-
 });
