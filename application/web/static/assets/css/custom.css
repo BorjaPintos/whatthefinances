@@ -38,6 +38,11 @@ tr.resumen-gasto.odd, tr.resumen-gasto.even, .resumen-gasto{
     --ct-table-hover-bg: #CCD1D1;
 }
 
+#resumen-categorias-gasto-gasto .text-success {
+    --ct-text-opacity: 1;
+    color: rgba(var(--ct-danger-rgb),var(--ct-text-opacity))!important;
+}
+
 .resumen-ingreso .text-success {
     --ct-text-opacity: 1;
     color: green!important;

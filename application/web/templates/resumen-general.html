@@ -1,0 +1,31 @@
+{% extends 'layout.html'%}
+
+
+{% block cssstyle %}
+<link href="assets/datatables/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+{% endblock%}
+
+{% block contenido %}
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-body pt-2">
+                <div>
+                    <canvas id="resumen_totales"></canvas>
+                </div>
+
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div>
+
+{% endblock%}
+
+{% block script %}
+<script type="text/javascript" src="assets/datatables/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="assets/datatables/js/dataTables.bootstrap5.min.js"></script>
+<script type="text/javascript" src="assets/datatables/js/dataTables.rowGroup.min.js"></script>
+<script type="text/javascript" src="assets/chartjs/js/chart.js"></script>
+<script type="text/javascript" src="assets/js/resumen.js"></script>
+<script type="text/javascript" src="assets/js/resumengeneral.js"></script>
+{% endblock %}

@@ -19,5 +19,5 @@ activar_collapse = function(){
 
 activar_elements = function(){
     activar_tooltip();
-    activar_collapse();
+    //activar_collapse();
 }
