@@ -15,7 +15,7 @@ function on_login() {
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4)
             if (xhttp.status === 200) {
-                window.location = '/resumen.html';
+                window.location = '/resumen-general.html';
             } else if (xhttp.status != 200){
                 var respuesta = JSON.parse(xhttp.responseText).message;
                 document.getElementById("typeMessageX").innerText = respuesta

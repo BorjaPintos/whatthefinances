@@ -132,10 +132,27 @@
                 <li class="side-nav-title">Navigation</li>
 
                 <li class="side-nav-item">
-                    <a href="resumen.html" class="side-nav-link">
-                        <i class="uil-signal-alt-3"></i>
+                    <a data-bs-toggle="collapse" href="#sidebarresumen" aria-expanded="false" aria-controls="sidebarresumen"
+                       class="side-nav-link">
+                        <i class="uil uil-signal-alt-3"></i>
                         <span> Resumen </span>
                     </a>
+                    <div class="collapse" id="sidebarresumen">
+                        <ul class="side-nav-second-level">
+                            <li>
+                                <a href="resumen-general.html">General</a>
+                            </li>
+                            <li>
+                                <a href="resumen-cuentas.html">Cuentas</a>
+                            </li>
+                            <li>
+                                <a href="resumen-monederos.html">Monederos</a>
+                            </li>
+                            <li>
+                                <a href="resumen-categorias.html">Categorias</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
 
                 <li class="side-nav-item">
@@ -160,12 +177,12 @@
                 </li>
 
                 <li class="side-nav-item">
-                    <a data-bs-toggle="collapse" href="#sidebarCrm" aria-expanded="false" aria-controls="sidebarCrm"
+                    <a data-bs-toggle="collapse" href="#sidebarcategorias" aria-expanded="false" aria-controls="sidebarcategorias"
                        class="side-nav-link">
                         <i class="uil uil-wrench"></i>
                         <span> Configuración </span>
                     </a>
-                    <div class="collapse" id="sidebarCrm">
+                    <div class="collapse" id="sidebarcategorias">
                         <ul class="side-nav-second-level">
                             <li>
                                 <a href="categorias-ingreso.html">Categorias Ingreso</a>

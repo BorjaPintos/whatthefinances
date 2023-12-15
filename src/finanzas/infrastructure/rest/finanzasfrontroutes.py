@@ -19,11 +19,29 @@ def import_routes(rootpath, app):
         date = datetime.datetime.fromtimestamp(value)
         return date.strftime("%Y-%m-%d")
 
-    @app.route(rootpath + "resumen.html", methods=['GET'])
+    @app.route(rootpath + "resumen-general.html", methods=['GET'])
     @login_required
-    def home():
+    def resumen_general():
         user = request.user
-        return render_template('/resumen.html', username=user.get_name())
+        return render_template('/resumen-general.html', username=user.get_name())
+
+    @app.route(rootpath + "resumen-cuentas.html", methods=['GET'])
+    @login_required
+    def resumen_cuentas():
+        user = request.user
+        return render_template('/resumen-cuentas.html', username=user.get_name())
+
+    @app.route(rootpath + "resumen-monederos.html", methods=['GET'])
+    @login_required
+    def resumen_monederos():
+        user = request.user
+        return render_template('/resumen-monederos.html', username=user.get_name())
+
+    @app.route(rootpath + "resumen-categorias.html", methods=['GET'])
+    @login_required
+    def resumen_categorias():
+        user = request.user
+        return render_template('/resumen-categorias.html', username=user.get_name())
 
     @app.route(rootpath + "cuentas.html", methods=['GET'])
     @login_required
