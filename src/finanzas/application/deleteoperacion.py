@@ -42,4 +42,4 @@ class DeleteOperacion(TransactionalUseCase):
             except Exception as e:
                 logger.info(e)
         else:
-            raise MessageError("Ocurrió un error durante la actualización", 500)
+            raise MessageError("Ocurrió un error durante el borrado", 500)

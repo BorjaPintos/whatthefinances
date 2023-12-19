@@ -12,6 +12,10 @@ class OperacionRepository(ABC):
         pass
 
     @abstractmethod
+    def count(self, criteria: Criteria) -> int:
+        pass
+
+    @abstractmethod
     def new(self, params: dict) -> int:
         pass
 

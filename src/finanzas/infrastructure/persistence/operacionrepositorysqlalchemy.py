@@ -82,7 +82,7 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
             if result is not None:
                 for i in range(n_elements):
                     elements.append(self.__get_operation_from_complete_join_row(result[i]))
-            return elements, self.__get_complete_join_query(criteria).count()
+            return elements, self.count(criteria)
         except Exception as e:
             traceback.print_exc()
 
@@ -103,6 +103,14 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
         except Exception as e:
             traceback.print_exc()
         return None
+
+    def count(self, criteria: Criteria) -> int:
+        try:
+            query = self.__get_complete_join_query(criteria)
+            return query.count()
+        except Exception as e:
+            traceback.print_exc()
+        return 0
 
     def new(self, params: dict) -> int:
         try:

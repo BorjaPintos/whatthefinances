@@ -31,7 +31,7 @@ class ListOperaciones(TransactionalUseCase):
         filter = None
         if "descripcion" in params and params["descripcion"]:
             description_filter = SimpleFilter(
-                "descripcion", WhereOperator.LIKE, "%{}%".format(params["descripcion"]))
+                "descripcion", WhereOperator.ILIKE, "%{}%".format(params["descripcion"]))
             filter = combine_filters(filter, CompositeOperator.AND, description_filter)
         if "id_monedero_cargo" in params and params["id_monedero_cargo"]:
             monedero_filter = SimpleFilter(
