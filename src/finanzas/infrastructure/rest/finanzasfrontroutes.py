@@ -1,11 +1,12 @@
 import locale
 
+from src.finanzas.infrastructure.rest import finanzascuentascontroller, finanzasmonederoscontroller, \
+    finanzascategoriasingresocontroller, finanzascategoriasgastocontroller, finanzasposicionaccioncontroller
 from src.shared.infraestructure.rest.response import serialize_response
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
 from flask import request, render_template
 from flask_login import login_required
-from src.finanzas.infrastructure.rest import finanzascontroller
 import datetime
 
 
@@ -65,8 +66,8 @@ def import_routes(rootpath, app):
     @login_required
     def categorias_ingreso():
         user = request.user
-        lista_cuentas, code = finanzascontroller.list_cuentas({})
-        lista_monederos, code = finanzascontroller.list_monederos({})
+        lista_cuentas, code = finanzascuentascontroller.list_cuentas({})
+        lista_monederos, code = finanzasmonederoscontroller.list_monederos({})
         lista_headers = ["Descripción", "Cuenta abono por defecto", "Monedero abono por defecto"]
         return render_template('/categorias_ingreso.html', username=user.get_name(),
                                title="Categorias Ingreso",
@@ -78,8 +79,8 @@ def import_routes(rootpath, app):
     @login_required
     def categorias_gasto():
         user = request.user
-        lista_cuentas, code = finanzascontroller.list_cuentas({})
-        lista_monederos, code = finanzascontroller.list_monederos({})
+        lista_cuentas, code = finanzascuentascontroller.list_cuentas({})
+        lista_monederos, code = finanzasmonederoscontroller.list_monederos({})
         lista_headers = ["Descripción", "Cuenta cargo por defecto", "Monedero cargo por defecto"]
         return render_template('/categorias_gasto.html', username=user.get_name(),
                                title="Categorias Gasto",
@@ -91,10 +92,10 @@ def import_routes(rootpath, app):
     @login_required
     def operaciones():
         user = request.user
-        lista_categorias_gasto, code = finanzascontroller.list_categorias_gasto({})
-        lista_categorias_ingreso, code = finanzascontroller.list_categorias_ingreso({})
-        lista_cuentas, code = finanzascontroller.list_cuentas({})
-        lista_monederos, code = finanzascontroller.list_monederos({})
+        lista_categorias_gasto, code = finanzascategoriasgastocontroller.list_categorias_gasto({})
+        lista_categorias_ingreso, code = finanzascategoriasingresocontroller.list_categorias_ingreso({})
+        lista_cuentas, code = finanzascuentascontroller.list_cuentas({})
+        lista_monederos, code = finanzasmonederoscontroller.list_monederos({})
         lista_headers = ["Fecha", "Cantidad", "Descripcion",
                          "Categoría Gasto", "Categoría Ingreso",
                          "Cuenta Cargo", "Cuenta Abono",
@@ -107,4 +108,41 @@ def import_routes(rootpath, app):
                                lista_categorias_ingreso=lista_categorias_ingreso,
                                lista_cuentas=lista_cuentas,
                                lista_monederos=lista_monederos,
+                               )
+
+    @app.route(rootpath + "broker.html", methods=['GET'])
+    @login_required
+    def brokers():
+        user = request.user
+        lista_headers = ["Nombre"]
+        return render_template('/broker.html', username=user.get_name(),
+                               title="Brokers",
+                               lista_headers=lista_headers)
+
+    @app.route(rootpath + "bolsa.html", methods=['GET'])
+    @login_required
+    def bolsas():
+        user = request.user
+        lista_headers = ["Nombre"]
+        return render_template('/bolsa.html', username=user.get_name(),
+                               title="Bolsas",
+                               lista_headers=lista_headers)
+
+    @app.route(rootpath + "posiciones_acciones.html", methods=['GET'])
+    @login_required
+    def posiciones_acciones():
+        user = request.user
+        lista_brokers, code = finanzasposicionaccioncontroller.list_brokers({})
+        lista_bolsas, code = finanzasposicionaccioncontroller.list_bolsas({})
+        lista_headers = ["Fecha", "Nombre", "ISIN", "Bolsa", "Broker",
+                         "Precio por accion", "Número de acciones",
+                         "Comisión de compra", "Otras Comisiones", "Total Compra"]
+        # "Cierre actual", "Valoración actual",
+        # "Ganacia SC", "% Ganacia SC", "Ganancia CC", "% Ganancia CC"]
+
+        return render_template('/posiciones_acciones.html', username=user.get_name(),
+                               title="Posiciones de Acciones",
+                               lista_headers=lista_headers,
+                               lista_brokers=lista_brokers,
+                               lista_bolsas=lista_bolsas
                                )

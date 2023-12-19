@@ -1,16 +1,13 @@
-function add_categoria_gasto() {
-    var descripcion = $.trim($("#addTypeDescripcionX").val());
-    var cuenta_id = $("#add-cuenta-select").val();
-    var monedero_id = $("#add-monedero-select").val();
+function add_bolsa() {
+    var nombre = $.trim($("#addTypeNombreX").val());
+
 
     var data = {
-        descripcion: descripcion,
-        id_cuenta_cargo_defecto: cuenta_id ? cuenta_id : null,
-        id_monedero_defecto:monedero_id ? monedero_id : null
+        nombre: nombre
     }
     var xhttp = new XMLHttpRequest();
 
-    xhttp.open("POST", "/finanzas/categoria_gasto", true);
+    xhttp.open("POST", "/finanzas/bolsa", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
 
@@ -28,9 +25,9 @@ function add_categoria_gasto() {
 
 }
 
-function delete_categoria_gasto(id) {
+function delete_bolsa(id) {
     var xhttp = new XMLHttpRequest();
-    xhttp.open("DELETE", "/finanzas/categoria_gasto/"+id, true);
+    xhttp.open("DELETE", "/finanzas/bolsa/"+id, true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
 
@@ -51,20 +48,16 @@ function delete_categoria_gasto(id) {
     xhttp.send();
 }
 
-function update_categoria_gasto() {
+function update_bolsa() {
     var id = $.trim($("#editTypeIdX").val())
-    var descripcion = $.trim($("#editTypeDescripcionX").val());
-    var cuenta_id = $("#edit-cuenta-select").val();
-    var monedero_id = $("#edit-monedero-select").val();
+    var nombre = $.trim($("#editTypeNombreX").val());
 
     var data = {
-        descripcion: descripcion,
-        id_cuenta_cargo_defecto: cuenta_id ? cuenta_id : null,
-        id_monedero_defecto:monedero_id ? monedero_id : null
+        nombre: nombre
     }
 
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "/finanzas/categoria_gasto/"+id, true);
+    xhttp.open("POST", "/finanzas/bolsa/"+id, true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
 
@@ -83,54 +76,25 @@ function update_categoria_gasto() {
 
 render_actions = function (data, type) {
     if (type === 'display') {
-        edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
+        edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Editar" data-bs-original-title="Editar" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
         del = '<a class="delete-element font-18 text-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete" data-bs-original-title="Borrar" data-element="'+data+'"><i class="uil uil-trash"></i></a>'
         return edit + del
     }
     return data
 }
 
-render_nombre_cuenta = function (data, type) {
-    new_data = data
-    if (data == undefined)
-        new_data = "Todas"
-    if (type === 'display'){
-        return '<span class="badge badge-danger-lighten">'+new_data+'</span>'
-    }
-    return new_data
-}
-
-render_nombre_monedero = function (data, type) {
-    new_data = data
-    if (data == undefined)
-        new_data = "Ninguno"
-    if (type === 'display'){
-        return '<span class="badge badge-danger-lighten">'+new_data+'</span>'
-    }
-    return new_data
-}
 
 $( document).ready(function() {
 
     table = $('#lista_tabla').DataTable({
         ajax: {
-            url:'/finanzas/categoria_gasto',
+            url:'/finanzas/bolsa',
             dataSrc: '',
         },
         columns: [
             {
-                data:'descripcion',
+                data:'nombre',
                 type: "string"
-            },
-            {
-                data:'nombre_cuenta_cargo_defecto',
-                type: "string",
-                render: render_nombre_cuenta
-            },
-            {
-                data:'nombre_monedero_defecto',
-                type: "string",
-                render: render_nombre_monedero
             },
             {
                 className: 'text-end',
@@ -146,8 +110,8 @@ $( document).ready(function() {
         searching: false,
         scrollX: false,
         language: {
-            info: 'Total _MAX_ Categorías gasto',
-            infoEmpty: 'No hay Categorías gasto',
+            info: 'Total _MAX_ Bolsas',
+            infoEmpty: 'No hay Bolsas',
             loadingRecords: "Cargando...",
             decimal:",",
         }
@@ -158,34 +122,22 @@ $( document).ready(function() {
         $('.edit-element').on( "click", function() {
             var data = table.row($(this).parents('tr')).data()
             var id = data.id
-            var descripcion = data.descripcion
-            var cuenta = data.id_cuenta_cargo_defecto
-            var monedero = data.id_monedero_defecto
+            var nombre = data.nombre
 
-            $("#editTypeDescripcionX").val(descripcion);
-            $("#edit-cuenta-select").val(cuenta).change();
-            $("#edit-monedero-select").val(monedero).change();
+            $("#editTypeNombreX").val(nombre);
             $("#editTypeIdX").val(id);
-
             $('#edit').modal('show')
         });
 
-
-
-
-
-
         $('.delete-element').on( "click", function() {
-           delete_categoria_gasto($(this).attr("data-element"))
+           delete_bolsa($(this).attr("data-element"))
         });
     } );
 
 
 
     $('#add-button').on( "click", function() {
-        $("#addTypeDescripcionX").val('')
-        $("#add-cuenta-select").val('')
-        $("#add-monedero-select").val('')
+        $("#addTypeNombreX").val('')
         $("#addTypeMessageX").text('')
         $('#add').modal('show')
     } );
@@ -195,7 +147,7 @@ $( document).ready(function() {
     } );
 
     $('#add-submit-button').on( "click", function() {
-       add_categoria_gasto();
+       add_bolsa();
     });
 
 
@@ -204,11 +156,8 @@ $( document).ready(function() {
     } );
 
     $('#edit-submit-button').on( "click", function() {
-       update_categoria_gasto()
+       update_bolsa()
     });
-
-
-
 
 
 });

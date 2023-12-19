@@ -1,0 +1,29 @@
+{% extends 'lista.html'%}
+
+{% block titulo_add %}
+Añadir Broker
+{% endblock %}
+
+{% block contenido_add %}
+<div class="form-outline form-white mb-4">
+    <input type="text" id="addTypeNombreX" class="form-control form-control-lg"/>
+    <label class="form-label" for="addTypeNombreX">Nombre</label>
+</div>
+{% endblock %}
+
+{% block titulo_edit %}
+Editar Broker
+{% endblock %}
+
+{% block contenido_edit %}
+<div class="form-outline form-white mb-4">
+    <input type="text" id="editTypeNombreX" class="form-control form-control-lg"/>
+    <label class="form-label" for="editTypeNombreX">Nombre</label>
+</div>
+<input type="hidden" id="editTypeIdX"/>
+{% endblock %}
+
+
+{% block listaextendsscript %}
+<script type="text/javascript" src="assets/js/broker.js"></script>
+{% endblock%}
