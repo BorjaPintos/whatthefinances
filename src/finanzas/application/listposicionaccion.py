@@ -20,7 +20,8 @@ class ListPosicionAccion(TransactionalUseCase):
     def execute(self, params: dict) -> Tuple[List[PosicionAccion], Union[bool, Any]]:
 
         criteria = Criteria(
-            order=Order(OrderBy(params.get("order_property", "fecha")), OrderType(params.get("order_type", "asc"))),
+            order=Order(OrderBy(params.get("order_property", "fecha_compra")),
+                        OrderType(params.get("order_type", "asc"))),
             filter=self._create_filters(params),
             offset=params["offset"],
             limit=params["count"]
@@ -50,13 +51,21 @@ class ListPosicionAccion(TransactionalUseCase):
             bolsa_filter = SimpleFilter(
                 "id_bolsa", WhereOperator.IS, params["id_bolsa"])
             filter = combine_filters(filter, CompositeOperator.AND, bolsa_filter)
-        if "begin_fecha" in params and params["begin_fecha"]:
+        if "begin_fecha_compra" in params and params["begin_fecha_compra"]:
             fecha_filter = SimpleFilter(
-                "begin_fecha", WhereOperator.GREATERTHANOREQUAL, params["begin_fecha"])
+                "begin_fecha_compra", WhereOperator.GREATERTHANOREQUAL, params["begin_fecha_compra"])
             filter = combine_filters(filter, CompositeOperator.AND, fecha_filter)
-        if "end_fecha" in params and params["end_fecha"]:
+        if "end_fecha_compra" in params and params["end_fecha_compra"]:
             fecha_filter = SimpleFilter(
-                "end_fecha", WhereOperator.LESSTHANOREQUAL, params["end_fecha"])
+                "end_fecha_compra", WhereOperator.LESSTHANOREQUAL, params["end_fecha_compra"])
+            filter = combine_filters(filter, CompositeOperator.AND, fecha_filter)
+        if "begin_fecha_venta" in params and params["begin_fecha_venta"]:
+            fecha_filter = SimpleFilter(
+                "begin_fecha_venta", WhereOperator.GREATERTHANOREQUAL, params["begin_fecha_venta"])
+            filter = combine_filters(filter, CompositeOperator.AND, fecha_filter)
+        if "end_fecha_venta" in params and params["end_fecha_venta"]:
+            fecha_filter = SimpleFilter(
+                "end_fecha_venta", WhereOperator.LESSTHANOREQUAL, params["end_fecha_venta"])
             filter = combine_filters(filter, CompositeOperator.AND, fecha_filter)
         if "begin_precio_accion_sin_comision" in params and params["begin_precio_accion_sin_comision"]:
             begin_precio_accion_sin_comision_filter = SimpleFilter(

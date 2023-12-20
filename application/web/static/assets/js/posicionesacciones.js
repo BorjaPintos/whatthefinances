@@ -150,22 +150,64 @@ render_texto = function(data, type){
     return data
 }
 
+get_datapicker_conf = function(){
+    return {
+        singleDatePicker: true,
+        timePicker: false,
+        autoApply: false,
+        autoUpdateInput: true,
+        locale: {
+          format: "DD/MM/YYYY",
+          applyLabel: "Aplicar",
+          cancelLabel: "Limpiar",
+          weekLabel: "S",
+          daysOfWeek: [
+                "Do",
+                "Lu",
+                "Ma",
+                "Mi",
+                "Ju",
+                "Vi",
+                "Sa"
+            ],
+            monthNames: [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octuber",
+                "Noviembre",
+                "Diciembre"
+            ],
+            firstDay: 1
+        }
+    }
+}
+
+
+
 $(document).ready(function() {
-    $('#addFechaCompraDataPicker').datepicker({
-        format: 'dd/mm/yyyy',
-        language: 'es-ES'
+
+
+    $('#addFechaCompraDataPicker').daterangepicker(get_datapicker_conf());
+
+    $('#editFechaCompraDataPicker').daterangepicker(get_datapicker_conf());
+
+    $('#search-fecha-compra-begin-datapicker').daterangepicker(get_datapicker_conf());
+    $('#search-fecha-compra-begin-datapicker').val('')
+    $('#search-fecha-compra-end-datapicker').daterangepicker(get_datapicker_conf());
+    $('#search-fecha-compra-end-datapicker').val('')
+
+    $('#search-fecha-compra-begin-datapicker').on('cancel.daterangepicker', function(ev, picker) {
+        $('#search-fecha-compra-begin-datapicker').val('');
     });
-    $('#editFechaCompraDataPicker').datepicker({
-        format: 'dd/mm/yyyy',
-        language: 'es-ES'
-    });
-     $('#search-fecha-compra-begin-datapicker').datepicker({
-        format: 'dd/mm/yyyy',
-        language: 'es-ES'
-    });
-    $('#search-fecha-compra-end-datapicker').datepicker({
-        format: 'dd/mm/yyyy',
-        language: 'es-ES'
+    $('#search-fecha-compra-end-datapicker').on('cancel.daterangepicker', function(ev, picker) {
+        $('#search-fecha-compra-end-datapicker').val('');
     });
 
     table = $('#lista_tabla')
@@ -311,7 +353,7 @@ $(document).ready(function() {
 
 
             $("#editTypeIdX").val(id)
-            $('#editFechaCompraDataPicker').datepicker('update',  fecha_compra);
+            $('#editFechaCompraDataPicker').val(fecha_compra);
             $("#editTypeNombreX").val(nombre)
             $("#editTypeISINX").val(isin)
             $("#edit-bolsa-select").val(id_bolsa).change();
@@ -337,7 +379,7 @@ $(document).ready(function() {
 
 
     $('#add-button').on( "click", function() {
-        $("#addFechaCompraDataPicker").datepicker('update',  new Date());
+        $("#addFechaCompraDataPicker").val(moment().format("DD/MM/YYYY"));
         $("#addTypeNombreX").val('');
         $("#addTypeISINX").val('');
         $("#add-bolsa-select").val('')

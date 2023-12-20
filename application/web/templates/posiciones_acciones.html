@@ -1,7 +1,7 @@
 {% extends 'lista.html'%}
 
 {% block listaextendscssstyle %}
-<link href="assets/bootstrap/css/bootstrap-datepicker.min.css" rel="stylesheet">
+<link href="assets/daterangepicker/css/daterangepicker.css" rel="stylesheet">
 {% endblock %}
 
 {% block titulo_add %}
@@ -12,15 +12,27 @@ Añadir Compra de acciones
 {% block tabletopmenu %}
 
 <div>
-    <label class="mt-2 px-2 search-label" for="search-fecha-compra-begin-datapicker">Desde:</label>
-    <input id="search-fecha-compra-begin-datapicker" type="text" class="form-control filtro-search">
 
-    <label class="mt-2 px-2 search-label" for="search-fecha-compra-end-datapicker">Hasta:</label>
-    <input id="search-fecha-compra-end-datapicker" type="text" class="form-control filtro-search">
+    <div class="input-group">
+        <label class="mt-2 px-2 search-label" for="search-fecha-compra-begin-datapicker">Desde:</label>
+        <input type="text" class="form-control" id="search-fecha-compra-begin-datapicker"
+               data-toggle="date-picker" data-time-picker="true">
+        <div class="input-group-text bg-primary border-primary text-white">
+            <span class="uil uil-calendar-alt"></span>
+        </div>
 
-    <button type="button" class="btn btn-info px-2" id="search-button"><i
-            class="uil-search"></i> Buscar
-    </button>
+        <label class="mt-2 px-2 search-label" for="search-fecha-compra-end-datapicker">Hasta:</label>
+        <input type="text" class="form-control" id="search-fecha-compra-end-datapicker"
+               data-toggle="date-picker" data-time-picker="true">
+        <div class="input-group-text bg-primary border-primary text-white">
+            <span class="uil uil-calendar-alt"></span>
+        </div>
+        <button type="button" class="btn btn-info px-2" id="search-button"><i
+                class="uil-search"></i> Buscar
+        </button>
+    </div>
+
+
 </div>
 
 {% endblock %}
@@ -28,51 +40,57 @@ Añadir Compra de acciones
 
 {% block contenido_add %}
 <div class="form-outline form-white mb-4">
-    <div class="input-group date">
-        <input id="addFechaCompraDataPicker" type="text" class="form-control form-control-lg">
-        <div class="input-group-addon">
-            <span class="glyphicon glyphicon-th"></span>
+    <div class="input-group date form-floating">
+        <input type="text" class="form-control" id="addFechaCompraDataPicker"
+               data-toggle="date-picker" data-time-picker="true">
+        <div class="input-group-text bg-primary border-primary text-white">
+            <span class="uil uil-calendar-alt"></span>
         </div>
-
+        <label for="addFechaCompraDataPicker">Fecha Compra</label>
     </div>
-    <label class="form-label" for="addFechaCompraDataPicker">Fecha Compra</label>
 
-    <input type="text" id="addTypeNombreX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypeNombreX">Nombre</label>
+    <div class="form-floating mb-3 mt-2">
+        <input type="text" id="addTypeNombreX" class="form-control"/>
+        <label for="addTypeNombreX">Nombre</label>
+    </div>
 
-    <input type="text" id="addTypeISINX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypeISINX">ISIN</label>
+    <div class="form-floating mb-3">
+        <input type="text" id="addTypeISINX" class="form-control"/>
+        <label for="addTypeISINX">ISIN</label>
+    </div>
 
-    <select class="form-select" id="add-bolsa-select">
-        <option value="" selected=""></option>
+    <select class="form-select mt-2" id="add-bolsa-select">
+        <option value="">Seleccione Bolsa</option>
         {% for bolsa in lista_bolsas %}
         <option value="{{bolsa.id}}">{{bolsa.nombre}}</option>
         {% endfor %}
     </select>
-    <label class="form-label" for="add-bolsa-select">Bolsa</label>
 
 
-    <select class="form-select" id="add-broker-select">
-        <option value="" selected=""></option>
+    <select class="form-select mt-2" id="add-broker-select">
+        <option value="">Seleccione Broker</option>
         {% for broker in lista_brokers %}
         <option value="{{broker.id}}">{{broker.nombre}}</option>
         {% endfor %}
     </select>
-    <label class="form-label" for="add-broker-select">Broker</label>
 
+    <div class="form-floating mt-2">
+        <input type="text" id="addTypePrecioAccionX" class="form-control"/>
+        <label for="addTypePrecioAccionX">Precio Acción</label>
+    </div>
 
-    <input type="text" id="addTypePrecioAccionX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypePrecioAccionX">Precio Acción</label>
-
-    <input type="text" id="addTypeNumeroAccionesX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypeNumeroAccionesX">Número de acciones</label>
-
-    <input type="text" id="addTypeComisionesCompraX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypeComisionesCompraX">Comisiones Compra</label>
-
-    <input type="text" id="addTypeOtrasComisionesX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypeOtrasComisionesX">Otras Comisiones</label>
-
+    <div class="form-floating mt-2">
+        <input type="text" id="addTypeNumeroAccionesX" class="form-control"/>
+        <label for="addTypeNumeroAccionesX">Número de acciones</label>
+    </div>
+    <div class="form-floating mt-2">
+        <input type="text" id="addTypeComisionesCompraX" class="form-control"/>
+        <label for="addTypeComisionesCompraX">Comisiones Compra</label>
+    </div>
+    <div class="form-floating mt-2">
+        <input type="text" id="addTypeOtrasComisionesX" class="form-control"/>
+        <label for="addTypeOtrasComisionesX">Otras Comisiones</label>
+    </div>
 </div>
 {% endblock %}
 
@@ -82,19 +100,24 @@ Editar Compra de acciones
 
 {% block contenido_edit %}
 <div class="form-outline form-white mb-4">
-    <div class="input-group date">
-        <input id="editFechaCompraDataPicker" type="text" class="form-control form-control-lg">
-        <div class="input-group-addon">
-            <span class="glyphicon glyphicon-th"></span>
+    <div class="input-group date form-floating">
+        <input type="text" class="form-control" id="editFechaCompraDataPicker"
+               data-toggle="date-picker" data-time-picker="true">
+        <div class="input-group-text bg-primary border-primary text-white">
+            <span class="uil uil-calendar-alt"></span>
         </div>
+        <label for="editFechaCompraDataPicker">Fecha Compra</label>
     </div>
-    <label class="form-label" for="editFechaCompraDataPicker">Fecha Compra</label>
 
-    <input type="text" id="editTypeNombreX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypeNombreX">Nombre</label>
 
-    <input type="text" id="editTypeISINX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypeISINX">ISIN</label>
+    <div class="form-floating mb-3 mt-2">
+        <input type="text" id="editTypeNombreX" class="form-control"/>
+        <label for="editTypeNombreX">Nombre</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeISINX" class="form-control"/>
+        <label for="editTypeISINX">ISIN</label>
+    </div>
 
     <div class="form-outline form-white mb-4">
         <select class="form-select" id="edit-bolsa-select">
@@ -116,24 +139,29 @@ Editar Compra de acciones
     </div>
     <label class="form-label" for="edit-broker-select">Broker</label>
 
-    <input type="text" id="editTypePrecioAccionX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypePrecioAccionX">Precio Acción</label>
-
-    <input type="text" id="editTypeNumeroAccionesX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypeNumeroAccionesX">Número de acciones</label>
-
-    <input type="text" id="editTypeComisionesCompraX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypeComisionesCompraX">Comisiones Compra</label>
-
-    <input type="text" id="editTypeOtrasComisionesX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypeOtrasComisionesX">Otras Comisiones</label>
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypePrecioAccionX" class="form-control"/>
+        <label for="editTypePrecioAccionX">Precio Acción</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeNumeroAccionesX" class="form-control"/>
+        <label for="editTypeNumeroAccionesX">Número de acciones</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeComisionesCompraX" class="form-control"/>
+        <label for="editTypeComisionesCompraX">Comisiones Compra</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeOtrasComisionesX" class="form-control"/>
+        <label for="editTypeOtrasComisionesX">Otras Comisiones</label>
+    </div>
 </div>
 <input type="hidden" id="editTypeIdX"/>
 {% endblock %}
 
 
 {% block listaextendsscript %}
-<script type="text/javascript" src="assets/bootstrap/js/bootstrap-datepicker.min.js"></script>
-<script type="text/javascript" src="assets/bootstrap/js/bootstrap-datepicker.es.min.js"></script>
+<script type="text/javascript" src="assets/moment/js/moment-with-locales.min.js"></script>
+<script type="text/javascript" src="assets/daterangepicker/js/daterangepicker.min.js"></script>
 <script type="text/javascript" src="assets/js/posicionesacciones.js"></script>
 {% endblock%}

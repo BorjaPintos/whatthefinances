@@ -128,6 +128,17 @@ def import_routes(rootpath, app):
                                title="Bolsas",
                                lista_headers=lista_headers)
 
+    @app.route(rootpath + "valores_acciones.html", methods=['GET'])
+    @login_required
+    def valores_acciones():
+        user = request.user
+        lista_isin = [{"isin": "ISIN AQUI", "nombre": "NOMBRE-AQUI"}]
+
+        return render_template('/valores_acciones.html', username=user.get_name(),
+                               title="Valores de Acciones",
+                               lista_isin=lista_isin
+                               )
+
     @app.route(rootpath + "posiciones_acciones.html", methods=['GET'])
     @login_required
     def posiciones_acciones():

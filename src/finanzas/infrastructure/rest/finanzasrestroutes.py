@@ -312,6 +312,40 @@ def import_routes(rootpath, app):
         }
         return finanzasposicionaccioncontroller.update_bolsa(params)
 
+    @app.route(rootpath + "/valoraccion", methods=['GET'])
+    @login_required
+    @serialize_response
+    def list_valor_accion():
+        params = {
+            "order_property": request.args.get('order_property', 'fecha'),
+            "order_type": request.args.get('order_type', 'desc'),
+            "count": request.args.get('count', 30),
+            "offset": request.args.get('offset', 0),
+            "isin": request.args.get('isin', None),
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+            "begin_valor": request.args.get('begin_valor', None),
+            "end_valor": request.args.get('end_valor', None),
+        }
+        return finanzasposicionaccioncontroller.list_valores_acciones(params)
+
+    @app.route(rootpath + "/valoraccion", methods=['POST'])
+    @login_required
+    @serialize_response
+    def create_valor_accion():
+        params = {
+            "isin": request.json.get('isin', None),
+            "fecha": request.json.get('fecha', None),
+            "valor": request.json.get('valor', None)
+        }
+        return finanzasposicionaccioncontroller.create_valor_accion(params)
+
+    @app.route(rootpath + "/valoraccion/<id_valor_accion>", methods=['DELETE'])
+    @login_required
+    @serialize_response
+    def delete_valor_accion(id_valor_accion: int):
+        return finanzasposicionaccioncontroller.delete_valor_accion(id_valor_accion)
+
     @app.route(rootpath + "/posicionaccion", methods=['GET'])
     @login_required
     @serialize_response
