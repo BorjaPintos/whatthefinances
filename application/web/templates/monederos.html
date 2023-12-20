@@ -6,12 +6,16 @@ Añadir monederos
 
 {% block contenido_add %}
 <div class="form-outline form-white mb-4">
-    <input type="text" id="addTypeNombreX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypeNombreX">Nombre</label>
+    <div class="form-floating mb-3">
+        <input type="text" id="addTypeNombreX" class="form-control"/>
+        <label for="addTypeNombreX">Nombre</label>
+    </div>
 </div>
 <div class="form-outline form-white mb-4">
-    <input type="text" id="addTypeCantidadInicialX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypeCantidadInicialX">Cantidad Inicial</label>
+    <div class="form-floating mb-3">
+        <input type="text" id="addTypeCantidadInicialX" class="form-control"/>
+        <label for="addTypeCantidadInicialX">Cantidad Inicial</label>
+    </div>
 </div>
 {% endblock %}
 
@@ -21,12 +25,16 @@ Editar monederos
 
 {% block contenido_edit %}
 <div class="form-outline form-white mb-4">
-    <input type="text" id="editTypeNombreX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypeNombreX">Nombre</label>
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeNombreX" class="form-control"/>
+        <label for="editTypeNombreX">Nombre</label>
+    </div>
 </div>
 <div class="form-outline form-white mb-4">
-    <input type="text" id="editTypeCantidadInicialX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypeCantidadInicialX">Cantidad Inicial</label>
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeCantidadInicialX" class="form-control"/>
+        <label for="editTypeCantidadInicialX">Cantidad Inicial</label>
+    </div>
 </div>
 <input type="hidden" id="editTypeIdX"/>
 {% endblock %}

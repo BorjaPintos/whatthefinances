@@ -1,7 +1,7 @@
 {% extends 'lista.html'%}
 
 {% block listaextendscssstyle %}
-<link href="assets/bootstrap/css/bootstrap-datepicker.min.css" rel="stylesheet">
+<link href="assets/daterangepicker/css/daterangepicker.css" rel="stylesheet">
 {% endblock %}
 
 {% block titulo_add %}
@@ -13,17 +13,30 @@ Añadir operación
 
 <div>
 
-    <label class="mt-2 px-2 search-label" for="search-fecha-begin-datapicker">Desde:</label>
-    <input id="search-fecha-begin-datapicker" type="text" class="form-control filtro-search">
+
+    <div class="input-group">
+        <div class="input-group form-floating">
+            <input type="text" class="form-control" id="search-fecha-begin-datapicker" data-toggle="date-picker"
+                   data-time-picker="true">
+            <div class="input-group-text bg-primary border-primary text-white">
+                <span class="uil uil-calendar-alt"></span>
+            </div>
+            <label for="search-fecha-begin-datapicker">Desde:</label>
+        </div>
 
 
-    <label class="mt-2 px-2 search-label" for="search-fecha-end-datapicker">Hasta:</label>
-    <input id="search-fecha-end-datapicker" type="text" class="form-control filtro-search">
-
-
+        <div class="input-group date form-floating">
+            <input type="text" class="form-control" id="search-fecha-end-datapicker" data-toggle="date-picker"
+                   data-time-picker="true">
+            <div class="input-group-text bg-primary border-primary text-white">
+                <span class="uil uil-calendar-alt"></span>
+            </div>
+            <label for="search-fecha-end-datapicker">Hasta:</label>
+        </div>
+    </div>
     <label class="mt-2 px-2 search-label" for="search-categoria-gasto-select">Categoria Gasto</label>
 
-    <select class="mt-2 px-2 form-control filtro-search" id="search-categoria-gasto-select">
+    <select class="mt-2 px-2 form-select filtro-search" id="search-categoria-gasto-select">
         <option value="">-</option>
         {% for categoria_gasto in lista_categorias_gasto %}
         <option value="{{categoria_gasto.id}}">{{categoria_gasto.descripcion}}
@@ -33,7 +46,7 @@ Añadir operación
 
     <label class="mt-2 px-2 search-label" for="search-categoria-ingreso-select">Categoria Ingreso</label>
 
-    <select class="mt-2 px-2 form-control filtro-search" id="search-categoria-ingreso-select">
+    <select class="mt-2 px-2 form-select filtro-search" id="search-categoria-ingreso-select">
         <option value="">-</option>
         {% for categoria_ingreso in lista_categorias_ingreso %}
         <option value="{{categoria_ingreso.id}}">{{categoria_ingreso.descripcion}}
@@ -45,7 +58,7 @@ Añadir operación
 </div>
 <div>
     <label class="mt-2 px-2 search-label" for="search-cuenta-cargo-select">Cuenta Cargo</label>
-    <select class="mt-2 px-2 form-control filtro-search" id="search-cuenta-cargo-select">
+    <select class="mt-2 px-2 form-select filtro-search" id="search-cuenta-cargo-select">
         <option value="">-</option>
         {% for cuenta in lista_cuentas %}
         <option value="{{cuenta.id}}">{{cuenta.nombre}}
@@ -54,7 +67,7 @@ Añadir operación
     </select>
 
     <label class="mt-2 px-2 search-label" for="search-cuenta-abono-select">Cuenta Abono</label>
-    <select class="mt-2 px-2 form-control filtro-search" id="search-cuenta-abono-select">
+    <select class="mt-2 px-2 form-select filtro-search" id="search-cuenta-abono-select">
         <option value="">-</option>
         {% for cuenta in lista_cuentas %}
         <option value="{{cuenta.id}}">{{cuenta.nombre}}
@@ -64,7 +77,7 @@ Añadir operación
 
     <label class="mt-2 px-2 search-label" for="search-monedero-cargo-select">Monedero cargo</label>
 
-    <select class="mt-2 px-2 form-control filtro-search" id="search-monedero-cargo-select">
+    <select class="mt-2 px-2 form-select filtro-search" id="search-monedero-cargo-select">
         <option value="">-</option>
         {% for monedero in lista_monederos %}
         <option value="{{monedero.id}}">{{monedero.nombre}}
@@ -74,7 +87,7 @@ Añadir operación
 
     <label class="mt-2 px-2 search-label" for="search-monedero-abono-select">Monedero abono</label>
 
-    <select class="mt-2 px-2 form-control filtro-search" id="search-monedero-abono-select">
+    <select class="mt-2 px-2 form-select filtro-search" id="search-monedero-abono-select">
         <option value="">-</option>
         {% for monedero in lista_monederos %}
         <option value="{{monedero.id}}">{{monedero.nombre}}
@@ -92,22 +105,24 @@ Añadir operación
 
 {% block contenido_add %}
 <div class="form-outline form-white mb-4">
-    <div class="input-group date">
-        <input id="addFechaDataPicker" type="text" class="form-control form-control-lg">
-        <div class="input-group-addon">
-            <span class="glyphicon glyphicon-th"></span>
+    <div class="input-group date form-floating mb-3">
+        <input type="text" class="form-control" id="addFechaDataPicker"
+               data-toggle="date-picker" data-time-picker="true">
+        <div class="input-group-text bg-primary border-primary text-white">
+            <span class="uil uil-calendar-alt"></span>
         </div>
-
+        <label for="addFechaDataPicker">Fecha</label>
     </div>
-    <label class="form-label" for="addFechaDataPicker">Fecha</label>
 
-    <input type="text" id="addTypeDescripcionX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypeDescripcionX">Descripción</label>
-
-    <input type="text" id="addTypeCantidadX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypeCantidadX">Cantidad</label>
-
-    <div id="add-seleccion_tipo" class="form-control form-check form-check-inline">
+    <div class="form-floating mb-3">
+        <input type="text" id="addTypeDescripcionX" class="form-control"/>
+        <label for="addTypeDescripcionX">Descripción</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" id="addTypeCantidadX" class="form-control"/>
+        <label for="addTypeCantidadX">Cantidad</label>
+    </div>
+    <div id="add-seleccion_tipo" class="form-check form-check-inline">
         <input type="radio" class="btn-check" name="add_tipo" id="add-tipo-gasto" autocomplete="off" checked>
         <label class="btn btn-primary btn-radios" for="add-tipo-gasto">Gasto</label>
 
@@ -220,21 +235,25 @@ Editar Operacion
 
 {% block contenido_edit %}
 <div class="form-outline form-white mb-4">
-    <div class="input-group date">
-        <input id="editFechaDataPicker" type="text" class="form-control form-control-lg">
-        <div class="input-group-addon">
-            <span class="glyphicon glyphicon-th"></span>
+    <div class="input-group date form-floating mb-3">
+        <input type="text" class="form-control" id="editFechaDataPicker"
+               data-toggle="date-picker" data-time-picker="true">
+        <div class="input-group-text bg-primary border-primary text-white">
+            <span class="uil uil-calendar-alt"></span>
         </div>
+        <label for="editFechaDataPicker">Fecha</label>
     </div>
-    <label class="form-label" for="editFechaDataPicker">Fecha</label>
 
-    <input type="text" id="editTypeDescripcionX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypeDescripcionX">Descripción</label>
 
-    <input type="text" id="editTypeCantidadX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypeCantidadX">Cantidad</label>
-
-    <div id="edit-seleccion_tipo" class="form-control form-check form-check-inline">
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeDescripcionX" class="form-control"/>
+        <label for="editTypeDescripcionX">Descripción</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeCantidadX" class="form-control"/>
+        <label for="editTypeCantidadX">Cantidad</label>
+    </div>
+    <div id="edit-seleccion_tipo" class="form-check form-check-inline">
         <input type="radio" class="btn-check" name="edit_tipo" id="edit-tipo-gasto" autocomplete="off">
         <label class="btn btn-primary btn-radios" for="edit-tipo-gasto">Gasto</label>
 
@@ -344,7 +363,7 @@ Editar Operacion
 
 
 {% block listaextendsscript %}
-<script type="text/javascript" src="assets/bootstrap/js/bootstrap-datepicker.min.js"></script>
-<script type="text/javascript" src="assets/bootstrap/js/bootstrap-datepicker.es.min.js"></script>
+<script type="text/javascript" src="assets/moment/js/moment-with-locales.min.js"></script>
+<script type="text/javascript" src="assets/daterangepicker/js/daterangepicker.min.js"></script>
 <script type="text/javascript" src="assets/js/operaciones.js"></script>
 {% endblock%}

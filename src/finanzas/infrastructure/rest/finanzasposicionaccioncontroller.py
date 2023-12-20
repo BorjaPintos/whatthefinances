@@ -5,7 +5,9 @@ from src.finanzas.application.cerrarposicionaccion import CerrarPosicionAccion
 from src.finanzas.application.createbolsa import CreateBolsa
 from src.finanzas.application.createbroker import CreateBroker
 from src.finanzas.application.createposicionaccion import CreatePosicionAccion
+from src.finanzas.application.createvaloraccion import CreateValorAccion
 from src.finanzas.application.deleteposicionaccion import DeletePosicionAccion
+from src.finanzas.application.deletevaloraccion import DeleteValorAccion
 from src.finanzas.application.deshacercerrarposicionaccion import DeshacerCerrarPosicionAccion
 from src.finanzas.application.getbolsa import GetBolsa
 from src.finanzas.application.getbroker import GetBroker
@@ -13,6 +15,7 @@ from src.finanzas.application.getposicionaccion import GetPosicionAccion
 from src.finanzas.application.listbolsa import ListBolsa
 from src.finanzas.application.listbroker import ListBroker
 from src.finanzas.application.listposicionaccion import ListPosicionAccion
+from src.finanzas.application.listvaloraccion import ListValorAccion
 from src.finanzas.application.updatebolsa import UpdateBolsa
 from src.finanzas.application.updatebroker import UpdateBroker
 from src.finanzas.application.updateposicionaccion import UpdatePosicionAccion
@@ -20,6 +23,7 @@ from src.finanzas.infrastructure.persistence.bolsarepositorysqlalchemy import Bo
 from src.finanzas.infrastructure.persistence.brokerrepositorysqlalchemy import BrokerRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.posicionaccionrepositorysqlalchemy import \
     PosicionAccionRepositorySQLAlchemy
+from src.finanzas.infrastructure.persistence.valoraccionnrepositorysqlalchemy import ValorAccionRepositorySQLAlchemy
 from src.finanzas.infrastructure.rest.localeutils import apply_locale_float, apply_locale_int, apply_locale_date, \
     apply_locale_bool
 from src.shared.domain.exceptions.messageerror import MessageError
@@ -38,6 +42,11 @@ list_bolsas_use_case = ListBolsa(bolsa_repository=bolsa_repository)
 get_bolsa_use_case = GetBolsa(bolsa_repository=bolsa_repository)
 create_bolsa_use_case = CreateBolsa(bolsa_repository=bolsa_repository)
 update_bolsa_use_case = UpdateBolsa(bolsa_repository=bolsa_repository)
+
+valor_accion_repository = ValorAccionRepositorySQLAlchemy()
+list_valor_accion_use_case = ListValorAccion(valor_accion_repository=valor_accion_repository)
+create_valor_accion_use_case = CreateValorAccion(valor_accion_repository=valor_accion_repository)
+delete_valor_accion_use_case = DeleteValorAccion(valor_accion_repository=valor_accion_repository)
 
 posicion_accion_repository = PosicionAccionRepositorySQLAlchemy()
 
@@ -152,6 +161,42 @@ def update_bolsa(params: dict) -> Tuple[Any, int]:
         code = 409
         logger.warning("Ya existe una bolsa con ese nombre: {}".format(params.get("nombre")))
         raise MessageError("Parece que ya existe una bolsa con ese nombre: {}".format(params.get("nombre")), code)
+    return response, code
+
+
+def list_valores_acciones(params: dict) -> Tuple[Any, int]:
+    code = 200
+    __cast_params(params)
+    elements, total_elements = list_valor_accion_use_case.execute(params)
+    response_elements = []
+    for element in elements:
+        response_elements.append(element.get_dto())
+    return Pagination(response_elements, params["offset"], params["count"], total_elements), code
+
+
+def create_valor_accion(params: dict) -> Tuple[Any, int]:
+    code = 201
+
+    __cast_params(params)
+    valor_accion = create_valor_accion_use_case.execute(params)
+    if valor_accion:
+        response = valor_accion.get_dto()
+    else:
+        code = 409
+        logger.warning("Ya existe un valor_accion con esa fecha: {}".format(params.get("fecha")))
+        raise MessageError("Parece que ya existe una valor accion con esa fecha: {}".format(params.get("fecha")), code)
+    return response, code
+
+
+def delete_valor_accion(id_valor_accion: int) -> Tuple[Any, int]:
+    code = 200
+    deleted = delete_valor_accion_use_case.execute(apply_locale_int(id_valor_accion))
+    if deleted:
+        response = {}
+    else:
+        code = 400
+        logger.warning("Error al eliminar el valor acción con id: {}".format(id_valor_accion))
+        raise MessageError("Error al eliminar el valor acción con id: {}".format(id_valor_accion), code)
     return response, code
 
 

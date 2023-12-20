@@ -124,7 +124,7 @@
         </div>
 
         <!-- Sidebar -left -->
-        <div class="h-100 show" id="leftside-menu-container" data-simplebar="init">
+        <div class="h-100 show" id="leftside-menu-container" data-simplebar>
 
             <!--- Sidemenu -->
             <ul class="side-nav">
@@ -177,10 +177,21 @@
                 </li>
 
                 <li class="side-nav-item">
-                    <a href="posiciones_acciones.html" class="side-nav-link">
+                    <a data-bs-toggle="collapse" href="#sidebaracciones" aria-expanded="false" aria-controls="sidebaracciones"
+                       class="side-nav-link">
                         <i class="uil-arrow-growth"></i>
                         <span> Acciones </span>
                     </a>
+                    <div class="collapse" id="sidebaracciones">
+                        <ul class="side-nav-second-level">
+                            <li>
+                                <a href="posiciones_acciones.html">Posiciones de Acciones</a>
+                            </li>
+                             <li>
+                                <a href="valores_acciones.html">Valores de Acciones</a>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
 
                 <li class="side-nav-item">

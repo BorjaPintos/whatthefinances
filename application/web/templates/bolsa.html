@@ -6,8 +6,10 @@ Añadir Bolsa
 
 {% block contenido_add %}
 <div class="form-outline form-white mb-4">
-    <input type="text" id="addTypeNombreX" class="form-control form-control-lg"/>
-    <label class="form-label" for="addTypeNombreX">Nombre</label>
+    <div class="form-floating mb-3">
+        <input type="text" id="addTypeNombreX" class="form-control" required/>
+        <label for="addTypeNombreX">Nombre</label>
+    </div>
 </div>
 {% endblock %}
 
@@ -17,8 +19,10 @@ Editar Bolsa
 
 {% block contenido_edit %}
 <div class="form-outline form-white mb-4">
-    <input type="text" id="editTypeNombreX" class="form-control form-control-lg"/>
-    <label class="form-label" for="editTypeNombreX">Nombre</label>
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeNombreX" class="form-control" required/>
+        <label class="form-label" for="editTypeNombreX">Nombre</label>
+    </div>
 </div>
 <input type="hidden" id="editTypeIdX"/>
 {% endblock %}

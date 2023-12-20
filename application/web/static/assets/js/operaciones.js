@@ -216,23 +216,60 @@ render_texto = function(data, type){
     return data
 }
 
+get_datapicker_conf = function(){
+    return {
+        singleDatePicker: true,
+        timePicker: false,
+        autoApply: false,
+        autoUpdateInput: true,
+        locale: {
+          format: "DD/MM/YYYY",
+          applyLabel: "Aplicar",
+          cancelLabel: "Limpiar",
+          weekLabel: "S",
+          daysOfWeek: [
+                "Do",
+                "Lu",
+                "Ma",
+                "Mi",
+                "Ju",
+                "Vi",
+                "Sa"
+            ],
+            monthNames: [
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octuber",
+                "Noviembre",
+                "Diciembre"
+            ],
+            firstDay: 1
+        }
+    }
+}
+
 $(document).ready(function() {
-    $('#addFechaDataPicker').datepicker({
-        format: 'dd/mm/yyyy',
-        language: 'es-ES'
+    $('#addFechaDataPicker').daterangepicker(get_datapicker_conf());
+    $('#editFechaDataPicker').daterangepicker(get_datapicker_conf());
+    $('#search-fecha-begin-datapicker').daterangepicker(get_datapicker_conf());
+    $('#search-fecha-begin-datapicker').val('')
+    $('#search-fecha-end-datapicker').daterangepicker(get_datapicker_conf());
+    $('#search-fecha-end-datapicker').val('')
+
+    $('#search-fecha-begin-datapicker').on('cancel.daterangepicker', function(ev, picker) {
+      $('#search-fecha-begin-datapicker').val('');
     });
-    $('#editFechaDataPicker').datepicker({
-        format: 'dd/mm/yyyy',
-        language: 'es-ES'
+    $('#search-fecha-end-datapicker').on('cancel.daterangepicker', function(ev, picker) {
+      $('#search-fecha-end-datapicker').val('');
     });
-     $('#search-fecha-begin-datapicker').datepicker({
-        format: 'dd/mm/yyyy',
-        language: 'es-ES'
-    });
-    $('#search-fecha-end-datapicker').datepicker({
-        format: 'dd/mm/yyyy',
-        language: 'es-ES'
-    });
+
 
     table = $('#lista_tabla')
          .on('preXhr.dt', function ( e, settings, data ) {
@@ -396,7 +433,7 @@ $(document).ready(function() {
 
 
             $("#editTypeIdX").val(id)
-            $('#editFechaDataPicker').datepicker('update',  fecha);
+            $('#editFechaDataPicker').val(fecha);
             $("#editTypeDescripcionX").val(descripcion)
             $("#editTypeCantidadX").val(cantidad)
 
@@ -462,7 +499,7 @@ $(document).ready(function() {
         $("#addTypeCantidadInicialX").val('')
         $("#addTypePonderacionX").val('')
         $("#addTypeMessageX").text('')
-        $('#addFechaDataPicker').datepicker('update',  new Date());
+        $('#addFechaDataPicker').val(moment().format("DD/MM/YYYY"));
 
         $("#add-gasto-categoria-gasto-select").val('');
         $("#add-gasto-cuenta-cargo-select").val('None');
