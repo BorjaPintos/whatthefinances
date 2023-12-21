@@ -132,8 +132,7 @@ def import_routes(rootpath, app):
     @login_required
     def valores_acciones():
         user = request.user
-        lista_isin = [{"isin": "ISIN AQUI", "nombre": "NOMBRE-AQUI"}]
-
+        lista_isin, code = finanzasposicionaccioncontroller.list_unique_posiciones_acciones_isins()
         return render_template('/valores_acciones.html', username=user.get_name(),
                                title="Valores de Acciones",
                                lista_isin=lista_isin
@@ -147,9 +146,8 @@ def import_routes(rootpath, app):
         lista_bolsas, code = finanzasposicionaccioncontroller.list_bolsas({})
         lista_headers = ["Fecha", "Nombre", "ISIN", "Bolsa", "Broker",
                          "Precio por accion", "Número de acciones",
-                         "Comisión de compra", "Otras Comisiones", "Total Compra"]
-        # "Cierre actual", "Valoración actual",
-        # "Ganacia SC", "% Ganacia SC", "Ganancia CC", "% Ganancia CC"]
+                         "Comisión de compra", "Otras Comisiones", "Total Compra",
+                         "Valor actual", "Total Actual", "Ganacia SC", "Ganacia CC"]
 
         return render_template('/posiciones_acciones.html', username=user.get_name(),
                                title="Posiciones de Acciones",

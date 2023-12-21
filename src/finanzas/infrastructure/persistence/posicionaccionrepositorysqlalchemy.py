@@ -2,14 +2,18 @@ import traceback
 from typing import List, Tuple
 
 from loguru import logger
+from sqlalchemy import func, Subquery
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Query
 
+from src.finanzas.domain.isinnombre import IsinNombre
 from src.finanzas.domain.posicionaccion import PosicionAccion
 from src.finanzas.domain.posicionaccionrepository import PosicionAccionRepository
 from src.finanzas.infrastructure.persistence.orm.bolsaentity import BolsaEntity
 from src.finanzas.infrastructure.persistence.orm.brokerentity import BrokerEntity
 from src.finanzas.infrastructure.persistence.orm.posicionaccionentity import PosicionAccionEntity
+from src.finanzas.infrastructure.persistence.orm.valoraccionentity import ValorAccionEntity
+from src.persistence.application.databasemanager import DatabaseManager
 from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.itransactionalrepository import ITransactionalRepository
 from src.persistence.domain.simplefilter import SimpleFilter, WhereOperator
@@ -19,7 +23,17 @@ from src.shared.domain.exceptions.notfounderror import NotFoundError
 
 class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccionRepository):
 
+    def __get_subquery_valor_accion(self) -> Subquery:
+
+        columnas = (ValorAccionEntity.isin, func.max(ValorAccionEntity.fecha), ValorAccionEntity.valor)
+        subquery_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas)
+        subquery = subquery_builder.build_query(Criteria())
+        subquery = subquery.group_by(ValorAccionEntity.isin)
+        return subquery.subquery()
+
     def __get_complete_join_query(self, criteria: Criteria) -> Query:
+
+        subquery_valor = self.__get_subquery_valor_accion()
 
         columnas = (
             PosicionAccionEntity.id, PosicionAccionEntity.nombre, PosicionAccionEntity.isin,
@@ -28,13 +42,14 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
             PosicionAccionEntity.precio_accion_sin_comision, PosicionAccionEntity.precio_venta_sin_comision,
             PosicionAccionEntity.comision_compra, PosicionAccionEntity.otras_comisiones,
             PosicionAccionEntity.comision_venta, PosicionAccionEntity.abierta,
-            BolsaEntity.nombre, BrokerEntity.nombre
+            BolsaEntity.nombre, BrokerEntity.nombre, subquery_valor.columns[2]
         )
 
         query_builder = SQLAlchemyQueryBuilder(PosicionAccionEntity, self._session, selected_columns=columnas)
         query = query_builder.build_order_query(criteria) \
             .join(BrokerEntity, PosicionAccionEntity.id_broker == BrokerEntity.id, isouter=False) \
-            .join(BolsaEntity, PosicionAccionEntity.id_bolsa == BolsaEntity.id, isouter=True)
+            .join(BolsaEntity, PosicionAccionEntity.id_bolsa == BolsaEntity.id, isouter=False) \
+            .join(subquery_valor, PosicionAccionEntity.isin == subquery_valor.columns[0], isouter=True)
 
         return query
 
@@ -56,6 +71,7 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
                   "abierta": row[13],
                   "nombre_bolsa": row[14],
                   "nombre_broker": row[15],
+                  "valor_accion": row[16],
                   }
         return PosicionAccion(params)
 
@@ -89,7 +105,8 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
 
     def get(self, id_posicion_accion: int) -> PosicionAccion:
         try:
-            query = self.__get_complete_join_query(Criteria(filter=SimpleFilter("id", WhereOperator.IS, id_posicion_accion)))
+            query = self.__get_complete_join_query(
+                Criteria(filter=SimpleFilter("id", WhereOperator.IS, id_posicion_accion)))
             result = query.one_or_none()
             if result is None:
                 raise NotFoundError("No se encuentra la PosicionAccion con id:  {}".format(id_posicion_accion))
@@ -117,7 +134,8 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
                 id_broker=params.get("id_broker"),
                 precio_accion_sin_comision=params.get("precio_accion_sin_comision"),
                 comision_compra=params.get("comision_compra"),
-                otras_comisiones=params.get("otras_comisiones")
+                otras_comisiones=params.get("otras_comisiones"),
+                abierta=params.get("abierta")
             )
             self._session.add(entity)
             self._session.flush()
@@ -162,6 +180,23 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
         except Exception as e:
             traceback.print_exc()
         return False
+
+    def list_unique_isin(self, criteria) -> List[str]:
+        elements = []
+        try:
+            columnas = (
+                PosicionAccionEntity.isin,
+            )
+            query_builder = SQLAlchemyQueryBuilder(PosicionAccionEntity, self._session, selected_columns=columnas)
+            query = query_builder.build_order_query(criteria)
+            result = query.distinct().all()
+            if result is not None:
+                for row in result:
+                    elements.append(row[0])
+        except Exception as e:
+            traceback.print_exc()
+
+        return elements
 
     def check_broker(self, id_broker: int):
         if id_broker is not None:

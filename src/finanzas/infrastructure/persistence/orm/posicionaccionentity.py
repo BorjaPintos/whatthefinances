@@ -12,8 +12,8 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 @InitTable()
 class PosicionAccionEntity(BaseEntity):
     __tablename__ = 'finanzas_posiciones_acciones'
-    nombre = Column(Text, nullable=False, unique=True)
-    isin = Column(Text, nullable=False, unique=True)
+    nombre = Column(Text, nullable=False)
+    isin = Column(Text, nullable=False)
     fecha_compra = Column(Date, nullable=False)
     fecha_venta = Column(Date, nullable=True)
     numero_acciones = Column(Integer, nullable=False)
@@ -24,7 +24,7 @@ class PosicionAccionEntity(BaseEntity):
     comision_compra = Column(Float(precision=4), server_default="0.00", nullable=False)
     otras_comisiones = Column(Float(precision=4), server_default="0.00", nullable=False)
     comision_venta = Column(Float(precision=4), server_default="0.00", nullable=False)
-    abierta = Column(Boolean, server_default="True", nullable=False)
+    abierta = Column(Boolean, nullable=False)
 
     @staticmethod
     def get_order_column(str_property) -> Column:
