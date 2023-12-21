@@ -1,22 +1,17 @@
-
-
 function add_valor_accion() {
     var fecha = $("#addFechaDataPicker").val()
     var isin = $("#add-isin-select").val();
     var valor_accion = $("#addTypeValorAccionX").val();
 
-
-
     var data = {
         fecha: fecha,
         isin: isin,
-        valor_accion: parseFloat(precio_accion).toFixed(4) ? precio_accion : null,
+        valor: parseFloat(valor_accion).toFixed(4) ? valor_accion : null,
     }
     var xhttp = new XMLHttpRequest();
 
     xhttp.open("POST", "/finanzas/valoraccion", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
-
 
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4)
@@ -97,13 +92,11 @@ get_daterangepicker_config = function(){
 
 $(document).ready(function() {
 
-    $('#editFechaDataPickerInput').daterangepicker(get_daterangepicker_config());
-
-    $('#addFechaDataPickerInput').daterangepicker(get_daterangepicker_config());
+    $('#addFechaDataPicker').daterangepicker(get_daterangepicker_config());
 
     $('#add-button').on( "click", function() {
-        $('#addFechaDataPickerInput').val(moment().format("DD/MM/YYYY HH:mm"));
-        $("#addTypeValorAccionX").val('')
+        $('#addFechaDataPicker').val(moment().format("DD/MM/YYYY HH:mm"));
+        $("#add-isin-select").val('')
         $("#addTypeValorAccionX").val('')
         $("#addTypeMessageX").text('')
         $('#add').modal('show')

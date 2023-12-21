@@ -218,18 +218,14 @@ $(document).ready(function() {
                data.order_type = data.order[0].dir
          })
          .on('xhr.dt', function ( e, settings, json, xhr ) {
-
-            /*
             for (var i=0; i<json.elements.length; i++) {
-            Falta calcular los precios actuales para ver si están en beneficio o no
-                if (json.elements[i]. != undefined && json.elements[i].id_categoria_gasto != undefined)
-                    json.elements[i].DT_RowClass = "transferencia"
-                else if (json.elements[i].id_categoria_ingreso != undefined)
+                if ( json.elements[i].ganacia_con_comosiones > 0)
                     json.elements[i].DT_RowClass = "ingreso"
-                else
+                else if (json.elements[i].ganacia_con_comosiones < 0)
                     json.elements[i].DT_RowClass = "gasto"
+                else
+                    json.elements[i].DT_RowClass = "transferencia"
             }
-            */
             json.recordsTotal = json.total_elements
             json.recordsFiltered = json.total_elements
          })
@@ -308,7 +304,31 @@ $(document).ready(function() {
                 type: "num",
                 render: render_dinero,
                 width: "12%"
-            }, {
+            },
+            {
+                data:'valor_accion',
+                type: "num",
+                render: render_dinero,
+                width: "10%"
+            },
+            {
+                data:'valor_actual',
+                type: "num",
+                render: render_dinero,
+                width: "10%"
+            },
+            {
+                data:'ganacia_sin_comosiones',
+                type: "num",
+                render: render_dinero,
+                width: "10%"
+            },
+            {
+                data:'ganacia_con_comosiones',
+                type: "num",
+                render: render_dinero,
+                width: "10%"
+            },{
                 className: 'text-end',
                 data:'id',
                 render: render_actions,

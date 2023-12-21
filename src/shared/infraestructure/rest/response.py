@@ -25,7 +25,9 @@ def serialize_response(func):
         except NotFoundError as e:
             error = Error(str(e), 404)
         except MessageError as e:
-            error = Error(e.get_msg(),e.get_code())
+            error = Error(e.get_msg(), e.get_code())
+        except ValueError as e:
+            error = Error(str(e), 400)
         except:
             traceback.print_exc()
             error = Error("Bad Request", 400)

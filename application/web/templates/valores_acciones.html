@@ -13,8 +13,8 @@
             <div class="card-body pt-2">
                 <div class="col-xl-12">
                     <div class="text-xl-end mt-2">
-                        <button type="button" class="btn btn-danger mb-2 me-2" id="add-button"><i
-                                class="uil-plus"></i> Añadir
+                        <button type="button" class="btn btn-danger mb-2 me-2" id="add-button">
+                            <i class="uil-plus"></i> Añadir
                         </button>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
         <div class="modal-content modal-body card bg-dark text-white">
             <div class="modal-header">
                 <h5 class="modal-title">Añadir Valor de acciones</h5>
-                <button type="button" class="close" id="add-close-button" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-danger" id="add-close-button" data-dismiss="modal" aria-label="Close">
                     <i class="uil-times"></i>
                 </button>
             </div>
@@ -47,20 +47,20 @@
                     <div class="mb-md-5 mt-md-4">
                         <div class="form-outline form-white mb-4">
                             <div class="input-group date form-floating">
-                                <input type="text" class="form-control" id="addFechaDataPickerInput"
+                                <input type="text" class="form-control" id="addFechaDataPicker"
                                        data-toggle="date-picker" data-time-picker="true">
                                 <div class="input-group-text bg-primary border-primary text-white">
                                     <span class="uil uil-calendar-alt"></span>
                                 </div>
-                                <label  for="addFechaDataPickerInput">Fecha y Hora</label>
+                                <label  for="addFechaDataPicker">Fecha y Hora</label>
                             </div>
 
 
                             <div class="input-group mt-2">
                                 <select class="form-select" id="add-isin-select">
                                     <option value="">Seleccione ISIN</option>
-                                    {% for isin_nombre in lista_isin %}
-                                    <option value="{{isin_nombre.isin}}">{{isin_nombre.nombre}} - {{isin_nombre.isin}}
+                                    {% for isin in lista_isin %}
+                                    <option value="{{isin}}">{{isin}}
                                     </option>
                                     {% endfor %}
                                 </select>

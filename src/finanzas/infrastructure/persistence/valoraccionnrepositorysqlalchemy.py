@@ -47,14 +47,14 @@ class ValorAccionRepositorySQLAlchemy(ITransactionalRepository, ValorAccionRepos
             traceback.print_exc()
         return 0
 
-    def new(self, params: dict) -> int:
+    def new(self, params: dict) -> ValorAccion:
         try:
             entity = ValorAccionEntity(fecha=params.get("fecha"),
                                        isin=params.get("isin"),
                                        valor=params.get("valor"))
             self._session.add(entity)
             self._session.flush()
-            return entity.id
+            return entity.convert_to_object_domain()
         except IntegrityError as e:
             logger.info(e)
         except NotFoundError as e:

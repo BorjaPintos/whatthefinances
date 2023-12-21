@@ -11,7 +11,7 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 @InitTable()
 class ValorAccionEntity(BaseEntity):
     __tablename__ = 'finanzas_valor_acciones'
-    isin = Column(Text, nullable=False, unique=True)
+    isin = Column(Text, nullable=False)
     fecha = Column(DateTime, nullable=False)
     valor = Column(Float(precision=4), server_default="0.00", nullable=False)
 

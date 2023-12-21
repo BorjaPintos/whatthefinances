@@ -15,6 +15,7 @@ from src.finanzas.application.getposicionaccion import GetPosicionAccion
 from src.finanzas.application.listbolsa import ListBolsa
 from src.finanzas.application.listbroker import ListBroker
 from src.finanzas.application.listposicionaccion import ListPosicionAccion
+from src.finanzas.application.listuniqueposicionaccionisin import ListUniquePosicionAccionIsin
 from src.finanzas.application.listvaloraccion import ListValorAccion
 from src.finanzas.application.updatebolsa import UpdateBolsa
 from src.finanzas.application.updatebroker import UpdateBroker
@@ -25,7 +26,7 @@ from src.finanzas.infrastructure.persistence.posicionaccionrepositorysqlalchemy 
     PosicionAccionRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.valoraccionnrepositorysqlalchemy import ValorAccionRepositorySQLAlchemy
 from src.finanzas.infrastructure.rest.localeutils import apply_locale_float, apply_locale_int, apply_locale_date, \
-    apply_locale_bool
+    apply_locale_bool, apply_locale_datetime
 from src.shared.domain.exceptions.messageerror import MessageError
 from src.shared.infraestructure.rest.pagination import Pagination
 
@@ -57,6 +58,8 @@ update_posicion_accion_use_case = UpdatePosicionAccion(posicion_accion_repositor
 delete_posicion_accion_use_case = DeletePosicionAccion(posicion_accion_repository=posicion_accion_repository)
 cerrar_posicion_accion_use_case = CerrarPosicionAccion(posicion_accion_repository=posicion_accion_repository)
 deshacer_cerrar_posicion_accion_use_case = DeshacerCerrarPosicionAccion(
+    posicion_accion_repository=posicion_accion_repository)
+list_unique_posiciones_acciones_isins_use_case = ListUniquePosicionAccionIsin(
     posicion_accion_repository=posicion_accion_repository)
 
 
@@ -176,15 +179,15 @@ def list_valores_acciones(params: dict) -> Tuple[Any, int]:
 
 def create_valor_accion(params: dict) -> Tuple[Any, int]:
     code = 201
-
     __cast_params(params)
+    if params.get("fecha") is not None:
+        params["fecha"] = apply_locale_datetime(params["fecha"])
     valor_accion = create_valor_accion_use_case.execute(params)
     if valor_accion:
         response = valor_accion.get_dto()
     else:
-        code = 409
-        logger.warning("Ya existe un valor_accion con esa fecha: {}".format(params.get("fecha")))
-        raise MessageError("Parece que ya existe una valor accion con esa fecha: {}".format(params.get("fecha")), code)
+        logger.warning("Error al crear el valor acción {}")
+        raise MessageError("Error al crear el valor acción {}", code)
     return response, code
 
 
@@ -198,6 +201,12 @@ def delete_valor_accion(id_valor_accion: int) -> Tuple[Any, int]:
         logger.warning("Error al eliminar el valor acción con id: {}".format(id_valor_accion))
         raise MessageError("Error al eliminar el valor acción con id: {}".format(id_valor_accion), code)
     return response, code
+
+
+def list_unique_posiciones_acciones_isins() -> Tuple[Any, int]:
+    code = 200
+    elements = list_unique_posiciones_acciones_isins_use_case.execute()
+    return elements, code
 
 
 def list_posiciones_acciones(params: dict) -> Tuple[Pagination, int]:
@@ -359,5 +368,7 @@ def __cast_params(params: dict):
     if params.get("end_otras_comisiones") is not None:
         params["end_otras_comisiones"] = apply_locale_float(params["end_otras_comisiones"])
 
+    if params.get("valor") is not None:
+        params["valor"] = apply_locale_float(params["valor"])
     if params.get("abierta") is not None:
         params["abierta"] = apply_locale_bool(params["abierta"])

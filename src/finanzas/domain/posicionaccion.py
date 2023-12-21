@@ -20,6 +20,7 @@ class PosicionAccion:
         self._otras_comisiones = params.get("otras_comisiones")
         self._comision_venta = params.get("comision_venta")
         self._abierta = params.get("abierta")
+        self._valor_accion = params.get("valor_accion")
 
     def get_id(self) -> int:
         return self._id
@@ -108,6 +109,11 @@ class PosicionAccion:
     def get_nombre_broker(self) -> str:
         return self._nombre_broker
 
+    def get_valor_acccion(self) -> float:
+        if self._valor_accion is None:
+            return self._precio_accion_sin_comision
+        return self._valor_accion
+
     def get_dto(self) -> dict:
         return {"id": self._id,
                 "nombre": self._nombre,
@@ -128,5 +134,12 @@ class PosicionAccion:
                 "total_compra_sin_comisiones": (self._precio_accion_sin_comision * self._numero_acciones),
                 "total": (self._precio_accion_sin_comision * self._numero_acciones) + (
                         self._comision_compra + self._otras_comisiones + self._comision_venta),
-                "abierta": self._abierta
+                "abierta": self._abierta,
+                "valor_accion": self.get_valor_acccion(),
+                "valor_actual": (self.get_valor_acccion() * self._numero_acciones),
+                "ganacia_sin_comosiones": (self.get_valor_acccion() * self._numero_acciones) - (
+                        self._precio_accion_sin_comision * self._numero_acciones),
+                "ganacia_con_comosiones": (self.get_valor_acccion() * self._numero_acciones) - (
+                        self._precio_accion_sin_comision * self._numero_acciones) - (
+                                                      self._comision_compra + self._otras_comisiones + self._comision_venta)
                 }

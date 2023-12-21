@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple
+
+from src.finanzas.domain.isinnombre import IsinNombre
 from src.finanzas.domain.posicionaccion import PosicionAccion
 from src.persistence.domain.criteria import Criteria
 
@@ -28,4 +30,8 @@ class PosicionAccionRepository(ABC):
 
     @abstractmethod
     def delete(self, id_posicion_accion: int) -> bool:
+        pass
+
+    @abstractmethod
+    def list_unique_isin(self, criteria) -> List[str]:
         pass
