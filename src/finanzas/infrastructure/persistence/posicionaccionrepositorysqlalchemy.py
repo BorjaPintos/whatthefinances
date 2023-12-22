@@ -2,7 +2,7 @@ import traceback
 from typing import List, Tuple
 
 from loguru import logger
-from sqlalchemy import func, Subquery
+from sqlalchemy import func, Subquery, and_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Query
 
@@ -25,11 +25,25 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
 
     def __get_subquery_valor_accion(self) -> Subquery:
 
-        columnas = (ValorAccionEntity.isin, func.max(ValorAccionEntity.fecha), ValorAccionEntity.valor)
+        """
+        select fvc.isin, fvc.fecha, fvc.valor
+        FROM finanzas_valor_acciones fvc
+        join (SELECT fac.isin AS isin, max(fac.fecha) AS max_1 FROM finanzas_valor_acciones fac GROUP BY fac.isin) fvc2
+        on fvc.isin = fvc2.isin and fvc.fecha = fvc2.max_1
+        """
+
+        columnas = (ValorAccionEntity.isin, func.max(ValorAccionEntity.fecha))
         subquery_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas)
         subquery = subquery_builder.build_query(Criteria())
-        subquery = subquery.group_by(ValorAccionEntity.isin)
-        return subquery.subquery()
+        subquery = subquery.group_by(ValorAccionEntity.isin).subquery()
+
+        columnas2 = (ValorAccionEntity.isin, ValorAccionEntity.fecha, ValorAccionEntity.valor)
+        subquery_builder2 = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas2)
+        subquery2 = (subquery_builder2.build_query(Criteria())
+                     .join(subquery, and_(ValorAccionEntity.isin == subquery.columns[0],
+                                          ValorAccionEntity.fecha == subquery.columns[1]), isouter=False))
+
+        return subquery2.subquery()
 
     def __get_complete_join_query(self, criteria: Criteria) -> Query:
 
@@ -185,7 +199,7 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
         elements = []
         try:
             columnas = (
-                PosicionAccionEntity.isin,
+                PosicionAccionEntity.isin, func.upper(PosicionAccionEntity.isin), PosicionAccionEntity.id
             )
             query_builder = SQLAlchemyQueryBuilder(PosicionAccionEntity, self._session, selected_columns=columnas)
             query = query_builder.build_order_query(criteria)
