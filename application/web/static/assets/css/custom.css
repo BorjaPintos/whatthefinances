@@ -88,3 +88,7 @@ font-weight: bold;
 .daterangepicker {
     z-index: 2000;
 }
+
+cell-border + tbody, td, tfoot, th, thead, tr {
+    border-width: 1px;
+}

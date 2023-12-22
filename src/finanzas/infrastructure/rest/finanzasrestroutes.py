@@ -443,6 +443,12 @@ def import_routes(rootpath, app):
     def delete_posicion_accion(id_posicion_accion: int):
         return finanzasposicionaccioncontroller.delete_posicion_accion(id_posicion_accion)
 
+    @app.route(rootpath + "/posicionaccion/isin", methods=['GET'])
+    @login_required
+    @serialize_response
+    def get_isins():
+        return finanzasposicionaccioncontroller.list_unique_posiciones_acciones_isins()
+
     @app.route(rootpath + "/resumen/ingresos", methods=['GET'])
     @login_required
     @serialize_response
@@ -558,3 +564,23 @@ def import_routes(rootpath, app):
             "end_fecha": request.args.get('end_fecha', None),
         }
         return finanzasresumencontroller.resumen_total(params)
+
+    @app.route(rootpath + "/resumen/valores_acciones_meses", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_valores_acciones_meses():
+        params = {
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzasresumencontroller.resumen_valores_acciones_meses(params)
+
+    @app.route(rootpath + "/resumen/valores_acciones_dias", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_valores_acciones_dias():
+        params = {
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzasresumencontroller.resumen_valores_acciones_dias(params)

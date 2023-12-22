@@ -72,7 +72,6 @@ function get_line_ahorros_gastos_ingresos(){
                         current_mes += datos_totales[i]
                         datos_grafica_acumulado.push(current_mes)
                     }
-                    console.log(datos_grafica_acumulado)
                     create_chart_line_ahorros_gastos_ingresos(labels, datos_grafica_totales, datos_grafica_ingresos, datos_grafica_gastos)
                     create_chart_ahorros_acumulado(labels, datos_grafica_acumulado)
                 });

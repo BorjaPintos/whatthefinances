@@ -18,3 +18,6 @@ class PostgresDatabase(SQLAlchemyDatabase):
 
     def month(self, colum: Column):
         return func.extract("Month", colum)
+
+    def day(self, colum: Column):
+        return func.extract("Day", colum)

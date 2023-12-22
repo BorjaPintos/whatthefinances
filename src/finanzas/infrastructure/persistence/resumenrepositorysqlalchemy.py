@@ -8,6 +8,7 @@ from src.finanzas.domain.resumeningreso import ResumenIngreso
 from src.finanzas.domain.resumenmonedero import ResumenMonedero
 from src.finanzas.domain.resumenrepository import ResumenRepository
 from src.finanzas.domain.resumentotal import ResumenTotal
+from src.finanzas.domain.resumenvaloraccion import ResumenValorAccion
 from src.finanzas.infrastructure.persistence.orm.categoriagastoentity import CategoriaGastoEntity
 from src.finanzas.infrastructure.persistence.orm.categoriaingresoentity import CategoriaIngresoEntity
 from src.finanzas.infrastructure.persistence.orm.cuentaentity import CuentaEntity
@@ -15,14 +16,16 @@ from src.finanzas.infrastructure.persistence.orm.monederoentity import MonederoE
 from src.finanzas.infrastructure.persistence.orm.movimientocuentaentity import MovimientoCuentaEntity
 from src.finanzas.infrastructure.persistence.orm.movimientomonederoentity import MovimientoMonederoEntity
 from src.finanzas.infrastructure.persistence.orm.operacionentity import OperacionEntity
+from src.finanzas.infrastructure.persistence.orm.valoraccionentity import ValorAccionEntity
 from src.persistence.application.databasemanager import DatabaseManager
+from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.itransactionalrepository import ITransactionalRepository
 from src.persistence.infrastructure.sqlalchmeyquerybuilder import SQLAlchemyQueryBuilder
 
 
 class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
 
-    def ingresos(self, criteria) -> List[ResumenIngreso]:
+    def ingresos(self, criteria: Criteria) -> List[ResumenIngreso]:
         elements = []
         try:
             columnas = (
@@ -61,7 +64,7 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
 
         return elements
 
-    def gastos(self, criteria) -> List[ResumenGasto]:
+    def gastos(self, criteria: Criteria) -> List[ResumenGasto]:
         elements = []
         try:
             columnas = (
@@ -100,7 +103,7 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
 
         return elements
 
-    def cuentas(self, criteria) -> List[ResumenCuenta]:
+    def cuentas(self, criteria: Criteria) -> List[ResumenCuenta]:
         elements = []
         try:
             columnas = (
@@ -139,7 +142,7 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
 
         return elements
 
-    def monederos(self, criteria) -> List[ResumenMonedero]:
+    def monederos(self, criteria: Criteria) -> List[ResumenMonedero]:
         elements = []
         try:
             columnas = (
@@ -179,7 +182,7 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
         return elements
 
 
-    def total(self, criteria) -> List[ResumenTotal]:
+    def total(self, criteria: Criteria) -> List[ResumenTotal]:
         elements = []
         try:
             columnas = (
@@ -205,6 +208,82 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
                                "total": float(row[2])
                                }
                     elements.append(ResumenTotal(element))
+        except Exception as e:
+            traceback.print_exc()
+
+        return elements
+
+    def resumen_valor_accion_meses(self, criteria: Criteria) -> List[ResumenValorAccion]:
+        elements = []
+        try:
+            columnas = (
+                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
+                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
+                func.max(ValorAccionEntity.fecha),
+                ValorAccionEntity.isin,
+                ValorAccionEntity.valor
+            )
+
+            query_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas)
+            query = query_builder.build_query(criteria)
+            query = query.group_by(
+                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
+                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
+                ValorAccionEntity.isin)
+            query = query.order_by(DatabaseManager.get_database().year(ValorAccionEntity.fecha).desc(),
+                                   DatabaseManager.get_database().month(ValorAccionEntity.fecha).desc(),
+                                   func.upper(ValorAccionEntity.isin).asc())
+
+            result = query.all()
+            if result is not None:
+                for row in result:
+                    element = {"año": int(row[0]),
+                               "mes": int(row[1]),
+                               "fecha": row[2],
+                               "isin": row[3],
+                               "ultimo_valor": float(row[4]),
+                               }
+                    elements.append(ResumenValorAccion(element))
+        except Exception as e:
+            traceback.print_exc()
+
+        return elements
+
+    def resumen_valor_accion_dias(self, criteria: Criteria) -> List[ResumenValorAccion]:
+        elements = []
+        try:
+            columnas = (
+                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
+                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
+                func.max(ValorAccionEntity.fecha),
+                ValorAccionEntity.isin,
+                ValorAccionEntity.valor,
+                DatabaseManager.get_database().day(ValorAccionEntity.fecha)
+            )
+
+            query_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas)
+            query = query_builder.build_query(criteria)
+            query = query.group_by(
+                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
+                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
+                DatabaseManager.get_database().day(ValorAccionEntity.fecha),
+                ValorAccionEntity.isin)
+            query = query.order_by(DatabaseManager.get_database().year(ValorAccionEntity.fecha).desc(),
+                                   DatabaseManager.get_database().month(ValorAccionEntity.fecha).desc(),
+                                   DatabaseManager.get_database().day(ValorAccionEntity.fecha).desc(),
+                                   func.upper(ValorAccionEntity.isin).asc())
+
+            result = query.all()
+            if result is not None:
+                for row in result:
+                    element = {"año": int(row[0]),
+                               "mes": int(row[1]),
+                               "fecha": row[2],
+                               "isin": row[3],
+                               "ultimo_valor": float(row[4]),
+                               "dia": row[5]
+                               }
+                    elements.append(ResumenValorAccion(element))
         except Exception as e:
             traceback.print_exc()
 
