@@ -1,6 +1,6 @@
 import traceback
 from typing import List
-from sqlalchemy import func
+from sqlalchemy import func, and_
 
 from src.finanzas.domain.resumencuenta import ResumenCuenta
 from src.finanzas.domain.resumengasto import ResumenGasto
@@ -181,7 +181,6 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
 
         return elements
 
-
     def total(self, criteria: Criteria) -> List[ResumenTotal]:
         elements = []
         try:
@@ -216,20 +215,40 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
     def resumen_valor_accion_meses(self, criteria: Criteria) -> List[ResumenValorAccion]:
         elements = []
         try:
+
+            """
+            select fvc.year, fvc.month, fvc.fecha, fvc.isin, fvc.valor
+            FROM finanzas_valor_acciones fvc
+            join (SELECT fac.isin AS isin, max(fac.fecha) AS max_1, fac.year as year, fac.month as month FROM finanzas_valor_acciones fac GROUP BY fac.isin, fac.year, fac.month) fvc2
+            on fvc.isin = fvc2.isin and fvc.fecha = fvc2.max_1
+            """
+
             columnas = (
+                ValorAccionEntity.isin,
+                func.max(ValorAccionEntity.fecha),
                 DatabaseManager.get_database().year(ValorAccionEntity.fecha),
                 DatabaseManager.get_database().month(ValorAccionEntity.fecha),
-                func.max(ValorAccionEntity.fecha),
+            )
+
+
+            subquery_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas)
+            subquery = subquery_builder.build_query(Criteria())
+            subquery = subquery.group_by(
+                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
+                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
+                ValorAccionEntity.isin).subquery()
+
+            columnas2 = (
+                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
+                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
+                ValorAccionEntity.fecha,
                 ValorAccionEntity.isin,
                 ValorAccionEntity.valor
             )
-
-            query_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas)
-            query = query_builder.build_query(criteria)
-            query = query.group_by(
-                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
-                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
-                ValorAccionEntity.isin)
+            query_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas2)
+            query = (query_builder.build_query(Criteria())
+                     .join(subquery, and_(ValorAccionEntity.isin == subquery.columns[0],
+                                          ValorAccionEntity.fecha == subquery.columns[1]), isouter=False))
             query = query.order_by(DatabaseManager.get_database().year(ValorAccionEntity.fecha).desc(),
                                    DatabaseManager.get_database().month(ValorAccionEntity.fecha).desc(),
                                    func.upper(ValorAccionEntity.isin).asc())
@@ -252,25 +271,44 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
     def resumen_valor_accion_dias(self, criteria: Criteria) -> List[ResumenValorAccion]:
         elements = []
         try:
+            """
+            select fvc.year, fvc.month, fvc.fecha, fvc.isin, fvc.valor, fvc.day
+            FROM finanzas_valor_acciones fvc
+            join (SELECT fac.isin AS isin, max(fac.fecha) AS max_1, fac.year as year, fac.month as month 
+            FROM finanzas_valor_acciones fac GROUP BY fac.isin, fac.year, fac.month, fac.day) fvc2
+            on fvc.isin = fvc2.isin and fvc.fecha = fvc2.max_1
+            """
+
             columnas = (
+                ValorAccionEntity.isin,
+                func.max(ValorAccionEntity.fecha),
                 DatabaseManager.get_database().year(ValorAccionEntity.fecha),
                 DatabaseManager.get_database().month(ValorAccionEntity.fecha),
-                func.max(ValorAccionEntity.fecha),
+                DatabaseManager.get_database().day(ValorAccionEntity.fecha),
+            )
+
+
+            subquery_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas)
+            subquery = subquery_builder.build_query(Criteria())
+            subquery = subquery.group_by(
+                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
+                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
+                ValorAccionEntity.isin).subquery()
+
+            columnas2 = (
+                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
+                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
+                ValorAccionEntity.fecha,
                 ValorAccionEntity.isin,
                 ValorAccionEntity.valor,
                 DatabaseManager.get_database().day(ValorAccionEntity.fecha)
             )
-
-            query_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas)
-            query = query_builder.build_query(criteria)
-            query = query.group_by(
-                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
-                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
-                DatabaseManager.get_database().day(ValorAccionEntity.fecha),
-                ValorAccionEntity.isin)
+            query_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas2)
+            query = (query_builder.build_query(Criteria())
+                     .join(subquery, and_(ValorAccionEntity.isin == subquery.columns[0],
+                                          ValorAccionEntity.fecha == subquery.columns[1]), isouter=False))
             query = query.order_by(DatabaseManager.get_database().year(ValorAccionEntity.fecha).desc(),
                                    DatabaseManager.get_database().month(ValorAccionEntity.fecha).desc(),
-                                   DatabaseManager.get_database().day(ValorAccionEntity.fecha).desc(),
                                    func.upper(ValorAccionEntity.isin).asc())
 
             result = query.all()

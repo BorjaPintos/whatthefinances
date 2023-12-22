@@ -135,7 +135,7 @@ class DatabaseManager:
                     seguir = True
                     while seguir:
                         query = file.readline()
-                        if query:
+                        if query is not None and query not in ["", "\n", "\r\n"]:
                             DatabaseManager.exec_sql(query, commit=False)
                         else:
                             seguir = False

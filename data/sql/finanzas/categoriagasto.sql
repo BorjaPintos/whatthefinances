@@ -48,7 +48,7 @@ insert into finanzas_categorias_gasto ("descripcion", "id_cuenta_cargo_defecto",
 insert into finanzas_categorias_gasto ("descripcion", "id_cuenta_cargo_defecto", "id_monedero_defecto") select 'Colegio profesional', fc.id, fm.id from finanzas_cuentas fc, finanzas_monederos fm where fc.nombre = 'Básicos' and fm.nombre = 'Cuenta Banco';
 insert into finanzas_categorias_gasto ("descripcion", "id_cuenta_cargo_defecto", "id_monedero_defecto") select 'Mascotas', fc.id, fm.id from finanzas_cuentas fc, finanzas_monederos fm where fc.nombre = 'Básicos' and fm.nombre = 'Cuenta Banco';
 insert into finanzas_categorias_gasto ("descripcion", "id_cuenta_cargo_defecto", "id_monedero_defecto") select 'Retención de dividendo', fc.id, fm.id from finanzas_cuentas fc, finanzas_monederos fm where fc.nombre = 'Inversión' and fm.nombre = 'Degiro';
-insert into finanzas_categorias_gasto ("descripcion") values ("Transferencia a otro monedero");
+insert into finanzas_categorias_gasto ("descripcion") values ('Transferencia a otro monedero');
 insert into finanzas_categorias_gasto ("descripcion", "id_cuenta_cargo_defecto", "id_monedero_defecto") select 'Regalos a otras personas', fc.id, fm.id from finanzas_cuentas fc, finanzas_monederos fm where fc.nombre = 'Básicos' and fm.nombre = 'Cuenta Banco';
 insert into finanzas_categorias_gasto ("descripcion", "id_cuenta_cargo_defecto", "id_monedero_defecto") select 'Tabaco', fc.id, fm.id from finanzas_cuentas fc, finanzas_monederos fm where fc.nombre = 'Ocio' and fm.nombre = 'Cuenta Banco';
 insert into finanzas_categorias_gasto ("descripcion", "id_cuenta_cargo_defecto", "id_monedero_defecto") select 'Reperaciones', fc.id, fm.id from finanzas_cuentas fc, finanzas_monederos fm where fc.nombre = 'Básicos' and fm.nombre = 'Cuenta Banco';
@@ -58,5 +58,3 @@ insert into finanzas_categorias_gasto ("descripcion", "id_cuenta_cargo_defecto",
 insert into finanzas_categorias_gasto ("descripcion", "id_cuenta_cargo_defecto", "id_monedero_defecto") select 'Curso de Formación', fc.id, fm.id from finanzas_cuentas fc, finanzas_monederos fm where fc.nombre = 'Formación' and fm.nombre = 'Cuenta Banco';
 insert into finanzas_categorias_gasto ("descripcion", "id_cuenta_cargo_defecto", "id_monedero_defecto") select 'Material de Formación', fc.id, fm.id from finanzas_cuentas fc, finanzas_monederos fm where fc.nombre = 'Formación' and fm.nombre = 'Cuenta Banco';
 insert into finanzas_categorias_gasto ("descripcion", "id_cuenta_cargo_defecto", "id_monedero_defecto") select 'Dietas de viajes de empresa', fc.id, fm.id from finanzas_cuentas fc, finanzas_monederos fm where fc.nombre = 'Básicos' and fm.nombre = 'Cuenta Banco';
-
-
