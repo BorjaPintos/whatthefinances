@@ -111,7 +111,7 @@ function update_posicion_accion() {
 }
 
 get_local_number = function(num){
-    return $.fn.dataTable.render.number('', ',', 4).display(num);
+    return $.fn.dataTable.render.number('', ',', 2).display(num);
 }
 
 get_local_integer = function(num){
@@ -141,8 +141,8 @@ render_actions = function (data, type) {
 render_texto = function(data, type){
 
     if (type == 'display'){
-        if (data.length>75)
-            return '<span class="badge custom-badge" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+data+'">'+  (data.substring(0, 75) + "...") +'</span>'
+        if (data.length>15)
+            return '<span class="badge custom-badge" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+data+'">'+  (data.substring(0, 15) + "...") +'</span>'
         else
           return '<span class="badge custom-badge">'+ data +'</span>'
 
@@ -337,7 +337,7 @@ $(document).ready(function() {
                 width: "12%"
             }
         ],
-        order: [[0, 'desc']],
+        order: [[0, 'asc']],
         info: true,
         lengthChange: false,
         paging: true,

@@ -16,3 +16,6 @@ class SQLiteDatabase(SQLAlchemyDatabase):
 
     def month(self, colum: Column):
         return func.strftime("%m", colum)
+
+    def day(self, colum: Column):
+        return func.strftime("%d", colum)

@@ -77,3 +77,7 @@ class SQLAlchemyDatabase(Database):
     @abstractmethod
     def month(self, colum: Column):
         pass
+
+    @abstractmethod
+    def day(self, colum: Column):
+        pass
