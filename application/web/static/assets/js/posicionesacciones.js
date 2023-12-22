@@ -344,6 +344,7 @@ $(document).ready(function() {
         pageLength: 30,
         searching: false,
         scrollX: false,
+        responsive: true,
         language: {
             info: 'Total _MAX_ Posiciones de Acciones',
             infoEmpty: 'No hay Posiciones de Acciones',
