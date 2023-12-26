@@ -30,11 +30,14 @@ class BolsaEntity(BaseEntity):
 
     @staticmethod
     def cast_to_column_type(column: Column, value: str) -> Any:
-        caster = {
-            BolsaEntity.id: int,
-            BolsaEntity.nombre: str,
-        }
-        return caster.get(column)(value)
+        if isinstance(value, str):
+            caster = {
+                BolsaEntity.id: int,
+                BolsaEntity.nombre: str,
+            }
+            return caster.get(column)(value)
+        else:
+            return value
 
     def convert_to_object_domain(self) -> Bolsa:
         return Bolsa({"id": self.id,

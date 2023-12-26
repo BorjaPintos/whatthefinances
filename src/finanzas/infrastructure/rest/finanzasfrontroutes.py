@@ -138,6 +138,18 @@ def import_routes(rootpath, app):
                                lista_isin=lista_isin
                                )
 
+    @app.route(rootpath + "dividendos.html", methods=['GET'])
+    @login_required
+    def dividendos():
+        user = request.user
+        lista_isin, code = finanzasposicionaccioncontroller.list_unique_posiciones_acciones_isins()
+        lista_headers = ["Fecha", "ISIN", "Dividendo por Acción", "Retención por acción"]
+        return render_template('/dividendos.html', username=user.get_name(),
+                               title="Dividendos",
+                               lista_headers=lista_headers,
+                               lista_isin=lista_isin
+                               )
+
     @app.route(rootpath + "posiciones_acciones.html", methods=['GET'])
     @login_required
     def posiciones_acciones():

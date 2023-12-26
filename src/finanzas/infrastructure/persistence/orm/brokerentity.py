@@ -33,12 +33,15 @@ class BrokerEntity(BaseEntity):
 
     @staticmethod
     def cast_to_column_type(column: Column, value: str) -> Any:
-        caster = {
-            BrokerEntity.id: int,
-            BrokerEntity.nombre: str,
-            BrokerEntity.extrangero: bool
-        }
-        return caster.get(column)(value)
+        if isinstance(value, str):
+            caster = {
+                BrokerEntity.id: int,
+                BrokerEntity.nombre: str,
+                BrokerEntity.extrangero: bool
+            }
+            return caster.get(column)(value)
+        else:
+            return value
 
     def convert_to_object_domain(self) -> Broker:
         return Broker({"id": self.id,

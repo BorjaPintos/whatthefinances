@@ -47,7 +47,8 @@ class ValorAccionEntity(BaseEntity):
                 ValorAccionEntity.valor: float,
             }
             return caster.get(column)(value)
-        return value
+        else:
+            return value
 
     def convert_to_object_domain(self) -> ValorAccion:
         return ValorAccion({"id": self.id,

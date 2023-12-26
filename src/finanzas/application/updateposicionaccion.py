@@ -11,12 +11,12 @@ class UpdatePosicionAccion(TransactionalUseCase):
 
     def __init__(self, posicion_accion_repository: PosicionAccionRepository):
         super().__init__([posicion_accion_repository])
-        self._posicion_accion_repository_repository = posicion_accion_repository
+        self._posicion_accion_repository = posicion_accion_repository
 
     @transactional(readonly=False)
     def execute(self, params: dict) -> PosicionAccion:
         self._validate_params(params)
-        posicion_accion = self._posicion_accion_repository_repository.get(params["id"])
+        posicion_accion = self._posicion_accion_repository.get(params["id"])
 
         "El usuario puede cambiar todo salvo si es abierta o no, además en caso de ser posición cerrada también podrá modificar la comisión de venta"
         posicion_accion.set_fecha_compra(params.get("fecha_compra"))
@@ -41,7 +41,7 @@ class UpdatePosicionAccion(TransactionalUseCase):
             posicion_accion.set_fecha_venta(params.get("fecha_venta"))
             posicion_accion.set_precio_venta_sin_comision(params.get("precio_venta_sin_comision"))
 
-        updated = self._posicion_accion_repository_repository.update(posicion_accion)
+        updated = self._posicion_accion_repository.update(posicion_accion)
         if updated:
             try:
                 self._session.flush()

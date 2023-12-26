@@ -37,14 +37,17 @@ class MonederoEntity(BaseEntity):
 
     @staticmethod
     def cast_to_column_type(column: Column, value: str) -> Any:
-        caster = {
-            MonederoEntity.id: int,
-            MonederoEntity.nombre: str,
-            MonederoEntity.cantidad_inicial: float,
-            MonederoEntity.diferencia: float
+        if isinstance(value, str):
+            caster = {
+                MonederoEntity.id: int,
+                MonederoEntity.nombre: str,
+                MonederoEntity.cantidad_inicial: float,
+                MonederoEntity.diferencia: float
 
-        }
-        return caster.get(column)(value)
+            }
+            return caster.get(column)(value)
+        else:
+            return value
 
     def convert_to_object_domain(self) -> Monedero:
         return Monedero({"id": self.id,
