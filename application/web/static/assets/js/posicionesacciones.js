@@ -236,9 +236,9 @@ $(document).ready(function() {
          })
          .on('xhr.dt', function ( e, settings, json, xhr ) {
             for (var i=0; i<json.elements.length; i++) {
-                if ( json.elements[i].ganacia_con_comosiones > 0)
+                if ( json.elements[i].ganacia_con_comosiones_y_dividendos > 0)
                     json.elements[i].DT_RowClass = "ingreso"
-                else if (json.elements[i].ganacia_con_comosiones < 0)
+                else if (json.elements[i].ganacia_con_comosiones_y_dividendos < 0)
                     json.elements[i].DT_RowClass = "gasto"
                 else
                     json.elements[i].DT_RowClass = "transferencia"
@@ -336,6 +336,12 @@ $(document).ready(function() {
             },
             {
                 data:'dividendos_total',
+                type: "num",
+                render: render_dinero,
+                width: "10%"
+            },
+            {
+                data:'ganacia_con_comosiones_y_dividendos',
                 type: "num",
                 render: render_dinero,
                 width: "10%"

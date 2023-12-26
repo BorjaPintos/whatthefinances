@@ -131,6 +131,15 @@ class PosicionAccion:
     def get_dividendos_total(self) -> float:
         return self.get_dividendos() - self.get_retencion_dividendos()
 
+    def get_todas_comisiones(self):
+        return self.get_comision_compra() + self.get_otras_comisiones() + self.get_comision_venta()
+
+    def get_precio_compra_sin_comisiones(self):
+        return self.get_precio_accion_sin_comision() * self.get_numero_acciones()
+
+    def get_valor_actual(self):
+        return self.get_valor_accion() * self.get_numero_acciones()
+
     def get_dto(self) -> dict:
         return {"id": self._id,
                 "nombre": self._nombre,
@@ -147,19 +156,19 @@ class PosicionAccion:
                 "comision_compra": self._comision_compra,
                 "comision_venta": self._comision_venta,
                 "otras_comisiones": self._otras_comisiones,
-                "total_comisiones": (self._comision_compra + self._otras_comisiones + self._comision_venta),
-                "total_compra_sin_comisiones": (self._precio_accion_sin_comision * self._numero_acciones),
-                "total": (self._precio_accion_sin_comision * self._numero_acciones) + (
-                        self._comision_compra + self._otras_comisiones + self._comision_venta),
+                "total_comisiones": self.get_todas_comisiones(),
+                "total_compra_sin_comisiones": self.get_precio_compra_sin_comisiones(),
+                "total": self.get_precio_compra_sin_comisiones() + self.get_todas_comisiones(),
                 "abierta": self._abierta,
                 "valor_accion": self.get_valor_accion(),
-                "valor_actual": (self.get_valor_accion() * self._numero_acciones),
-                "ganacia_sin_comosiones": (self.get_valor_accion() * self._numero_acciones) - (
-                        self._precio_accion_sin_comision * self._numero_acciones),
-                "ganacia_con_comosiones": (self.get_valor_accion() * self._numero_acciones) - (
-                        self._precio_accion_sin_comision * self._numero_acciones) - (
-                                                  self._comision_compra + self._otras_comisiones + self._comision_venta),
+                "valor_actual": self.get_valor_actual(),
+                "ganacia_sin_comosiones": self.get_valor_actual() - self.get_precio_compra_sin_comisiones(),
+                "ganacia_con_comosiones": self.get_valor_actual() - self.get_precio_compra_sin_comisiones() -
+                                          self.get_todas_comisiones(),
                 "diviendos": self.get_dividendos(),
                 "retencion_dividendos": self.get_retencion_dividendos(),
-                "dividendos_total": self.get_dividendos_total()
+                "dividendos_total": self.get_dividendos_total(),
+                "ganacia_con_comosiones_y_dividendos": self.get_valor_actual() + self.get_dividendos_total()
+                                                       - self.get_precio_compra_sin_comisiones() - self.get_todas_comisiones()
+
                 }
