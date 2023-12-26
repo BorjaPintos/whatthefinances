@@ -21,6 +21,8 @@ class PosicionAccion:
         self._comision_venta = params.get("comision_venta")
         self._abierta = params.get("abierta")
         self._valor_accion = params.get("valor_accion")
+        self._dividendos_por_accion = params.get("dividendos_por_accion")
+        self._retencion_por_accion = params.get("retencion_por_accion")
 
     def get_id(self) -> int:
         return self._id
@@ -109,10 +111,25 @@ class PosicionAccion:
     def get_nombre_broker(self) -> str:
         return self._nombre_broker
 
-    def get_valor_acccion(self) -> float:
+    def get_valor_accion(self) -> float:
         if self._valor_accion is None:
             return self._precio_accion_sin_comision
         return self._valor_accion
+
+    def get_dividendos(self) -> float:
+        if self._dividendos_por_accion is None:
+            return 0.0
+        else:
+            return self._dividendos_por_accion * self._numero_acciones
+
+    def get_retencion_dividendos(self) -> float:
+        if self._retencion_por_accion is None:
+            return 0.0
+        else:
+            return self._retencion_por_accion * self._numero_acciones
+
+    def get_dividendos_total(self) -> float:
+        return self.get_dividendos() - self.get_retencion_dividendos()
 
     def get_dto(self) -> dict:
         return {"id": self._id,
@@ -135,11 +152,14 @@ class PosicionAccion:
                 "total": (self._precio_accion_sin_comision * self._numero_acciones) + (
                         self._comision_compra + self._otras_comisiones + self._comision_venta),
                 "abierta": self._abierta,
-                "valor_accion": self.get_valor_acccion(),
-                "valor_actual": (self.get_valor_acccion() * self._numero_acciones),
-                "ganacia_sin_comosiones": (self.get_valor_acccion() * self._numero_acciones) - (
+                "valor_accion": self.get_valor_accion(),
+                "valor_actual": (self.get_valor_accion() * self._numero_acciones),
+                "ganacia_sin_comosiones": (self.get_valor_accion() * self._numero_acciones) - (
                         self._precio_accion_sin_comision * self._numero_acciones),
-                "ganacia_con_comosiones": (self.get_valor_acccion() * self._numero_acciones) - (
+                "ganacia_con_comosiones": (self.get_valor_accion() * self._numero_acciones) - (
                         self._precio_accion_sin_comision * self._numero_acciones) - (
-                                                      self._comision_compra + self._otras_comisiones + self._comision_venta)
+                                                  self._comision_compra + self._otras_comisiones + self._comision_venta),
+                "diviendos": self.get_dividendos(),
+                "retencion_dividendos": self.get_retencion_dividendos(),
+                "dividendos_total": self.get_dividendos_total()
                 }

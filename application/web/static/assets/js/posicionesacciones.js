@@ -333,7 +333,14 @@ $(document).ready(function() {
                 type: "num",
                 render: render_dinero,
                 width: "10%"
-            },{
+            },
+            {
+                data:'dividendos_total',
+                type: "num",
+                render: render_dinero,
+                width: "10%"
+            },
+            {
                 className: 'text-end',
                 data:'id',
                 render: render_actions,

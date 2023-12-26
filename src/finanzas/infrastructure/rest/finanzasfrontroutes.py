@@ -159,7 +159,8 @@ def import_routes(rootpath, app):
         lista_headers = ["Fecha", "Nombre", "ISIN", "Bolsa", "Broker",
                          "Precio por accion", "Número de acciones",
                          "Total Compra",
-                         "Valor actual", "Total Actual", "Ganacia SC", "Ganacia CC"]
+                         "Valor actual", "Total Actual", "Ganacia SC", "Ganacia CC",
+                         "Dividendos Acumulados"]
 
         return render_template('/posiciones_acciones.html', username=user.get_name(),
                                title="Posiciones de Acciones",

@@ -1,16 +1,17 @@
 import traceback
-from typing import List, Tuple
+from typing import List, Tuple, Type
 
 from loguru import logger
-from sqlalchemy import func, Subquery, and_
+from sqlalchemy import func, Subquery, and_, Label, select
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Query
+from sqlalchemy.orm import Query, aliased
 
 from src.finanzas.domain.isinnombre import IsinNombre
 from src.finanzas.domain.posicionaccion import PosicionAccion
 from src.finanzas.domain.posicionaccionrepository import PosicionAccionRepository
 from src.finanzas.infrastructure.persistence.orm.bolsaentity import BolsaEntity
 from src.finanzas.infrastructure.persistence.orm.brokerentity import BrokerEntity
+from src.finanzas.infrastructure.persistence.orm.dividendos import DividendoEntity
 from src.finanzas.infrastructure.persistence.orm.posicionaccionentity import PosicionAccionEntity
 from src.finanzas.infrastructure.persistence.orm.valoraccionentity import ValorAccionEntity
 from src.persistence.application.databasemanager import DatabaseManager
@@ -45,25 +46,49 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
 
         return subquery2.subquery()
 
+    def __get_subquery_dividendo(self, alias: Type[PosicionAccionEntity]) -> Label:
+        columnas = (
+            func.sum(DividendoEntity.dividendo_por_accion),
+        )
+        subquery_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
+        subquery = ((subquery_builder.build_query(Criteria())).
+                    where(and_(DividendoEntity.fecha > alias.fecha_compra,
+                               DividendoEntity.isin == alias.isin)))
+        return subquery.label('dividendo')
+
+    def __get_subquery_retencion(self, alias: Type[PosicionAccionEntity]) -> Label:
+        columnas = (
+            func.sum(DividendoEntity.retencion_por_accion),
+        )
+        subquery_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
+        subquery = ((subquery_builder.build_query(Criteria())).
+                    where(and_(DividendoEntity.fecha > alias.fecha_compra,
+                               DividendoEntity.isin == alias.isin)))
+        return subquery.label('retencion')
+
     def __get_complete_join_query(self, criteria: Criteria) -> Query:
 
+        alias_posicion = PosicionAccionEntity
         subquery_valor = self.__get_subquery_valor_accion()
+        dividendo_label = self.__get_subquery_dividendo(alias_posicion)
+        retencion_label = self.__get_subquery_retencion(alias_posicion)
 
         columnas = (
-            PosicionAccionEntity.id, PosicionAccionEntity.nombre, PosicionAccionEntity.isin,
-            PosicionAccionEntity.fecha_compra, PosicionAccionEntity.fecha_venta,
-            PosicionAccionEntity.numero_acciones, PosicionAccionEntity.id_bolsa, PosicionAccionEntity.id_broker,
-            PosicionAccionEntity.precio_accion_sin_comision, PosicionAccionEntity.precio_venta_sin_comision,
-            PosicionAccionEntity.comision_compra, PosicionAccionEntity.otras_comisiones,
-            PosicionAccionEntity.comision_venta, PosicionAccionEntity.abierta,
-            BolsaEntity.nombre, BrokerEntity.nombre, subquery_valor.columns[2]
+            alias_posicion.id, alias_posicion.nombre, alias_posicion.isin,
+            alias_posicion.fecha_compra, alias_posicion.fecha_venta,
+            alias_posicion.numero_acciones, alias_posicion.id_bolsa, alias_posicion.id_broker,
+            alias_posicion.precio_accion_sin_comision, alias_posicion.precio_venta_sin_comision,
+            alias_posicion.comision_compra, alias_posicion.otras_comisiones,
+            alias_posicion.comision_venta, alias_posicion.abierta,
+            BolsaEntity.nombre, BrokerEntity.nombre, subquery_valor.columns[2],
+            dividendo_label, retencion_label
         )
 
-        query_builder = SQLAlchemyQueryBuilder(PosicionAccionEntity, self._session, selected_columns=columnas)
+        query_builder = SQLAlchemyQueryBuilder(alias_posicion, self._session, selected_columns=columnas)
         query = query_builder.build_order_query(criteria) \
-            .join(BrokerEntity, PosicionAccionEntity.id_broker == BrokerEntity.id, isouter=False) \
-            .join(BolsaEntity, PosicionAccionEntity.id_bolsa == BolsaEntity.id, isouter=False) \
-            .join(subquery_valor, PosicionAccionEntity.isin == subquery_valor.columns[0], isouter=True)
+            .join(BrokerEntity, alias_posicion.id_broker == BrokerEntity.id, isouter=False) \
+            .join(BolsaEntity, alias_posicion.id_bolsa == BolsaEntity.id, isouter=False) \
+            .join(subquery_valor, alias_posicion.isin == subquery_valor.columns[0], isouter=True)
 
         return query
 
@@ -86,6 +111,8 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
                   "nombre_bolsa": row[14],
                   "nombre_broker": row[15],
                   "valor_accion": row[16],
+                  "dividendos_por_accion": row[17],
+                  "retencion_por_accion": row[18]
                   }
         return PosicionAccion(params)
 
@@ -199,7 +226,7 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
         elements = []
         try:
             columnas = (
-                PosicionAccionEntity.isin, func.upper(PosicionAccionEntity.isin), PosicionAccionEntity.id
+                PosicionAccionEntity.isin, func.upper(PosicionAccionEntity.isin)
             )
             query_builder = SQLAlchemyQueryBuilder(PosicionAccionEntity, self._session, selected_columns=columnas)
             query = query_builder.build_order_query(criteria)
