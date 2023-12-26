@@ -349,6 +349,56 @@ def import_routes(rootpath, app):
     def delete_valor_accion(id_valor_accion: int):
         return finanzasposicionaccioncontroller.delete_valor_accion(id_valor_accion)
 
+    @app.route(rootpath + "/dividendo", methods=['GET'])
+    @login_required
+    @serialize_response
+    def list_dividendos():
+        params = {
+            "order_property": request.args.get('order_property', 'nombre'),
+            "order_type": request.args.get('order_type', 'asc'),
+            "isin": request.args.get('isin', None),
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None)
+        }
+        return finanzasposicionaccioncontroller.list_dividendos(params)
+
+    @app.route(rootpath + "/dividendo/<id_dividendo>", methods=['GET'])
+    @login_required
+    @serialize_response
+    def get_dividendo(id_dividendo: int):
+        return finanzasposicionaccioncontroller.get_dividendo(id_dividendo)
+
+    @app.route(rootpath + "/dividendo", methods=['POST'])
+    @login_required
+    @serialize_response
+    def create_dividendo():
+        params = {
+            "isin": request.json.get('isin'),
+            "fecha": request.json.get('fecha'),
+            "dividendo_por_accion": request.json.get('dividendo_por_accion'),
+            "retencion_por_accion": request.json.get('retencion_por_accion')
+        }
+        return finanzasposicionaccioncontroller.create_dividendo(params)
+
+    @app.route(rootpath + "/dividendo/<id_dividendo>", methods=['POST'])
+    @login_required
+    @serialize_response
+    def update_dividendo(id_dividendo: int):
+        params = {
+            "id": id_dividendo,
+            "isin": request.json.get('isin', None),
+            "fecha": request.json.get('fecha', None),
+            "dividendo_por_accion": request.json.get('dividendo_por_accion', None),
+            "retencion_por_accion": request.json.get('retencion_por_accion', None)
+        }
+        return finanzasposicionaccioncontroller.update_dividendo(params)
+
+    @app.route(rootpath + "/dividendo/<id_dividendo>", methods=['DELETE'])
+    @login_required
+    @serialize_response
+    def delete_dividendo(id_dividendo: int):
+        return finanzasposicionaccioncontroller.delete_dividendo(id_dividendo)
+
     @app.route(rootpath + "/posicionaccion", methods=['GET'])
     @login_required
     @serialize_response

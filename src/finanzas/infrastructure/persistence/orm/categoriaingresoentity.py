@@ -36,14 +36,17 @@ class CategoriaIngresoEntity(BaseEntity):
 
     @staticmethod
     def cast_to_column_type(column: Column, value: str) -> Any:
-        caster = {
-            CategoriaIngresoEntity.id: int,
-            CategoriaIngresoEntity.descripcion: str,
-            CategoriaIngresoEntity.id_cuenta_abono_defecto: int,
-            CategoriaIngresoEntity.id_monedero_defecto: int,
+        if isinstance(value, str):
+            caster = {
+                CategoriaIngresoEntity.id: int,
+                CategoriaIngresoEntity.descripcion: str,
+                CategoriaIngresoEntity.id_cuenta_abono_defecto: int,
+                CategoriaIngresoEntity.id_monedero_defecto: int,
 
-        }
-        return caster.get(column)(value)
+            }
+            return caster.get(column)(value)
+        else:
+            return value
 
     def convert_to_object_domain(self) -> CategoriaIngreso:
         return CategoriaIngreso({"id": self.id,

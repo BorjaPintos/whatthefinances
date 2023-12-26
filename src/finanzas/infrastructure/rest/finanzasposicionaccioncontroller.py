@@ -4,24 +4,30 @@ from loguru import logger
 from src.finanzas.application.cerrarposicionaccion import CerrarPosicionAccion
 from src.finanzas.application.createbolsa import CreateBolsa
 from src.finanzas.application.createbroker import CreateBroker
+from src.finanzas.application.createdividendo import CreateDividendo
 from src.finanzas.application.createposicionaccion import CreatePosicionAccion
 from src.finanzas.application.createvaloraccion import CreateValorAccion
+from src.finanzas.application.deletedividendo import DeleteDividendo
 from src.finanzas.application.deleteposicionaccion import DeletePosicionAccion
 from src.finanzas.application.deletevaloraccion import DeleteValorAccion
 from src.finanzas.application.deshacercerrarposicionaccion import DeshacerCerrarPosicionAccion
 from src.finanzas.application.getbolsa import GetBolsa
 from src.finanzas.application.getbroker import GetBroker
+from src.finanzas.application.getdividendo import GetDividendo
 from src.finanzas.application.getposicionaccion import GetPosicionAccion
 from src.finanzas.application.listbolsa import ListBolsa
 from src.finanzas.application.listbroker import ListBroker
+from src.finanzas.application.listdividendos import ListDividendos
 from src.finanzas.application.listposicionaccion import ListPosicionAccion
 from src.finanzas.application.listuniqueposicionaccionisin import ListUniquePosicionAccionIsin
 from src.finanzas.application.listvaloraccion import ListValorAccion
 from src.finanzas.application.updatebolsa import UpdateBolsa
 from src.finanzas.application.updatebroker import UpdateBroker
+from src.finanzas.application.updatedividendo import UpdateDividendo
 from src.finanzas.application.updateposicionaccion import UpdatePosicionAccion
 from src.finanzas.infrastructure.persistence.bolsarepositorysqlalchemy import BolsaRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.brokerrepositorysqlalchemy import BrokerRepositorySQLAlchemy
+from src.finanzas.infrastructure.persistence.dividendorepositorysqlalchemy import DividendoRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.posicionaccionrepositorysqlalchemy import \
     PosicionAccionRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.valoraccionnrepositorysqlalchemy import ValorAccionRepositorySQLAlchemy
@@ -48,6 +54,13 @@ valor_accion_repository = ValorAccionRepositorySQLAlchemy()
 list_valor_accion_use_case = ListValorAccion(valor_accion_repository=valor_accion_repository)
 create_valor_accion_use_case = CreateValorAccion(valor_accion_repository=valor_accion_repository)
 delete_valor_accion_use_case = DeleteValorAccion(valor_accion_repository=valor_accion_repository)
+
+dividendo_repository = DividendoRepositorySQLAlchemy()
+list_dividendos_use_case = ListDividendos(dividendo_repository=dividendo_repository)
+create_dividendo_use_case = CreateDividendo(dividendo_repository=dividendo_repository)
+get_dividendo_use_case = GetDividendo(dividendo_repository=dividendo_repository)
+update_dividendo_use_case = UpdateDividendo(dividendo_repository=dividendo_repository)
+delete_dividendo_use_case = DeleteDividendo(dividendo_repository=dividendo_repository)
 
 posicion_accion_repository = PosicionAccionRepositorySQLAlchemy()
 
@@ -203,6 +216,72 @@ def delete_valor_accion(id_valor_accion: int) -> Tuple[Any, int]:
     return response, code
 
 
+def list_dividendos(params: dict) -> Tuple[Any, int]:
+    code = 200
+    __cast_params(params)
+    if params.get("fecha") is not None:
+        params["fecha"] = apply_locale_date(params["fecha"])
+    elements = list_dividendos_use_case.execute(params)
+    response = []
+    for element in elements:
+        response.append(element.get_dto())
+    return response, code
+
+
+def get_dividendo(id_dividendo: int) -> Tuple[Any, int]:
+    code = 200
+    bolsa = get_dividendo_use_case.execute(apply_locale_int(id_dividendo))
+    if bolsa:
+        response = bolsa.get_dto()
+    else:
+        code = 404
+        logger.warning(
+            "Por alguna razón no devuelve el diviendo con id {} y no da la excepción de not found".format(id_dividendo))
+        raise MessageError("No se ha podido obtener el diviendo con id: {}".format(id_dividendo), code)
+    return response, code
+
+
+def create_dividendo(params: dict) -> Tuple[Any, int]:
+    code = 201
+    __cast_params(params)
+    if params.get("fecha") is not None:
+        params["fecha"] = apply_locale_date(params["fecha"])
+    dividendo = create_dividendo_use_case.execute(params)
+    if dividendo:
+        response = dividendo.get_dto()
+    else:
+        code = 400
+        logger.warning("Error al crear el dividendo: {}".format(params.get("isin")))
+        raise MessageError("Error al crear el dividendo: {}".format(params.get("isin")), code)
+    return response, code
+
+
+def update_dividendo(params: dict) -> Tuple[Any, int]:
+    code = 200
+    __cast_params(params)
+    if params.get("fecha") is not None:
+        params["fecha"] = apply_locale_date(params["fecha"])
+    dividendo = update_dividendo_use_case.execute(params)
+    if dividendo:
+        response = dividendo.get_dto()
+    else:
+        code = 400
+        logger.warning("Error al actualizar el dividendo: {}".format(params.get("isin")))
+        raise MessageError("Error al actualizar el dividendo: {}".format(params.get("isin")), code)
+    return response, code
+
+def delete_dividendo(id_dividendo: int) -> Tuple[Any, int]:
+    code = 200
+    deleted = delete_dividendo_use_case.execute(apply_locale_int(id_dividendo))
+    if deleted:
+        response = {}
+    else:
+        code = 400
+        logger.warning("Error al eliminar el dividendo con id: {}".format(id_dividendo))
+        raise MessageError("Error al eliminar el dividendo con id: {}".format(id_dividendo), code)
+    return response, code
+
+
 def list_unique_posiciones_acciones_isins() -> Tuple[Any, int]:
     code = 200
     elements = list_unique_posiciones_acciones_isins_use_case.execute()
@@ -262,8 +341,8 @@ def update_posicion_accion(params: dict) -> Tuple[Any, int]:
 
 def delete_posicion_accion(id_posicion_accion: int) -> Tuple[Any, int]:
     code = 200
-    operacion = delete_posicion_accion_use_case.execute(apply_locale_int(id_posicion_accion))
-    if operacion:
+    deleted = delete_posicion_accion_use_case.execute(apply_locale_int(id_posicion_accion))
+    if deleted:
         response = {}
     else:
         code = 400
@@ -375,3 +454,8 @@ def __cast_params(params: dict):
         params["valor"] = apply_locale_float(params["valor"])
     if params.get("abierta") is not None:
         params["abierta"] = apply_locale_bool(params["abierta"])
+
+    if params.get("dividendo_por_accion") is not None:
+        params["dividendo_por_accion"] = apply_locale_float(params["dividendo_por_accion"])
+    if params.get("retencion_por_accion") is not None:
+        params["retencion_por_accion"] = apply_locale_float(params["retencion_por_accion"])

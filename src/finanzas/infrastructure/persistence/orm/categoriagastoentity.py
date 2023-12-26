@@ -37,14 +37,17 @@ class CategoriaGastoEntity(BaseEntity):
 
     @staticmethod
     def cast_to_column_type(column: Column, value: str) -> Any:
-        caster = {
-            CategoriaGastoEntity.id: int,
-            CategoriaGastoEntity.descripcion: str,
-            CategoriaGastoEntity.id_cuenta_cargo_defecto: int,
-            CategoriaGastoEntity.id_monedero_defecto: int,
+        if isinstance(value, str):
+            caster = {
+                CategoriaGastoEntity.id: int,
+                CategoriaGastoEntity.descripcion: str,
+                CategoriaGastoEntity.id_cuenta_cargo_defecto: int,
+                CategoriaGastoEntity.id_monedero_defecto: int,
 
-        }
-        return caster.get(column)(value)
+            }
+            return caster.get(column)(value)
+        else:
+            return value
 
     def update(self, categoria_gasto: CategoriaGasto):
         self.descripcion = categoria_gasto.get_descripcion()

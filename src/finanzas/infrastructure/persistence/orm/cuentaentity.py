@@ -36,15 +36,18 @@ class CuentaEntity(BaseEntity):
 
     @staticmethod
     def cast_to_column_type(column: Column, value: str) -> Any:
-        caster = {
-            CuentaEntity.id: int,
-            CuentaEntity.nombre: str,
-            CuentaEntity.cantidad_inicial: float,
-            CuentaEntity.diferencia: float,
-            CuentaEntity.ponderacion: int
+        if isinstance(value, str):
+            caster = {
+                CuentaEntity.id: int,
+                CuentaEntity.nombre: str,
+                CuentaEntity.cantidad_inicial: float,
+                CuentaEntity.diferencia: float,
+                CuentaEntity.ponderacion: int
 
-        }
-        return caster.get(column)(value)
+            }
+            return caster.get(column)(value)
+        else:
+            return value
 
     def convert_to_object_domain(self) -> Cuenta:
         return Cuenta({"id": self.id,

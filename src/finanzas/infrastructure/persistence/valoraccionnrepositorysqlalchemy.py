@@ -2,15 +2,12 @@ import traceback
 from typing import List, Tuple
 
 from loguru import logger
-from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Query
 
-from src.finanzas.domain.resumenvaloraccion import ResumenValorAccion
 from src.finanzas.domain.valoraccion import ValorAccion
 from src.finanzas.domain.valoraccionrepository import ValorAccionRepository
 from src.finanzas.infrastructure.persistence.orm.valoraccionentity import ValorAccionEntity
-from src.persistence.application.databasemanager import DatabaseManager
 from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.itransactionalrepository import ITransactionalRepository
 from src.persistence.infrastructure.sqlalchmeyquerybuilder import SQLAlchemyQueryBuilder
