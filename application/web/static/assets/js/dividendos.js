@@ -221,7 +221,7 @@ $(document).ready(function() {
         });
 
         $('.delete-element').on( "click", function() {
-           delete_broker($(this).attr("data-element"))
+           delete_dividendo($(this).attr("data-element"))
         });
     } );
 
