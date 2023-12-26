@@ -10,6 +10,11 @@ Añadir Broker
         <input type="text" id="addTypeNombreX" class="form-control" required/>
         <label for="addTypeNombreX">Nombre</label>
     </div>
+    <div class="form-check form-switch">
+        <input type="checkbox" id="addTypeExtrangeroX" checked data-switch="bool"/>
+        <label for="addTypeExtrangeroX" data-on-label="Sí" data-off-label="No"></label>
+        <label class="form-check-label" for="addTypeExtrangeroX">Extrangero</label>
+    </div>
 </div>
 {% endblock %}
 
@@ -22,6 +27,11 @@ Editar Broker
     <div class="form-floating mb-3">
         <input type="text" id="editTypeNombreX" class="form-control" required/>
         <label for="editTypeNombreX">Nombre</label>
+    </div>
+    <div class="form-check form-switch">
+        <input type="checkbox" id="editTypeExtrangeroX" checked data-switch="bool"/>
+        <label for="editTypeExtrangeroX" data-on-label="Sí" data-off-label="No"></label>
+        <label class="form-check-label" for="editTypeExtrangeroX">Extrangero</label>
     </div>
 </div>
 <input type="hidden" id="editTypeIdX"/>

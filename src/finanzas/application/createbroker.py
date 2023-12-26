@@ -14,5 +14,7 @@ class CreateBroker(TransactionalUseCase):
     def execute(self, params: dict) -> Broker:
         if "nombre" not in params or params["nombre"] is None:
             raise InvalidParamError("campo nombre obligatorio")
+        if "extrangero" not in params or params["extrangero"] is None:
+            raise InvalidParamError("campo extrangero obligatorio")
         broker = self._broker_repository.new(params)
         return broker

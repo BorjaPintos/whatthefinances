@@ -126,6 +126,23 @@ render_dinero = function (data, type) {
     return data
 }
 
+render_total_dinero = function (data, type, row) {
+    var number = get_local_number(data);
+    if (type === 'display') {
+        explicacion = '( numero_acciones * precio_accion_sin_comision ) + comision_compra + otras_comisiones'
+        if (! row['abierta']){
+            explicacion += '+ comision_venta'
+        }
+        explicacion += ' = (' + row['numero_acciones'] + ' * ' +  row['precio_accion_sin_comision'] + ') + ' + row['comision_compra'] + ' + ' + row['otras_comisiones']
+        if (! row['abierta']){
+            explicacion += ' + ' + row['comision_venta']
+        }
+        explicacion += ' = ' + number
+        return '<span class="badge custom-badge flex-grow-1 ms-2" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+explicacion+'">'+number+'</span><span class="badge custom-badge flex-grow-1 ms-2">€</span>'
+    }
+    return data
+}
+
 render_actions = function (data, type) {
     if (type === 'display') {
         cerrar_posicion =  '<a class="cerrar-posicion-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Cerrar Posición" data-bs-original-title="Cerrar Posición" data-element="'+data+'"><i class="uil uil-sign-out-alt"></i></a>'
@@ -288,22 +305,10 @@ $(document).ready(function() {
                 width: "5%"
             },
             {
-                data:'comision_compra',
-                type: "num",
-                render: render_dinero,
-                width: "8%"
-            },
-            {
-                data:'otras_comisiones',
-                type: "num",
-                render: render_dinero,
-                width: "8%"
-            },
-            {
                 data:'total',
                 type: "num",
-                render: render_dinero,
-                width: "12%"
+                render: render_total_dinero,
+                width: "10%"
             },
             {
                 data:'valor_accion',
