@@ -1,9 +1,11 @@
 function add_broker() {
     var nombre = $.trim($("#addTypeNombreX").val());
+    var extrangero = $("#addTypeExtrangeroX")[0].checked;
 
 
     var data = {
-        nombre: nombre
+        nombre: nombre,
+        extrangero:extrangero
     }
     var xhttp = new XMLHttpRequest();
 
@@ -51,9 +53,11 @@ function delete_broker(id) {
 function update_broker() {
     var id = $.trim($("#editTypeIdX").val())
     var nombre = $.trim($("#editTypeNombreX").val());
+    var extrangero = $("#editTypeExtrangeroX")[0].checked;
 
     var data = {
-        nombre: nombre
+        nombre: nombre,
+        extrangero:extrangero
     }
 
     var xhttp = new XMLHttpRequest();
@@ -83,6 +87,15 @@ render_actions = function (data, type) {
     return data
 }
 
+render_boolean = function (data, type) {
+    if (type === 'display') {
+       checked = (data) ? "checked" : ""
+       code =  '<div class="form-check form-switch"><input type="checkbox" ' + checked  + ' disabled data-switch="bool"/><label data-on-label="Sí" data-off-label="No"></label></div>'
+       return code
+    }
+    return data
+}
+
 
 $( document).ready(function() {
 
@@ -95,6 +108,11 @@ $( document).ready(function() {
             {
                 data:'nombre',
                 type: "string"
+            },
+            {
+                data:'extrangero',
+                type: "boolean",
+                render: render_boolean,
             },
             {
                 className: 'text-end',
@@ -123,8 +141,10 @@ $( document).ready(function() {
             var data = table.row($(this).parents('tr')).data()
             var id = data.id
             var nombre = data.nombre
+            var extrangero = data.extrangero
 
             $("#editTypeNombreX").val(nombre);
+            $("#editTypeExtrangeroX").prop('checked', extrangero);
             $("#editTypeIdX").val(id);
             $('#edit').modal('show')
         });
@@ -138,6 +158,7 @@ $( document).ready(function() {
 
     $('#add-button').on( "click", function() {
         $("#addTypeNombreX").val('')
+        $("#addTypeExtrangeroX").val(false)
         $("#addTypeMessageX").text('')
         $('#add').modal('show')
     } );

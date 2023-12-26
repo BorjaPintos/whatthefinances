@@ -114,7 +114,7 @@ def import_routes(rootpath, app):
     @login_required
     def brokers():
         user = request.user
-        lista_headers = ["Nombre"]
+        lista_headers = ["Nombre", "Extrangero"]
         return render_template('/broker.html', username=user.get_name(),
                                title="Brokers",
                                lista_headers=lista_headers)
@@ -146,7 +146,7 @@ def import_routes(rootpath, app):
         lista_bolsas, code = finanzasposicionaccioncontroller.list_bolsas({})
         lista_headers = ["Fecha", "Nombre", "ISIN", "Bolsa", "Broker",
                          "Precio por accion", "Número de acciones",
-                         "Comisión de compra", "Otras Comisiones", "Total Compra",
+                         "Total Compra",
                          "Valor actual", "Total Actual", "Ganacia SC", "Ganacia CC"]
 
         return render_template('/posiciones_acciones.html', username=user.get_name(),

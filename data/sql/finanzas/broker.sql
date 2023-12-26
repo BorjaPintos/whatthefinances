@@ -1,6 +1,6 @@
-insert into finanzas_brokers ("nombre") values ('Degiro');
-insert into finanzas_brokers ("nombre") values ('Interactive Brokers');
-insert into finanzas_brokers ("nombre") values ('MyInvestor');
-insert into finanzas_brokers ("nombre") values ('eToro');
-insert into finanzas_brokers ("nombre") values ('XTB');
-insert into finanzas_brokers ("nombre") values ('EVO');
+insert into finanzas_brokers ("nombre", "extrangero") values ('Degiro', true);
+insert into finanzas_brokers ("nombre", "extrangero") values ('Interactive Brokers', true);
+insert into finanzas_brokers ("nombre", "extrangero") values ('MyInvestor', false);
+insert into finanzas_brokers ("nombre", "extrangero") values ('eToro', true);
+insert into finanzas_brokers ("nombre", "extrangero") values ('XTB', true);
+insert into finanzas_brokers ("nombre", "extrangero") values ('EVO', false);
