@@ -160,7 +160,7 @@ def import_routes(rootpath, app):
                          "Precio por accion", "Número de acciones",
                          "Total Compra",
                          "Valor actual", "Total Actual", "Ganacia SC", "Ganacia CC",
-                         "Dividendos Acumulados"]
+                         "Dividendos Acumulados", "Ganancia CC y Dividendos"]
 
         return render_template('/posiciones_acciones.html', username=user.get_name(),
                                title="Posiciones de Acciones",
