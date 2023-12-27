@@ -240,6 +240,46 @@ def import_routes(rootpath, app):
     def delete_operacion(id_operacion: int):
         return finanzasoperacionescontroller.delete_operacion(id_operacion)
 
+    @app.route(rootpath + "/producto", methods=['GET'])
+    @login_required
+    @serialize_response
+    def list_productos():
+        params = {
+            "order_property": request.args.get('order_property', 'nombre'),
+            "order_type": request.args.get('order_type', 'asc'),
+            "nombre": request.args.get('nombre', None),
+            "isin": request.args.get('isin', None)
+        }
+        return finanzasposicionaccioncontroller.list_productos(params)
+
+    @app.route(rootpath + "/producto/<id_producto>", methods=['GET'])
+    @login_required
+    @serialize_response
+    def get_producto(id_producto: int):
+        return finanzasposicionaccioncontroller.get_producto(id_producto)
+
+    @app.route(rootpath + "/producto", methods=['POST'])
+    @login_required
+    @serialize_response
+    def create_producto():
+        params = {
+            "nombre": request.json.get('nombre'),
+            "isin": request.json.get('isin')
+        }
+        return finanzasposicionaccioncontroller.create_producto(params)
+
+    @app.route(rootpath + "/producto/<id_producto>", methods=['POST'])
+    @login_required
+    @serialize_response
+    def update_producto(id_producto: int):
+        params = {
+            "id": id_producto,
+            "nombre": request.json.get('nombre', None),
+            "isin": request.json.get('isin', None)
+        }
+        return finanzasposicionaccioncontroller.update_producto(params)
+
+
     @app.route(rootpath + "/broker", methods=['GET'])
     @login_required
     @serialize_response

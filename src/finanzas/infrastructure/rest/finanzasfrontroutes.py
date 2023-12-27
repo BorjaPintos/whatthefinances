@@ -110,6 +110,15 @@ def import_routes(rootpath, app):
                                lista_monederos=lista_monederos,
                                )
 
+    @app.route(rootpath + "producto.html", methods=['GET'])
+    @login_required
+    def productos():
+        user = request.user
+        lista_headers = ["Nombre", "ISIN"]
+        return render_template('/producto.html', username=user.get_name(),
+                               title="Productos",
+                               lista_headers=lista_headers)
+
     @app.route(rootpath + "broker.html", methods=['GET'])
     @login_required
     def brokers():
