@@ -1,7 +1,7 @@
 insert into finanzas_bolsas ("nombre") values ('Bolsa de Madrid');
+insert into finanzas_bolsas ("nombre") values ('Euronext Paris');
 insert into finanzas_bolsas ("nombre") values ('Euronext Amsterdam');
 insert into finanzas_bolsas ("nombre") values ('Euronext Brussel');
-insert into finanzas_bolsas ("nombre") values ('Euronext Paris');
 insert into finanzas_bolsas ("nombre") values ('Xetra');
 insert into finanzas_bolsas ("nombre") values ('Börse Frankfurt');
 insert into finanzas_bolsas ("nombre") values ('Tradegate');

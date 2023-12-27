@@ -1,0 +1,41 @@
+{% extends 'lista.html'%}
+
+{% block titulo_add %}
+Añadir Bolsa
+{% endblock %}
+
+{% block contenido_add %}
+<div class="form-outline form-white mb-4">
+    <div class="form-floating mb-3">
+        <input type="text" id="addTypeNombreX" class="form-control" required/>
+        <label for="addTypeNombreX">Nombre</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" id="addTypeIsinX" class="form-control" required/>
+        <label for="addTypeIsinX">ISIN</label>
+    </div>
+</div>
+{% endblock %}
+
+{% block titulo_edit %}
+Editar Bolsa
+{% endblock %}
+
+{% block contenido_edit %}
+<div class="form-outline form-white mb-4">
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeNombreX" class="form-control" required/>
+        <label class="form-label" for="editTypeNombreX">Nombre</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeIsinX" class="form-control" required/>
+        <label class="form-label" for="editTypeIsinX">ISIN</label>
+    </div>
+</div>
+<input type="hidden" id="editTypeIdX"/>
+{% endblock %}
+
+
+{% block listaextendsscript %}
+<script type="text/javascript" src="assets/js/producto.js"></script>
+{% endblock%}

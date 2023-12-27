@@ -6,6 +6,7 @@ from src.finanzas.application.createbolsa import CreateBolsa
 from src.finanzas.application.createbroker import CreateBroker
 from src.finanzas.application.createdividendo import CreateDividendo
 from src.finanzas.application.createposicionaccion import CreatePosicionAccion
+from src.finanzas.application.createproducto import CreateProducto
 from src.finanzas.application.createvaloraccion import CreateValorAccion
 from src.finanzas.application.deletedividendo import DeleteDividendo
 from src.finanzas.application.deleteposicionaccion import DeletePosicionAccion
@@ -15,26 +16,37 @@ from src.finanzas.application.getbolsa import GetBolsa
 from src.finanzas.application.getbroker import GetBroker
 from src.finanzas.application.getdividendo import GetDividendo
 from src.finanzas.application.getposicionaccion import GetPosicionAccion
+from src.finanzas.application.getproducto import GetProducto
 from src.finanzas.application.listbolsa import ListBolsa
 from src.finanzas.application.listbroker import ListBroker
 from src.finanzas.application.listdividendos import ListDividendos
 from src.finanzas.application.listposicionaccion import ListPosicionAccion
+from src.finanzas.application.listproducto import ListProducto
 from src.finanzas.application.listuniqueposicionaccionisin import ListUniquePosicionAccionIsin
 from src.finanzas.application.listvaloraccion import ListValorAccion
 from src.finanzas.application.updatebolsa import UpdateBolsa
 from src.finanzas.application.updatebroker import UpdateBroker
 from src.finanzas.application.updatedividendo import UpdateDividendo
 from src.finanzas.application.updateposicionaccion import UpdatePosicionAccion
+from src.finanzas.application.updateproducto import UpdateProducto
 from src.finanzas.infrastructure.persistence.bolsarepositorysqlalchemy import BolsaRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.brokerrepositorysqlalchemy import BrokerRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.dividendorepositorysqlalchemy import DividendoRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.posicionaccionrepositorysqlalchemy import \
     PosicionAccionRepositorySQLAlchemy
+from src.finanzas.infrastructure.persistence.productorepositorysqlalchemy import ProductoRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.valoraccionnrepositorysqlalchemy import ValorAccionRepositorySQLAlchemy
 from src.finanzas.infrastructure.rest.localeutils import apply_locale_float, apply_locale_int, apply_locale_date, \
     apply_locale_bool, apply_locale_datetime
 from src.shared.domain.exceptions.messageerror import MessageError
 from src.shared.infraestructure.rest.pagination import Pagination
+
+producto_repository = ProductoRepositorySQLAlchemy()
+
+list_productos_use_case = ListProducto(producto_repository=producto_repository)
+get_producto_use_case = GetProducto(producto_repository=producto_repository)
+create_producto_use_case = CreateProducto(producto_repository=producto_repository)
+update_producto_use_case = UpdateProducto(producto_repository=producto_repository)
 
 broker_repository = BrokerRepositorySQLAlchemy()
 
@@ -74,6 +86,60 @@ deshacer_cerrar_posicion_accion_use_case = DeshacerCerrarPosicionAccion(
     posicion_accion_repository=posicion_accion_repository)
 list_unique_posiciones_acciones_isins_use_case = ListUniquePosicionAccionIsin(
     posicion_accion_repository=posicion_accion_repository)
+
+
+def list_productos(params: dict) -> Tuple[Any, int]:
+    code = 200
+    __cast_params(params)
+    elements = list_productos_use_case.execute(params)
+    response = []
+    for element in elements:
+        response.append(element.get_dto())
+    return response, code
+
+
+def get_producto(id_producto: int) -> Tuple[Any, int]:
+    code = 200
+    producto = get_producto_use_case.execute(apply_locale_int(id_producto))
+    if producto:
+        response = producto.get_dto()
+    else:
+        code = 404
+        logger.warning(
+            "Por alguna razón no devuelve el producto con id {} y no da la excepción de not found".format(id_producto))
+        raise MessageError("No se ha podido obtener el producto con id: {}".format(id_producto), code)
+    return response, code
+
+
+def create_producto(params: dict) -> Tuple[Any, int]:
+    code = 201
+
+    __cast_params(params)
+    producto = create_producto_use_case.execute(params)
+    if producto:
+        response = producto.get_dto()
+    else:
+        code = 409
+        logger.warning("Ya existe un producto con ese nombre o isin: {}".format(params.get("nombre")))
+        raise MessageError("Parece que ya existe un producto con ese nombre o isin: {}".format(params.get("nombre")),
+                           code)
+    return response, code
+
+
+def update_producto(params: dict) -> Tuple[Any, int]:
+    code = 200
+
+    __cast_params(params)
+    producto = update_producto_use_case.execute(params)
+    if producto:
+        response = producto.get_dto()
+
+    else:
+        code = 409
+        logger.warning("Ya existe un producto con ese nombre o isin: {}".format(params.get("nombre")))
+        raise MessageError("Parece que ya existe un producto con ese nombre o isin: {}".format(params.get("nombre")),
+                           code)
+    return response, code
 
 
 def list_brokers(params: dict) -> Tuple[Any, int]:
@@ -269,6 +335,7 @@ def update_dividendo(params: dict) -> Tuple[Any, int]:
         logger.warning("Error al actualizar el dividendo: {}".format(params.get("isin")))
         raise MessageError("Error al actualizar el dividendo: {}".format(params.get("isin")), code)
     return response, code
+
 
 def delete_dividendo(id_dividendo: int) -> Tuple[Any, int]:
     code = 200
