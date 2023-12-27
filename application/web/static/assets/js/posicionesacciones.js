@@ -2,7 +2,6 @@
 
 function add_posicion_accion() {
     var fecha_compra = $("#addFechaCompraDataPicker").val()
-    var nombre = $("#addTypeNombreX").val();
     var isin = $("#addTypeISINX").val();
     var id_bolsa = $("#add-bolsa-select").val();
     var id_broker = $("#add-broker-select").val();
@@ -14,7 +13,6 @@ function add_posicion_accion() {
 
     var data = {
         fecha_compra: fecha_compra,
-        nombre: nombre,
         isin: isin,
         id_bolsa: id_bolsa,
         id_broker: id_broker,
@@ -70,7 +68,6 @@ function update_posicion_accion() {
     var id = $.trim($("#editTypeIdX").val())
 
     var fecha_compra = $("#editFechaCompraDataPicker").val()
-    var nombre = $("#editTypeNombreX").val();
     var isin = $("#editTypeISINX").val();
     var id_bolsa = $("#edit-bolsa-select").val();
     var id_broker = $("#edit-broker-select").val();
@@ -82,7 +79,6 @@ function update_posicion_accion() {
 
     var data = {
         fecha_compra: fecha_compra,
-        nombre: nombre,
         isin: isin,
         id_bolsa: id_bolsa,
         id_broker: id_broker,
@@ -153,7 +149,18 @@ render_actions = function (data, type) {
     return data
 }
 
+render_nombre = function(data, type, row){
 
+    if (type == 'display'){
+        var isin = row["isin"]
+        if (data.length>15)
+            return '<span class="badge custom-badge" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+data+ ' - '+ isin +'">'+  (data.substring(0, 15) + "...") +'</span>'
+        else
+            return '<span class="badge custom-badge" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+data+ ' - '+ isin +'">'+  data +'</span>'
+
+    }
+    return data
+}
 
 render_texto = function(data, type){
 
@@ -272,13 +279,7 @@ $(document).ready(function() {
             {
                 data:'nombre',
                 type: "string",
-                render: render_texto,
-                width: "10%"
-            },
-            {
-                data:'isin',
-                type: "string",
-                render: render_texto,
+                render: render_nombre,
                 width: "10%"
             },
             {
@@ -381,7 +382,6 @@ $(document).ready(function() {
             var posicion_accion = table.row($(this).parents('tr')).data()
             var id = posicion_accion.id
             var fecha_compra = posicion_accion.fecha_compra
-            var nombre = posicion_accion.nombre;
             var isin = posicion_accion.isin;
             var id_bolsa = posicion_accion.id_bolsa;
             var id_broker = posicion_accion.id_broker;
@@ -393,7 +393,6 @@ $(document).ready(function() {
 
             $("#editTypeIdX").val(id)
             $('#editFechaCompraDataPicker').val(fecha_compra);
-            $("#editTypeNombreX").val(nombre)
             $("#editTypeISINX").val(isin)
             $("#edit-bolsa-select").val(id_bolsa).change();
             $("#edit-broker-select").val(id_broker).change();
@@ -419,7 +418,6 @@ $(document).ready(function() {
 
     $('#add-button').on( "click", function() {
         $("#addFechaCompraDataPicker").val(moment().format("DD/MM/YYYY"));
-        $("#addTypeNombreX").val('');
         $("#addTypeISINX").val('');
         $("#add-bolsa-select").val('')
         $("#add-broker-select").val('')

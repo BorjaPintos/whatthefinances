@@ -141,22 +141,22 @@ def import_routes(rootpath, app):
     @login_required
     def valores_acciones():
         user = request.user
-        lista_isin, code = finanzasposicionaccioncontroller.list_unique_posiciones_acciones_isins()
+        lista_productos, code = finanzasposicionaccioncontroller.list_productos({})
         return render_template('/valores_acciones.html', username=user.get_name(),
                                title="Valores de Acciones",
-                               lista_isin=lista_isin
+                               lista_productos=lista_productos
                                )
 
     @app.route(rootpath + "dividendos.html", methods=['GET'])
     @login_required
     def dividendos():
         user = request.user
-        lista_isin, code = finanzasposicionaccioncontroller.list_unique_posiciones_acciones_isins()
-        lista_headers = ["Fecha", "ISIN", "Dividendo por Acción", "Retención por acción"]
+        lista_productos, code = finanzasposicionaccioncontroller.list_productos({})
+        lista_headers = ["Fecha", "Nombre", "Dividendo por Acción", "Retención por acción"]
         return render_template('/dividendos.html', username=user.get_name(),
                                title="Dividendos",
                                lista_headers=lista_headers,
-                               lista_isin=lista_isin
+                               lista_productos=lista_productos
                                )
 
     @app.route(rootpath + "posiciones_acciones.html", methods=['GET'])
@@ -165,7 +165,8 @@ def import_routes(rootpath, app):
         user = request.user
         lista_brokers, code = finanzasposicionaccioncontroller.list_brokers({})
         lista_bolsas, code = finanzasposicionaccioncontroller.list_bolsas({})
-        lista_headers = ["Fecha", "Nombre", "ISIN", "Bolsa", "Broker",
+        lista_productos, code = finanzasposicionaccioncontroller.list_productos({})
+        lista_headers = ["Fecha", "Nombre", "Bolsa", "Broker",
                          "Precio por accion", "Número de acciones",
                          "Total Compra",
                          "Valor actual", "Total Actual", "Ganacia SC", "Ganacia CC",
@@ -175,5 +176,6 @@ def import_routes(rootpath, app):
                                title="Posiciones de Acciones",
                                lista_headers=lista_headers,
                                lista_brokers=lista_brokers,
-                               lista_bolsas=lista_bolsas
+                               lista_bolsas=lista_bolsas,
+                               lista_productos=lista_productos
                                )

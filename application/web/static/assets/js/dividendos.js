@@ -143,14 +143,17 @@ render_actions = function (data, type) {
     return data
 }
 
-render_isin = function (data, type) {
-    var new_data = data
-    if (data == undefined)
-        new_data = "-"
-    if (type === 'display'){
-        return '<span class="badge custom-badge">'+new_data+'</span>'
+render_nombre = function(data, type, row){
+
+    if (type == 'display'){
+        var isin = row["isin"]
+        if (data.length>45)
+            return '<span class="badge custom-badge" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+data+ ' - '+ isin +'">'+  (data.substring(0, 45) + "...") +'</span>'
+        else
+            return '<span class="badge custom-badge" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+data+ ' - '+ isin +'">'+  data +'</span>'
+
     }
-    return new_data
+    return data
 }
 
 $(document).ready(function() {
@@ -166,9 +169,9 @@ $(document).ready(function() {
                 type: "string"
             },
             {
-                data:'isin',
+                data:'nombre',
                 type: "string",
-                render: render_isin,
+                render: render_nombre,
             },
             {
                 data:'dividendo_por_accion',
@@ -227,6 +230,7 @@ $(document).ready(function() {
 
 
     $('#addFechaDataPicker').daterangepicker(get_daterangepicker_config());
+    $('#editFechaDataPicker').daterangepicker(get_daterangepicker_config());
 
     $('#add-button').on( "click", function() {
         $('#addFechaDataPicker').val(moment().format("DD/MM/YYYY"));

@@ -49,14 +49,14 @@ Añadir Compra de acciones
         <label for="addFechaCompraDataPicker">Fecha Compra</label>
     </div>
 
-    <div class="form-floating mb-3 mt-2">
-        <input type="text" id="addTypeNombreX" class="form-control"/>
-        <label for="addTypeNombreX">Nombre</label>
-    </div>
-
-    <div class="form-floating mb-3">
-        <input type="text" id="addTypeISINX" class="form-control"/>
-        <label for="addTypeISINX">ISIN</label>
+    <div class="input-group mt-2">
+        <select class="form-select" id="addTypeISINX">
+            <option value="">Seleccione Producto</option>
+            {% for producto in lista_productos %}
+            <option value="{{producto.isin}}">{{producto.nombre}} - {{producto.isin}}
+            </option>
+            {% endfor %}
+        </select>
     </div>
 
     <select class="form-select mt-2" id="add-bolsa-select">
@@ -110,16 +110,19 @@ Editar Compra de acciones
     </div>
 
 
-    <div class="form-floating mb-3 mt-2">
-        <input type="text" id="editTypeNombreX" class="form-control"/>
-        <label for="editTypeNombreX">Nombre</label>
-    </div>
-    <div class="form-floating mb-3">
-        <input type="text" id="editTypeISINX" class="form-control"/>
-        <label for="editTypeISINX">ISIN</label>
+    <div class="input-group mt-2 mb-4">
+        <select class="form-select" id="editTypeISINX">
+            <option value="">Seleccione Producto</option>
+            {% for producto in lista_productos %}
+            <option value="{{producto.isin}}">{{producto.nombre}} - {{producto.isin}}
+            </option>
+            {% endfor %}
+        </select>
     </div>
 
+
     <div class="form-outline form-white mb-4">
+        <label for="edit-bolsa-select">Bolsa</label>
         <select class="form-select" id="edit-bolsa-select">
             <option value="" selected=""></option>
             {% for bolsa in lista_bolsas %}
@@ -127,9 +130,10 @@ Editar Compra de acciones
             {% endfor %}
         </select>
     </div>
-    <label class="form-label" for="edit-bolsa-select">Bolsa</label>
+
 
     <div class="form-outline form-white mb-4">
+        <label for="edit-broker-select">Broker</label>
         <select class="form-select" id="edit-broker-select">
             <option value="" selected=""></option>
             {% for broker in lista_brokers %}
@@ -137,7 +141,7 @@ Editar Compra de acciones
             {% endfor %}
         </select>
     </div>
-    <label class="form-label" for="edit-broker-select">Broker</label>
+
 
     <div class="form-floating mb-3">
         <input type="text" id="editTypePrecioAccionX" class="form-control"/>
