@@ -51,7 +51,7 @@ function create_tabla_cosas_concreta(data_entidades_totales, end_point, resumen,
 
         var tr = $("#resumen-"+entidad+"-"+resumen+" thead tr")
         tr.append($('<th></th>').text("tipo_row"))
-        tr.append($('<th></th>').text(entidad))
+        tr.append($('<th></th>').text(resumen))
         for (var i in labels){
             tr.append($('<th></th>').text(labels[i]))
         }
