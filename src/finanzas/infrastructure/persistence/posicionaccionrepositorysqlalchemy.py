@@ -2,19 +2,17 @@ import traceback
 from typing import List, Tuple, Type
 
 from loguru import logger
-from sqlalchemy import func, Subquery, and_, Label, select
+from sqlalchemy import func, Subquery, and_, Label
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Query, aliased
-
-from src.finanzas.domain.isinnombre import IsinNombre
+from sqlalchemy.orm import Query
 from src.finanzas.domain.posicionaccion import PosicionAccion
 from src.finanzas.domain.posicionaccionrepository import PosicionAccionRepository
 from src.finanzas.infrastructure.persistence.orm.bolsaentity import BolsaEntity
 from src.finanzas.infrastructure.persistence.orm.brokerentity import BrokerEntity
-from src.finanzas.infrastructure.persistence.orm.dividendos import DividendoEntity
+from src.finanzas.infrastructure.persistence.orm.dividendoentity import DividendoEntity
 from src.finanzas.infrastructure.persistence.orm.posicionaccionentity import PosicionAccionEntity
+from src.finanzas.infrastructure.persistence.orm.productoentity import ProductoEntity
 from src.finanzas.infrastructure.persistence.orm.valoraccionentity import ValorAccionEntity
-from src.persistence.application.databasemanager import DatabaseManager
 from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.itransactionalrepository import ITransactionalRepository
 from src.persistence.domain.simplefilter import SimpleFilter, WhereOperator
@@ -74,7 +72,7 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
         retencion_label = self.__get_subquery_retencion(alias_posicion)
 
         columnas = (
-            alias_posicion.id, alias_posicion.nombre, alias_posicion.isin,
+            alias_posicion.id, ProductoEntity.nombre, alias_posicion.isin,
             alias_posicion.fecha_compra, alias_posicion.fecha_venta,
             alias_posicion.numero_acciones, alias_posicion.id_bolsa, alias_posicion.id_broker,
             alias_posicion.precio_accion_sin_comision, alias_posicion.precio_venta_sin_comision,
@@ -86,6 +84,7 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
 
         query_builder = SQLAlchemyQueryBuilder(alias_posicion, self._session, selected_columns=columnas)
         query = query_builder.build_order_query(criteria) \
+            .join(ProductoEntity, alias_posicion.isin == ProductoEntity.isin, isouter=False) \
             .join(BrokerEntity, alias_posicion.id_broker == BrokerEntity.id, isouter=False) \
             .join(BolsaEntity, alias_posicion.id_bolsa == BolsaEntity.id, isouter=False) \
             .join(subquery_valor, alias_posicion.isin == subquery_valor.columns[0], isouter=True)
@@ -162,12 +161,11 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
 
     def new(self, params: dict) -> PosicionAccion:
         try:
-
+            self.check_isin(params.get("isin"))
             self.check_broker(params.get("id_broker"))
             self.check_bolsa(params.get("id_bolsa"))
 
             entity = PosicionAccionEntity(
-                nombre=params.get("nombre"),
                 isin=params.get("isin"),
                 fecha_compra=params.get("fecha_compra"),
                 numero_acciones=params.get("numero_acciones"),
@@ -193,6 +191,7 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
     def update(self, posicion_accion: PosicionAccion) -> bool:
         try:
 
+            self.check_isin(posicion_accion.get_isin())
             self.check_broker(posicion_accion.get_id_broker())
             self.check_bolsa(posicion_accion.get_id_bolsa())
 
@@ -222,23 +221,6 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
             traceback.print_exc()
         return False
 
-    def list_unique_isin(self, criteria) -> List[str]:
-        elements = []
-        try:
-            columnas = (
-                PosicionAccionEntity.isin, func.upper(PosicionAccionEntity.isin)
-            )
-            query_builder = SQLAlchemyQueryBuilder(PosicionAccionEntity, self._session, selected_columns=columnas)
-            query = query_builder.build_order_query(criteria)
-            result = query.distinct().all()
-            if result is not None:
-                for row in result:
-                    elements.append(row[0])
-        except Exception as e:
-            traceback.print_exc()
-
-        return elements
-
     def check_broker(self, id_broker: int):
         if id_broker is not None:
             query_builder = SQLAlchemyQueryBuilder(BrokerEntity, self._session).build_base_query()
@@ -252,3 +234,10 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
             bolsa_entity = query_builder.filter_by(id=id_bolsa).one_or_none()
             if bolsa_entity is None:
                 raise NotFoundError("No se encuentra la bolsa con id:  {}".format(id_bolsa))
+
+    def check_isin(self, isin: str):
+        if isin is not None:
+            query_builder = SQLAlchemyQueryBuilder(ProductoEntity, self._session).build_base_query()
+            producto_entity = query_builder.filter_by(isin=isin).one_or_none()
+            if producto_entity is None:
+                raise NotFoundError("No se encuentra el producto con isin:  {}".format(isin))

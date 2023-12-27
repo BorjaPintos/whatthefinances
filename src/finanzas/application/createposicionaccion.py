@@ -1,5 +1,3 @@
-from src.finanzas.domain.cuenta import Cuenta
-from src.finanzas.domain.cuentarepository import CuentaRepository
 from src.finanzas.domain.posicionaccion import PosicionAccion
 from src.finanzas.domain.posicionaccionrepository import PosicionAccionRepository
 from src.persistence.application.transactionalusecase import transactional, TransactionalUseCase
@@ -23,8 +21,6 @@ class CreatePosicionAccion(TransactionalUseCase):
         return posicion_accion
 
     def _validate_params(self, params):
-        if "nombre" not in params or params["nombre"] is None:
-            raise InvalidParamError("campo nombre obligatorio")
         if "isin" not in params or params["isin"] is None:
             raise InvalidParamError("campo isin obligatorio")
         if "fecha_compra" not in params or params["fecha_compra"] is None:

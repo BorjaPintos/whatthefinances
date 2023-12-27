@@ -84,8 +84,6 @@ delete_posicion_accion_use_case = DeletePosicionAccion(posicion_accion_repositor
 cerrar_posicion_accion_use_case = CerrarPosicionAccion(posicion_accion_repository=posicion_accion_repository)
 deshacer_cerrar_posicion_accion_use_case = DeshacerCerrarPosicionAccion(
     posicion_accion_repository=posicion_accion_repository)
-list_unique_posiciones_acciones_isins_use_case = ListUniquePosicionAccionIsin(
-    posicion_accion_repository=posicion_accion_repository)
 
 
 def list_productos(params: dict) -> Tuple[Any, int]:
@@ -347,12 +345,6 @@ def delete_dividendo(id_dividendo: int) -> Tuple[Any, int]:
         logger.warning("Error al eliminar el dividendo con id: {}".format(id_dividendo))
         raise MessageError("Error al eliminar el dividendo con id: {}".format(id_dividendo), code)
     return response, code
-
-
-def list_unique_posiciones_acciones_isins() -> Tuple[Any, int]:
-    code = 200
-    elements = list_unique_posiciones_acciones_isins_use_case.execute()
-    return elements, code
 
 
 def list_posiciones_acciones(params: dict) -> Tuple[Pagination, int]:

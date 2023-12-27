@@ -22,9 +22,9 @@ Añadir Dividendo
 
         <div class="input-group mt-2">
             <select class="form-select" id="add-isin-select">
-                <option value="">Seleccione ISIN</option>
-                {% for isin in lista_isin %}
-                <option value="{{isin}}">{{isin}}
+                <option value="">Seleccione Producto</option>
+                {% for producto in lista_productos %}
+                <option value="{{producto.isin}}">{{producto.nombre}} - {{producto.isin}}
                 </option>
                 {% endfor %}
             </select>
@@ -61,9 +61,9 @@ Editar Dividendo
 
         <div class="input-group mt-2">
             <select class="form-select" id="edit-isin-select">
-                <option value="">Seleccione ISIN</option>
-                {% for isin in lista_isin %}
-                <option value="{{isin}}">{{isin}}
+                <option value="">Seleccione Producto</option>
+                {% for producto in lista_productos %}
+                <option value="{{producto.isin}}">{{producto.nombre}} - {{producto.isin}}
                 </option>
                 {% endfor %}
             </select>

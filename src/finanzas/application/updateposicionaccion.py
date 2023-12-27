@@ -20,7 +20,6 @@ class UpdatePosicionAccion(TransactionalUseCase):
 
         "El usuario puede cambiar todo salvo si es abierta o no, además en caso de ser posición cerrada también podrá modificar la comisión de venta"
         posicion_accion.set_fecha_compra(params.get("fecha_compra"))
-        posicion_accion.set_nombre(params.get("nombre"))
         posicion_accion.set_isin(params.get("isin"))
         posicion_accion.set_id_bolsa(params.get("id_bolsa"))
         posicion_accion.set_id_broker(params.get("id_broker"))
@@ -52,8 +51,6 @@ class UpdatePosicionAccion(TransactionalUseCase):
             raise MessageError("Ocurrió un error durante la actualización", 500)
 
     def _validate_params(self, params):
-        if "nombre" not in params or params["nombre"] is None:
-            raise InvalidParamError("campo nombre obligatorio")
         if "isin" not in params or params["isin"] is None:
             raise InvalidParamError("campo isin obligatorio")
         if "fecha_compra" not in params or params["fecha_compra"] is None:

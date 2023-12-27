@@ -94,7 +94,7 @@ get_local_number = function(num){
     return $.fn.dataTable.render.number('', ',', 2).display(num);
 }
 
-function create_tabla_valores_acciones_meses(isins, callback){
+function create_tabla_valores_acciones_meses(data_productos, callback){
 
     var today = new Date()
     var año_antes_today = new Date(today)
@@ -110,9 +110,10 @@ function create_tabla_valores_acciones_meses(isins, callback){
         for (var i=1;i<=13;i++){
             label = (fecha_iterada.getMonth()+1) + "/" + fecha_iterada.getFullYear()
             labels.push(label)
-            for (var j in isins){
-                valores_acciones[isins[j]] = {}
-                valores_acciones[isins[j]][label] = 0
+            for (var j in data_productos){
+                valores_acciones[data_productos[j].isin] = {}
+                valores_acciones[data_productos[j].isin]["nombre"] = data_productos[j].nombre + ' - ' + data_productos[j].isin
+                valores_acciones[data_productos[j].isin][label] = 0
             }
             fecha_iterada.setMonth(fecha_iterada.getMonth()+1)
         }
@@ -135,13 +136,13 @@ function create_tabla_valores_acciones_meses(isins, callback){
         }
 
         var tbody = $("#resumen-valores-acciones tbody")
-        for (var isin in valores_acciones){
+        for (var valor_accion in valores_acciones){
             var row = $('<tr></tr>')
-            row.append($('<td></td>').text(isin))
+            row.append($('<td></td>').text(valores_acciones[valor_accion].nombre))
             for (var j in labels){
                 var value = "-"
-                if (valores_acciones[isin][labels[j]] != undefined){
-                    value = parseFloat(valores_acciones[isin][labels[j]]).toFixed(2)
+                if (valores_acciones[valor_accion][labels[j]] != undefined){
+                    value = parseFloat(valores_acciones[valor_accion][labels[j]]).toFixed(2)
                 }
                 row.append($('<td></td>').text(value))
             }
@@ -154,10 +155,23 @@ function create_tabla_valores_acciones_meses(isins, callback){
 }
 
 create_table = function(labels){
+
+    render_nombre = function(data, type, row){
+
+        if (type == 'display'){
+            if (data.length>15)
+                return '<span class="badge custom-badge" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+data+'">'+  (data.substring(0, 15) + "...") +'</span>'
+            else
+                return '<span class="badge custom-badge" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+data+'">'+  data +'</span>'
+        }
+        return data
+    }
+
     var columns = [
             {
-                data:'isin',
-                type: "string"
+                data:'nombre',
+                type: "string",
+                render: render_nombre
             }]
 
         render_valor_accion = function (data, type, row, meta) {
@@ -191,7 +205,10 @@ create_table = function(labels){
         }
 
 
-        table = $("#resumen-valores-acciones").DataTable({
+        table = $("#resumen-valores-acciones")
+            .on('init.dt', function () {
+                activar_elements();
+            }).DataTable({
             columns: columns,
             order: [[0, 'asc']],
             info: false,
@@ -207,7 +224,6 @@ create_table = function(labels){
                 decimal:",",
             },
         });
-
 }
 
 
@@ -221,7 +237,7 @@ reload_table = function() {
 
     tbody= $("#resumen-valores-acciones tbody").empty()
 
-    $.get("finanzas/posicionaccion/isin", function( data_isin ) {
+    $.get("finanzas/producto", function( data_isin ) {
         create_tabla_valores_acciones_meses(data_isin, function(labels) {
             create_table(labels);
         });
@@ -230,8 +246,8 @@ reload_table = function() {
 
 $(document).ready(function() {
 
-    $.get("finanzas/posicionaccion/isin", function( data_isin ) {
-        create_tabla_valores_acciones_meses(data_isin, create_table);
+    $.get("finanzas/producto", function( data_productos ) {
+        create_tabla_valores_acciones_meses(data_productos, create_table);
     });
 
     $('#addFechaDataPicker').daterangepicker(get_daterangepicker_config());

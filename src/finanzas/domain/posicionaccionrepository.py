@@ -31,7 +31,3 @@ class PosicionAccionRepository(ABC):
     @abstractmethod
     def delete(self, id_posicion_accion: int) -> bool:
         pass
-
-    @abstractmethod
-    def list_unique_isin(self, criteria) -> List[str]:
-        pass

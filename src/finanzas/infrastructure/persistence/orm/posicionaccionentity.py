@@ -5,6 +5,7 @@ from src.finanzas.domain.cuenta import Cuenta
 from src.finanzas.domain.posicionaccion import PosicionAccion
 from src.finanzas.infrastructure.persistence.orm.bolsaentity import BolsaEntity
 from src.finanzas.infrastructure.persistence.orm.brokerentity import BrokerEntity
+from src.finanzas.infrastructure.persistence.orm.productoentity import ProductoEntity
 from src.persistence.domain.init_table import InitTable
 from src.persistence.infrastructure.orm.baseentity import BaseEntity
 
@@ -12,7 +13,6 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 @InitTable()
 class PosicionAccionEntity(BaseEntity):
     __tablename__ = 'finanzas_posiciones_acciones'
-    nombre = Column(Text, nullable=False)
     isin = Column(Text, nullable=False)
     fecha_compra = Column(Date, nullable=False)
     fecha_venta = Column(Date, nullable=True)
@@ -30,7 +30,7 @@ class PosicionAccionEntity(BaseEntity):
     def get_order_column(str_property) -> Column:
         switcher = {
             "id": PosicionAccionEntity.id,
-            "nombre": PosicionAccionEntity.nombre,
+            "nombre": ProductoEntity.nombre,
             "isin": PosicionAccionEntity.isin,
             "fecha_compra": PosicionAccionEntity.fecha_compra,
             "fecha_venta": PosicionAccionEntity.fecha_venta,
@@ -59,7 +59,7 @@ class PosicionAccionEntity(BaseEntity):
     def get_filter_column(str_property: str) -> Column:
         switcher = {
             "id": PosicionAccionEntity.id,
-            "nombre": PosicionAccionEntity.nombre,
+            "nombre": ProductoEntity.nombre,
             "isin": PosicionAccionEntity.isin,
             "begin_fecha_compra": PosicionAccionEntity.fecha_compra,
             "end_fecha_compra": PosicionAccionEntity.fecha_compra,
@@ -94,7 +94,7 @@ class PosicionAccionEntity(BaseEntity):
         if isinstance(value, str):
             caster = {
                 PosicionAccionEntity.id: int,
-                PosicionAccionEntity.nombre: str,
+                ProductoEntity.nombre: str,
                 PosicionAccionEntity.isin: str,
                 PosicionAccionEntity.fecha_compra: Date,
                 PosicionAccionEntity.fecha_venta: Date,
@@ -114,7 +114,6 @@ class PosicionAccionEntity(BaseEntity):
 
     def convert_to_object_domain(self) -> PosicionAccion:
         return PosicionAccion({"id": self.id,
-                               "nombre": self.nombre,
                                "isin": self.isin,
                                "fecha_compra": self.fecha_compra,
                                "fecha_venta": self.fecha_venta,
@@ -130,7 +129,6 @@ class PosicionAccionEntity(BaseEntity):
                                })
 
     def update(self, posicion_accion: PosicionAccion):
-        self.nombre = posicion_accion.get_nombre()
         self.isin = posicion_accion.get_isin()
         self.fecha_compra = posicion_accion.get_fecha_compra()
         self.fecha_venta = posicion_accion.get_fecha_venta()
