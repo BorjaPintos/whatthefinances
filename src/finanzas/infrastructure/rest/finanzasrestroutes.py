@@ -190,6 +190,8 @@ def import_routes(rootpath, app):
             "id_cuenta_abono": request.args.get('id_cuenta_abono', None),
             "id_categoria_gasto": request.args.get('id_categoria_gasto', None),
             "id_categoria_ingreso": request.args.get('id_categoria_ingreso', None),
+            "list_id_categoria_gasto": request.args.get('list_id_categoria_gasto', None),
+            "list_id_categoria_ingreso": request.args.get('list_id_categoria_ingreso', None)
         }
         return finanzasoperacionescontroller.list_operaciones(params)
 
@@ -439,19 +441,34 @@ def import_routes(rootpath, app):
     def delete_dividendo(id_dividendo: int):
         return finanzasposicionaccioncontroller.delete_dividendo(id_dividendo)
 
+    @app.route(rootpath + "/dividendorango", methods=['GET'])
+    @login_required
+    @serialize_response
+    def list_dividendo_rango():
+        params = {
+            "order_property": request.args.get('order_property', 'isin'),
+            "order_type": request.args.get('order_type', 'asc'),
+            "isin": request.args.get('isin', None),
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None)
+        }
+        return finanzasposicionaccioncontroller.list_dividendo_rango(params)
+
     @app.route(rootpath + "/posicionaccion", methods=['GET'])
     @login_required
     @serialize_response
     def list_posicion_accion():
         params = {
-            "order_property": request.args.get('order_property', 'fecha'),
+            "order_property": request.args.get('order_property', 'fecha_compra'),
             "order_type": request.args.get('order_type', 'desc'),
             "count": request.args.get('count', 30),
             "offset": request.args.get('offset', 0),
             "nombre": request.args.get('nombre', None),
             "isin": request.args.get('isin', None),
             "id_bolsa": request.args.get('id_bolsa', None),
+            "list_id_broker": request.args.get('list_id_broker', None),
             "id_broker": request.args.get('id_broker', None),
+            "abierta": request.args.get('abierta', None),
             "begin_fecha_compra": request.args.get('begin_fecha_compra', None),
             "end_fecha_compra": request.args.get('end_fecha_compra', None),
             "begin_fecha_venta": request.args.get('begin_fecha_venta', None),

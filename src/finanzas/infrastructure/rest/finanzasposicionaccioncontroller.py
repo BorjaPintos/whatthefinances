@@ -19,16 +19,17 @@ from src.finanzas.application.getposicionaccion import GetPosicionAccion
 from src.finanzas.application.getproducto import GetProducto
 from src.finanzas.application.listbolsa import ListBolsa
 from src.finanzas.application.listbroker import ListBroker
+from src.finanzas.application.listdividendorango import ListDividendoRango
 from src.finanzas.application.listdividendos import ListDividendos
 from src.finanzas.application.listposicionaccion import ListPosicionAccion
 from src.finanzas.application.listproducto import ListProducto
-from src.finanzas.application.listuniqueposicionaccionisin import ListUniquePosicionAccionIsin
 from src.finanzas.application.listvaloraccion import ListValorAccion
 from src.finanzas.application.updatebolsa import UpdateBolsa
 from src.finanzas.application.updatebroker import UpdateBroker
 from src.finanzas.application.updatedividendo import UpdateDividendo
 from src.finanzas.application.updateposicionaccion import UpdatePosicionAccion
 from src.finanzas.application.updateproducto import UpdateProducto
+from src.finanzas.domain.dividendo_rango import DividendoRango
 from src.finanzas.infrastructure.persistence.bolsarepositorysqlalchemy import BolsaRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.brokerrepositorysqlalchemy import BrokerRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.dividendorepositorysqlalchemy import DividendoRepositorySQLAlchemy
@@ -37,7 +38,7 @@ from src.finanzas.infrastructure.persistence.posicionaccionrepositorysqlalchemy 
 from src.finanzas.infrastructure.persistence.productorepositorysqlalchemy import ProductoRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.valoraccionnrepositorysqlalchemy import ValorAccionRepositorySQLAlchemy
 from src.finanzas.infrastructure.rest.localeutils import apply_locale_float, apply_locale_int, apply_locale_date, \
-    apply_locale_bool, apply_locale_datetime
+    apply_locale_bool, apply_locale_datetime, apply_locale_list_int, apply_locale_list
 from src.shared.domain.exceptions.messageerror import MessageError
 from src.shared.infraestructure.rest.pagination import Pagination
 
@@ -84,6 +85,7 @@ delete_posicion_accion_use_case = DeletePosicionAccion(posicion_accion_repositor
 cerrar_posicion_accion_use_case = CerrarPosicionAccion(posicion_accion_repository=posicion_accion_repository)
 deshacer_cerrar_posicion_accion_use_case = DeshacerCerrarPosicionAccion(
     posicion_accion_repository=posicion_accion_repository)
+list_dividendo_rango_use_case = ListDividendoRango(posicion_accion_repository=posicion_accion_repository)
 
 
 def list_productos(params: dict) -> Tuple[Any, int]:
@@ -283,8 +285,10 @@ def delete_valor_accion(id_valor_accion: int) -> Tuple[Any, int]:
 def list_dividendos(params: dict) -> Tuple[Any, int]:
     code = 200
     __cast_params(params)
-    if params.get("fecha") is not None:
-        params["fecha"] = apply_locale_date(params["fecha"])
+    if params.get("begin_fecha") is not None:
+        params["begin_fecha"] = apply_locale_date(params["begin_fecha"])
+    if params.get("end_fecha") is not None:
+        params["end_fecha"] = apply_locale_date(params["end_fecha"])
     elements = list_dividendos_use_case.execute(params)
     response = []
     for element in elements:
@@ -345,6 +349,20 @@ def delete_dividendo(id_dividendo: int) -> Tuple[Any, int]:
         logger.warning("Error al eliminar el dividendo con id: {}".format(id_dividendo))
         raise MessageError("Error al eliminar el dividendo con id: {}".format(id_dividendo), code)
     return response, code
+
+
+def list_dividendo_rango(params: dict) -> Tuple[Any, int]:
+    code = 200
+    __cast_params(params)
+    if params.get("begin_fecha") is not None:
+        params["begin_fecha"] = apply_locale_date(params["begin_fecha"])
+    if params.get("end_fecha") is not None:
+        params["end_fecha"] = apply_locale_date(params["end_fecha"])
+    elements = list_dividendo_rango_use_case.execute(params)
+    response_elements = []
+    for element in elements:
+        response_elements.append(element.get_dto())
+    return response_elements, code
 
 
 def list_posiciones_acciones(params: dict) -> Tuple[Pagination, int]:
@@ -451,6 +469,11 @@ def __cast_params(params: dict):
         if params["offset"] < 0:
             params["offset"] = 0
 
+    if params.get("list_isin") is not None:
+        params["list_isin"] = apply_locale_list(params["list_isin"])
+
+    if params.get("list_id_broker") is not None:
+        params["list_id_broker"] = apply_locale_list_int(params["list_id_broker"])
     if params.get("id_broker") is not None:
         params["id_broker"] = apply_locale_int(params["id_broker"])
 

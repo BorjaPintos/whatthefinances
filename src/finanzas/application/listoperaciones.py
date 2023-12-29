@@ -53,9 +53,17 @@ class ListOperaciones(TransactionalUseCase):
             categoria_filter = SimpleFilter(
                 "id_categoria_ingreso", WhereOperator.IS, params["id_categoria_ingreso"])
             filter = combine_filters(filter, CompositeOperator.AND, categoria_filter)
+        if "list_id_categoria_ingreso" in params and params["list_id_categoria_ingreso"]:
+            categoria_filter = SimpleFilter(
+                "id_categoria_ingreso", WhereOperator.IN, params["list_id_categoria_ingreso"])
+            filter = combine_filters(filter, CompositeOperator.AND, categoria_filter)
         if "id_categoria_gasto" in params and params["id_categoria_gasto"]:
             categoria_filter = SimpleFilter(
                 "id_categoria_gasto", WhereOperator.IS, params["id_categoria_gasto"])
+            filter = combine_filters(filter, CompositeOperator.AND, categoria_filter)
+        if "list_id_categoria_gasto" in params and params["list_id_categoria_gasto"]:
+            categoria_filter = SimpleFilter(
+                "id_categoria_gasto", WhereOperator.IN, params["list_id_categoria_gasto"])
             filter = combine_filters(filter, CompositeOperator.AND, categoria_filter)
         if "begin_fecha" in params and params["begin_fecha"]:
             fecha_filter = SimpleFilter(

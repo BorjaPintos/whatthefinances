@@ -2,9 +2,11 @@ import traceback
 from typing import List, Tuple, Type
 
 from loguru import logger
-from sqlalchemy import func, Subquery, and_, Label
+from sqlalchemy import func, Subquery, and_, Label, or_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Query
+
+from src.finanzas.domain.dividendo_rango import DividendoRango
 from src.finanzas.domain.posicionaccion import PosicionAccion
 from src.finanzas.domain.posicionaccionrepository import PosicionAccionRepository
 from src.finanzas.infrastructure.persistence.orm.bolsaentity import BolsaEntity
@@ -50,8 +52,15 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
         )
         subquery_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
         subquery = ((subquery_builder.build_query(Criteria())).
-                    where(and_(DividendoEntity.fecha > alias.fecha_compra,
-                               DividendoEntity.isin == alias.isin)))
+                    where(or_(and_(DividendoEntity.fecha > alias.fecha_compra,
+                                   DividendoEntity.isin == alias.isin,
+                                   alias.abierta == True),
+                              and_(DividendoEntity.fecha > alias.fecha_compra,
+                                   DividendoEntity.fecha < alias.fecha_venta,
+                                   DividendoEntity.isin == alias.isin,
+                                   alias.abierta == False)
+                              )
+                          ))
         return subquery.label('dividendo')
 
     def __get_subquery_retencion(self, alias: Type[PosicionAccionEntity]) -> Label:
@@ -60,8 +69,15 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
         )
         subquery_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
         subquery = ((subquery_builder.build_query(Criteria())).
-                    where(and_(DividendoEntity.fecha > alias.fecha_compra,
-                               DividendoEntity.isin == alias.isin)))
+                    where(or_(and_(DividendoEntity.fecha > alias.fecha_compra,
+                                   DividendoEntity.isin == alias.isin,
+                                   alias.abierta == True),
+                              and_(DividendoEntity.fecha > alias.fecha_compra,
+                                   DividendoEntity.fecha < alias.fecha_venta,
+                                   DividendoEntity.isin == alias.isin,
+                                   alias.abierta == False)
+                              )
+                          ))
         return subquery.label('retencion')
 
     def __get_complete_join_query(self, criteria: Criteria) -> Query:
@@ -133,6 +149,46 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
             traceback.print_exc()
 
         return elements, 0
+
+    @staticmethod
+    def __get_dividendo_rango_from_complete_join_row(row) -> DividendoRango:
+        params = {"isin": row[0],
+                  "dividendo": row[1],
+                  "retencion": row[2]
+                  }
+        return DividendoRango(params)
+
+    def __get_join_query_dividendo_rango(self, criteria: Criteria) -> Query:
+
+        columnas = (
+            PosicionAccionEntity.isin,
+            func.sum(DividendoEntity.dividendo_por_accion * PosicionAccionEntity.numero_acciones),
+            func.sum(DividendoEntity.retencion_por_accion * PosicionAccionEntity.numero_acciones)
+        )
+        query_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
+        query = query_builder.build_query(criteria) \
+            .join(PosicionAccionEntity, DividendoEntity.isin == PosicionAccionEntity.isin) \
+            .where(DividendoEntity.fecha > PosicionAccionEntity.fecha_compra) \
+            .where(or_(PosicionAccionEntity.abierta == True, and_(PosicionAccionEntity.abierta == False,
+                                                                  DividendoEntity.fecha < PosicionAccionEntity.fecha_venta))) \
+            .group_by(PosicionAccionEntity.isin)
+
+        return query
+
+    def dividendo_rango(self, criteria: Criteria) -> List[DividendoRango]:
+        elements = []
+        try:
+            query_elements = self.__get_join_query_dividendo_rango(criteria)
+            result = query_elements.all()
+            n_elements = min(len(result), criteria.limit())
+            if result is not None:
+                for i in range(n_elements):
+                    elements.append(self.__get_dividendo_rango_from_complete_join_row(result[i]))
+            return elements
+        except Exception as e:
+            traceback.print_exc()
+
+        return elements
 
     def count(self, criteria: Criteria) -> int:
         try:

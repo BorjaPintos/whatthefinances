@@ -2,7 +2,8 @@ from src.finanzas.infrastructure.persistence.movimientocuentarepositorysqlalchem
     MovimientoCuentaRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.movimientomonederorepositorysqlalchemy import \
     MovimientoMonederoRepositorySQLAlchemy
-from src.finanzas.infrastructure.rest.localeutils import apply_locale_date, apply_locale_float, apply_locale_int
+from src.finanzas.infrastructure.rest.localeutils import apply_locale_date, apply_locale_float, apply_locale_int, \
+    apply_locale_list_int
 from src.shared.infraestructure.rest.pagination import Pagination
 
 from typing import Any, Tuple
@@ -128,8 +129,12 @@ def __cast_params(params: dict):
 
     if params.get("id_categoria_gasto") is not None:
         params["id_categoria_gasto"] = apply_locale_int(params["id_categoria_gasto"])
+    if params.get("list_id_categoria_gasto") is not None:
+        params["list_id_categoria_gasto"] = apply_locale_list_int(params["list_id_categoria_gasto"])
     if params.get("id_categoria_ingreso") is not None:
         params["id_categoria_ingreso"] = apply_locale_int(params["id_categoria_ingreso"])
+    if params.get("list_id_categoria_ingreso") is not None:
+        params["list_id_categoria_ingreso"] = apply_locale_list_int(params["list_id_categoria_ingreso"])
 
     if params.get("cantidad") is not None:
         params["cantidad"] = apply_locale_float(params["cantidad"])
