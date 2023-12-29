@@ -66,7 +66,7 @@ class PosicionAccionEntity(BaseEntity):
             "begin_fecha_venta": PosicionAccionEntity.fecha_venta,
             "end_fecha_venta": PosicionAccionEntity.fecha_venta,
             "id_bolsa": PosicionAccionEntity.id_bolsa,
-            "id:broker": PosicionAccionEntity.id_broker,
+            "id_broker": PosicionAccionEntity.id_broker,
             "numero_acciones": PosicionAccionEntity.numero_acciones,
             "begin_numero_acciones": PosicionAccionEntity.numero_acciones,
             "end_numero_acciones": PosicionAccionEntity.numero_acciones,

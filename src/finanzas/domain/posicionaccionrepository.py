@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple
 
+from src.finanzas.domain.dividendo_rango import DividendoRango
 from src.finanzas.domain.isinnombre import IsinNombre
 from src.finanzas.domain.posicionaccion import PosicionAccion
 from src.persistence.domain.criteria import Criteria
@@ -10,6 +11,9 @@ class PosicionAccionRepository(ABC):
 
     @abstractmethod
     def list(self, criteria: Criteria) -> Tuple[List[PosicionAccion], int]:
+        pass
+    @abstractmethod
+    def dividendo_rango(self, criteria: Criteria) -> List[DividendoRango]:
         pass
 
     @abstractmethod

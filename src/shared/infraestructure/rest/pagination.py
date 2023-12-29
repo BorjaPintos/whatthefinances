@@ -14,7 +14,7 @@ class Pagination:
         self.elements = elements
 
     def get_has_more_elements(self) -> bool:
-        return self.total_elements > self.offset * self.pagination_size + len(self.elements)
+        return self.total_elements > self.offset + len(self.elements)
 
     def get_offset(self) -> int:
         return self.offset

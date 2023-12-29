@@ -137,6 +137,9 @@ class PosicionAccion:
     def get_precio_compra_sin_comisiones(self):
         return self.get_precio_accion_sin_comision() * self.get_numero_acciones()
 
+    def get_precio_venta_sin_comisiones(self):
+        return self.get_precio_venta_sin_comision() * self.get_numero_acciones()
+
     def get_valor_actual(self):
         return self.get_valor_accion() * self.get_numero_acciones()
 
@@ -169,6 +172,8 @@ class PosicionAccion:
                 "retencion_dividendos": self.get_retencion_dividendos(),
                 "dividendos_total": self.get_dividendos_total(),
                 "ganacia_con_comosiones_y_dividendos": self.get_valor_actual() + self.get_dividendos_total()
-                                                       - self.get_precio_compra_sin_comisiones() - self.get_todas_comisiones()
+                                                       - self.get_precio_compra_sin_comisiones() - self.get_todas_comisiones(),
+                "valor_adquisicion": self.get_precio_compra_sin_comisiones() + self.get_comision_compra(),
+                "valor_transmision": self.get_precio_venta_sin_comisiones() - self.get_comision_venta()
 
                 }

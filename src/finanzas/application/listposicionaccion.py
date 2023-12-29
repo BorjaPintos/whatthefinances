@@ -43,6 +43,14 @@ class ListPosicionAccion(TransactionalUseCase):
             isin_filter = SimpleFilter(
                 "isin", WhereOperator.ILIKE, "%{}%".format(params["isin"]))
             filter = combine_filters(filter, CompositeOperator.AND, isin_filter)
+        if "list_isin" in params and params["isin"]:
+            isin_filter = SimpleFilter(
+                "isin", WhereOperator.IN, params["list_isin"])
+            filter = combine_filters(filter, CompositeOperator.AND, isin_filter)
+        if "list_id_broker" in params and params["list_id_broker"]:
+            broker_filter = SimpleFilter(
+                "id_broker", WhereOperator.IN, params["list_id_broker"])
+            filter = combine_filters(filter, CompositeOperator.AND, broker_filter)
         if "id_broker" in params and params["id_broker"]:
             broker_filter = SimpleFilter(
                 "id_broker", WhereOperator.IS, params["id_broker"])
