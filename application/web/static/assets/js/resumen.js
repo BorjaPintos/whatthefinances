@@ -33,8 +33,9 @@ function create_tabla_cosas_concreta(data_entidades_totales, end_point, resumen,
         }
         var labels = []
         var fecha_iterada = new Date(año_antes_today)
-        for (var i=1;i<=13;i++){
+        for (var i=1;i<=12;i++){
             label = (fecha_iterada.getMonth()+1) + "/" + fecha_iterada.getFullYear()
+            console.log(label);
             labels.push(label)
             for (var j in data_entidades_totales){
                 cosas[data_entidades_totales[j].id][label] = 0

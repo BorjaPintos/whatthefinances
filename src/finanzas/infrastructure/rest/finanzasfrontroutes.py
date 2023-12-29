@@ -179,3 +179,12 @@ def import_routes(rootpath, app):
                                lista_bolsas=lista_bolsas,
                                lista_productos=lista_productos
                                )
+
+
+    @app.route(rootpath + "hacienda.html", methods=['GET'])
+    @login_required
+    def hacienda():
+        user = request.user
+        title = "Hacienda Española"
+        return render_template('/hacienda.html', username=user.get_name(),
+                               title=title)

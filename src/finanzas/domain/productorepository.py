@@ -16,7 +16,7 @@ class ProductoRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, broker: Producto) -> bool:
+    def update(self, producto: Producto) -> bool:
         pass
 
     @abstractmethod

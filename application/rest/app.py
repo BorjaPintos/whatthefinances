@@ -12,7 +12,7 @@ from werkzeug.security import safe_join
 from src.persistence.application.databasemanager import DatabaseManager
 from application.iapp import IApp
 from src.finanzas.infrastructure.rest import finanzasrestroutes, finanzasfrontroutes
-from src.login.infrastructure.rest import loginroutes, userroutes, loginfrontroutes
+from src.login.infrastructure.rest import loginroutes, userroutes, loginfrontroutes, userfrontroutes
 from src.version.infrastructure.rest import versionroutes
 
 
@@ -93,6 +93,7 @@ class Rest(IApp):
         loginfrontroutes.import_routes("/", self.app)
         userroutes.import_routes("/user", self.app)
         finanzasrestroutes.import_routes("/finanzas", self.app)
+        userfrontroutes.import_routes("/", self.app)
         finanzasfrontroutes.import_routes("/", self.app)
         self._add_static_route(self.app)
 

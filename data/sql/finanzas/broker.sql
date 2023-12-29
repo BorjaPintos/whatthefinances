@@ -4,3 +4,4 @@ insert into finanzas_brokers ("nombre", "extrangero") values ('MyInvestor', fals
 insert into finanzas_brokers ("nombre", "extrangero") values ('eToro', true);
 insert into finanzas_brokers ("nombre", "extrangero") values ('XTB', true);
 insert into finanzas_brokers ("nombre", "extrangero") values ('EVO', false);
+insert into finanzas_brokers ("nombre", "extrangero") values ('Ninguno', false);

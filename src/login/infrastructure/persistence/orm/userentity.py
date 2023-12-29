@@ -37,6 +37,10 @@ class UserEntity(BaseEntity):
         }
         return caster.get(column)(value)
 
+    def update(self, user: User):
+        self.name = user.get_name()
+        self.password = user.get_encrypted_password()
+
     def convert_to_object_domain(self) -> User:
         return User(id=self.id,
                     name=self.name,

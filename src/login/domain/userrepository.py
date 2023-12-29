@@ -10,3 +10,7 @@ class UserRepository(ABC):
     @abstractmethod
     def get(self, criteria: Criteria) -> User:
         pass
+
+    @abstractmethod
+    def update(self, user: User) -> bool:
+        pass
