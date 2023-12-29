@@ -1,5 +1,5 @@
 from src.login.domain.exceptions.unauthorizederror import UnauthorizedError
-from src.shared.utils.securityutils import safe_check_password
+from src.shared.utils.securityutils import safe_check_password, encrypt_user_password
 
 
 class User:
@@ -38,3 +38,12 @@ class User:
 
     def is_anonymous(self) -> bool:
         return False
+
+    def get_encrypted_password(self) -> str:
+        return self._encrypted_password
+
+    def change_password(self, old_password: str, new_password: str):
+        if safe_check_password(self._encrypted_password, old_password):
+            self._encrypted_password = encrypt_user_password(new_password)
+        else:
+            raise UnauthorizedError("Invalid password")

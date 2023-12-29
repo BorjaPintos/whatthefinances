@@ -1,0 +1,50 @@
+{% extends 'layout.html'%}
+
+{% block cssstyle %}
+<link href="assets/bootstrap/css/bootstrap-datepicker.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+
+            <div class="card-body pt-2">
+                <div class="row mb-2">
+                    <div class="col-xxl-2">
+                        <div class="input-group date form-floating" id="datepicker">
+                            <input id="fechaDataPicker" type="text" class="form-control" data-provide="datepicker"
+                                   data-date-min-view-mode="2" data-date-container="#datepicker">
+                            <div class="input-group-text bg-primary border-primary text-white">
+                                <span class="uil uil-calendar-alt"></span>
+                            </div>
+                            <label for="fechaDataPicker">Año</label>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-4">
+                        <div class="text-xl mt-2">
+                            <button type="button" class="btn btn-info px-2" id="hacer-button"><i
+                                    class="uil-search"></i> Hacer
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-xl-4">
+                        <div class="text-xl">
+                            <p class="text-danger" id="messageX"></p>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% endblock%}
+
+    {% block script %}
+    <script type="text/javascript" src="assets/moment/js/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="assets/bootstrap/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="assets/js/hacienda.js"></script>
+    {% endblock %}

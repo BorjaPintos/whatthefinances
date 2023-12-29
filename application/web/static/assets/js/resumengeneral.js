@@ -33,7 +33,7 @@ function get_line_ahorros_gastos_ingresos(){
                     }
 
                     var fecha_iterada = new Date(año_antes_today)
-                    for (var i=1;i<=13;i++){
+                    for (var i=1;i<=12;i++){
                          label = (fecha_iterada.getMonth()+1) + "/" + fecha_iterada.getFullYear()
                          labels.push(label)
                          datos_totales[label] = 0

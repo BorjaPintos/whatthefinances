@@ -1,9 +1,8 @@
 function on_login() {
-    var name = document.getElementById("typeNameX").value;
     var password = document.getElementById("typePasswordX").value;
 
     var data = {
-        name: name,
+        name: 'admin',
         password: password
     }
     var xhttp = new XMLHttpRequest();
