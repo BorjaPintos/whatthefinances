@@ -495,9 +495,8 @@ $(document).ready(function() {
 
 
     $('#add-button').on( "click", function() {
-        $("#addTypeNombreX").val('')
-        $("#addTypeCantidadInicialX").val('')
-        $("#addTypePonderacionX").val('')
+        $("#addTypeDescripcionX").val('')
+        $("#addTypeCantidadX").val('')
         $("#addTypeMessageX").text('')
         $('#addFechaDataPicker').val(moment().format("DD/MM/YYYY"));
 
