@@ -107,7 +107,7 @@ function create_tabla_valores_acciones_meses(data_productos, callback){
         var labels = []
         var fecha_iterada = new Date(año_antes_today)
 
-        for (var i=1;i<=12;i++){
+        for (var i=1;i<=13;i++){
             label = (fecha_iterada.getMonth()+1) + "/" + fecha_iterada.getFullYear()
             labels.push(label)
             for (var j in data_productos){
