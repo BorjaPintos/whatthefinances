@@ -1,10 +1,12 @@
 {
   "log_level": "DEBUG",
+  "desktop_app": true,
   "flask_config": {
     "ENV": "dev",
-    "DEBUG": true,
+    "DEBUG": false,
+    "UVICORN" : false,
     "PORT": 9090,
-    "HOST": "0.0.0.0",
+    "HOST": "localhost",
     "use_ssl": false,
     "ssl": {
       "cert_path": "./ssl/server.crt",

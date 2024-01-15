@@ -34,7 +34,7 @@ class Rest(IApp):
 
     def run(self):
         logger.info("Start run")
-        if self.app.config['DEBUG']:
+        if not self.app.config['UVICORN']:
             self._run_flask()
         else:
             self._run_uvicorn()
@@ -52,8 +52,6 @@ class Rest(IApp):
                         server_header=False)
         else:
             uvicorn.run(asgi_app, host=self.app.config['HOST'], port=self.app.config['PORT'], server_header=False)
-
-
 
     def _run_flask(self):
         secure_context = None

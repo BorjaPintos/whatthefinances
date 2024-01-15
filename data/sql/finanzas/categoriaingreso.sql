@@ -30,3 +30,5 @@ insert into finanzas_categorias_ingreso ("descripcion", "id_cuenta_abono_defecto
 insert into finanzas_categorias_ingreso ("descripcion", "id_monedero_defecto") select 'Paro', fm.id from finanzas_monederos fm where fm.nombre = 'Cuenta Banco';
 insert into finanzas_categorias_ingreso ("descripcion", "id_monedero_defecto") select 'Pensión Viudedad', fm.id from finanzas_monederos fm where fm.nombre = 'Cuenta Banco';
 insert into finanzas_categorias_ingreso ("descripcion", "id_monedero_defecto") select 'Pensión Jubilación', fm.id from finanzas_monederos fm where fm.nombre = 'Cuenta Banco';
+insert into finanzas_categorias_ingreso ("descripcion", "id_monedero_defecto") select 'Préstamo Bancario', fm.id from finanzas_monederos fm where fm.nombre = 'Cuenta Banco';
+insert into finanzas_categorias_ingreso ("descripcion", "id_monedero_defecto") select 'Fusión de cuentas', fm.id from finanzas_monederos fm where fm.nombre = 'Cuenta Banco';
