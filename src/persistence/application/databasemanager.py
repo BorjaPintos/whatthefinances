@@ -11,6 +11,7 @@ from src.persistence.infrastructure.mockdatabase import MockDatabase
 from src.persistence.infrastructure.orm.baseentity import BaseEntity
 from src.persistence.infrastructure.postgresql.postgresdatabase import PostgresDatabase
 from src.persistence.infrastructure.sqlite.sqlitedatabase import SQLiteDatabase
+from src.shared.utils.resources import resource_path
 
 
 class DatabaseManager:
@@ -131,7 +132,8 @@ class DatabaseManager:
     def init_data(config_init):
         for table, sql_path in config_init["sql_path_files"].items():
             if not DatabaseManager.check_if_table_has_data(table):
-                with open(sql_path, encoding="utf-8") as file:
+                sql_resource = resource_path(sql_path)
+                with open(sql_resource, encoding="utf-8") as file:
                     seguir = True
                     while seguir:
                         query = file.readline()
