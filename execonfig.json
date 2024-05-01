@@ -1,7 +1,7 @@
 {
   "log_level": "DEBUG",
   "desktop_app": true,
-  "packet": false,
+  "packet": true,
   "flask_config": {
     "ENV": "dev",
     "DEBUG": false,
@@ -9,11 +9,6 @@
     "PORT": 9090,
     "HOST": "localhost",
     "use_ssl": false,
-    "ssl": {
-      "cert_path": "./ssl/server.crt",
-      "key_path": "./ssl/server.key",
-      "passphrase": "Gradiant"
-    },
     "token_secret": "Token-cifrado01939938203894",
     "token_login_hours_alive": 240
   },
@@ -21,15 +16,7 @@
     "type": "sqlite",
     "sqlite": {
       "file": "database.sqlite3",
-      "debug": true
-    },
-    "postgres": {
-      "host": "localhost",
-      "port": 5432,
-      "database": "finanzas",
-      "user": "postgres",
-      "password": "postgresqlpassword",
-      "debug": true
+      "debug": false
     },
     "init": {
       "delete_data_on_init": false,

@@ -13,6 +13,7 @@ from src.persistence.application.databasemanager import DatabaseManager
 from application.iapp import IApp
 from src.finanzas.infrastructure.rest import finanzasrestroutes, finanzasfrontroutes
 from src.login.infrastructure.rest import loginroutes, userroutes, loginfrontroutes, userfrontroutes
+from src.shared.utils.resources import resource_path
 from src.version.infrastructure.rest import versionroutes
 
 
@@ -21,7 +22,11 @@ class Rest(IApp):
     def __init__(self, config: dict):
         super().__init__(config)
         root_dir = os.getcwd()
-        templates = safe_join(root_dir, "./application/web/templates")
+        if config["packet"]:
+            logger.info("Templates_folder: {}".format(str(resource_path("templates"))))
+            templates = str(resource_path("templates"))
+        else:
+            templates = safe_join(root_dir, "./application/web/templates")
         self.app = Flask(__name__, template_folder=templates)
         self.app.config.update(config["flask_config"])
         self.cors = CORS(self.app)
@@ -95,10 +100,14 @@ class Rest(IApp):
         finanzasfrontroutes.import_routes("/", self.app)
         self._add_static_route(self.app)
 
-    @staticmethod
-    def _add_static_route(app):
+    def _add_static_route(self, app):
         root_dir = os.getcwd()
-        static = safe_join(root_dir, "./application/web/static")
+
+        if self._config["packet"]:
+            logger.info("Static_folder: {}".format(resource_path("static")))
+            static = str(resource_path("static"))
+        else:
+            static = safe_join(root_dir, "application/web/static")
 
         @app.route('/<path:path>', methods=['GET'])
         def _static(path):
