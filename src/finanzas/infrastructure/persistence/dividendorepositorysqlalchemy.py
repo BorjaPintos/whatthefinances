@@ -23,7 +23,7 @@ class DividendoRepositorySQLAlchemy(ITransactionalRepository, DividendoRepositor
     def __get_complete_join_query(self, criteria: Criteria) -> Query:
         columnas = (
             DividendoEntity.id, DividendoEntity.isin, DividendoEntity.fecha,
-            DividendoEntity.dividendo_por_accion, DividendoEntity.retencion_por_accion, ProductoEntity.nombre
+            DividendoEntity.dividendo_por_participacion, DividendoEntity.retencion_por_participacion, ProductoEntity.nombre
         )
 
         query_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
@@ -36,8 +36,8 @@ class DividendoRepositorySQLAlchemy(ITransactionalRepository, DividendoRepositor
         params = {"id": row[0],
                   "isin": row[1],
                   "fecha": row[2],
-                  "dividendo_por_accion": row[3],
-                  "retencion_por_accion": row[4],
+                  "dividendo_por_participacion": row[3],
+                  "retencion_por_participacion": row[4],
                   "nombre": row[5],
                   }
         return Dividendo(params)
@@ -62,8 +62,8 @@ class DividendoRepositorySQLAlchemy(ITransactionalRepository, DividendoRepositor
             self.check_isin(params.get("isin"))
             entity = DividendoEntity(fecha=params.get("fecha"),
                                      isin=params.get("isin"),
-                                     dividendo_por_accion=params.get("dividendo_por_accion"),
-                                     retencion_por_accion=params.get("retencion_por_accion"))
+                                     dividendo_por_participacion=params.get("dividendo_por_participacion"),
+                                     retencion_por_participacion=params.get("retencion_por_participacion"))
             self._session.add(entity)
             self._session.flush()
             return entity.convert_to_object_domain()

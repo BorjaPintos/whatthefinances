@@ -1,7 +1,7 @@
 from typing import List, Tuple, Union, Any
 
-from src.finanzas.domain.posicionaccion import PosicionAccion
-from src.finanzas.domain.posicionaccionrepository import PosicionAccionRepository
+from src.finanzas.domain.posicion import Posicion
+from src.finanzas.domain.posicionrepository import PosicionRepository
 from src.persistence.application.transactionalusecase import transactional, TransactionalUseCase
 from src.persistence.domain.criteria import Criteria, OrderType, Order, OrderBy
 from src.persistence.domain.filter import Filter
@@ -10,14 +10,14 @@ from src.persistence.domain.filterutils import combine_filters
 from src.persistence.domain.simplefilter import SimpleFilter, WhereOperator
 
 
-class ListPosicionAccion(TransactionalUseCase):
+class ListPosicion(TransactionalUseCase):
 
-    def __init__(self, posicion_accion_repository: PosicionAccionRepository):
-        super().__init__([posicion_accion_repository])
-        self._posicion_accion_repository = posicion_accion_repository
+    def __init__(self, posicion_repository: PosicionRepository):
+        super().__init__([posicion_repository])
+        self._posicion_repository = posicion_repository
 
     @transactional(readonly=True)
-    def execute(self, params: dict) -> Tuple[List[PosicionAccion], Union[bool, Any]]:
+    def execute(self, params: dict) -> Tuple[List[Posicion], Union[bool, Any]]:
 
         criteria = Criteria(
             order=Order(OrderBy(params.get("order_property", "fecha_compra")),
@@ -26,7 +26,7 @@ class ListPosicionAccion(TransactionalUseCase):
             offset=params["offset"],
             limit=params["count"]
         )
-        return self._posicion_accion_repository.list(criteria)
+        return self._posicion_repository.list(criteria)
 
     @staticmethod
     def _create_filters(params: dict) -> Filter:
@@ -75,16 +75,16 @@ class ListPosicionAccion(TransactionalUseCase):
             fecha_filter = SimpleFilter(
                 "end_fecha_venta", WhereOperator.LESSTHANOREQUAL, params["end_fecha_venta"])
             filter = combine_filters(filter, CompositeOperator.AND, fecha_filter)
-        if "begin_precio_accion_sin_comision" in params and params["begin_precio_accion_sin_comision"]:
-            begin_precio_accion_sin_comision_filter = SimpleFilter(
-                "begin_precio_accion_sin_comision", WhereOperator.LESSTHANOREQUAL,
-                params["begin_precio_accion_sin_comision"])
-            filter = combine_filters(filter, CompositeOperator.AND, begin_precio_accion_sin_comision_filter)
-        if "end_precio_accion_sin_comision" in params and params["end_precio_accion_sin_comision"]:
-            end_precio_accion_sin_comision_filter = SimpleFilter(
-                "end_precio_accion_sin_comision", WhereOperator.LESSTHANOREQUAL,
-                params["end_precio_accion_sin_comision"])
-            filter = combine_filters(filter, CompositeOperator.AND, end_precio_accion_sin_comision_filter)
+        if "begin_precio_compra_sin_comision" in params and params["begin_precio_compra_sin_comision"]:
+            begin_precio_compra_sin_comision_filter = SimpleFilter(
+                "begin_precio_compra_sin_comision", WhereOperator.LESSTHANOREQUAL,
+                params["begin_precio_compra_sin_comision"])
+            filter = combine_filters(filter, CompositeOperator.AND, begin_precio_compra_sin_comision_filter)
+        if "end_precio_compra_sin_comision" in params and params["end_precio_compra_sin_comision"]:
+            end_precio_compra_sin_comision_filter = SimpleFilter(
+                "end_precio_compra_sin_comision", WhereOperator.LESSTHANOREQUAL,
+                params["end_precio_compra_sin_comision"])
+            filter = combine_filters(filter, CompositeOperator.AND, end_precio_compra_sin_comision_filter)
         if "begin_comision_compra" in params and params["begin_comision_compra"]:
             begin_comision_compra_filter = SimpleFilter(
                 "begin_comision_compra", WhereOperator.LESSTHANOREQUAL,
@@ -116,16 +116,16 @@ class ListPosicionAccion(TransactionalUseCase):
                 params["end_otras_comisiones"])
             filter = combine_filters(filter, CompositeOperator.AND, end_otras_comisiones_filter)
 
-        if "begin_numero_acciones" in params and params["begin_numero_acciones"]:
-            begin_numero_acciones_filter = SimpleFilter(
-                "begin_numero_acciones", WhereOperator.LESSTHANOREQUAL,
-                params["begin_numero_acciones"])
-            filter = combine_filters(filter, CompositeOperator.AND, begin_numero_acciones_filter)
+        if "begin_numero_participaciones" in params and params["begin_numero_participaciones"]:
+            begin_numero_participaciones_filter = SimpleFilter(
+                "begin_numero_participaciones", WhereOperator.LESSTHANOREQUAL,
+                params["begin_numero_participaciones"])
+            filter = combine_filters(filter, CompositeOperator.AND, begin_numero_participaciones_filter)
 
-        if "end_numero_acciones" in params and params["end_numero_acciones"]:
-            end_numero_acciones_filter = SimpleFilter(
-                "end_numero_acciones", WhereOperator.LESSTHANOREQUAL,
-                params["end_numero_acciones"])
-            filter = combine_filters(filter, CompositeOperator.AND, end_numero_acciones_filter)
+        if "end_numero_participaciones" in params and params["end_numero_participaciones"]:
+            end_numero_participaciones_filter = SimpleFilter(
+                "end_numero_participaciones", WhereOperator.LESSTHANOREQUAL,
+                params["end_numero_participaciones"])
+            filter = combine_filters(filter, CompositeOperator.AND, end_numero_participaciones_filter)
 
         return filter
