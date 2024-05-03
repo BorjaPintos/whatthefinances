@@ -1,42 +1,41 @@
 from typing import Any, Tuple
 from loguru import logger
 
-from src.finanzas.application.cerrarposicionaccion import CerrarPosicionAccion
+from src.finanzas.application.cerrarposicion import CerrarPosicion
 from src.finanzas.application.createbolsa import CreateBolsa
 from src.finanzas.application.createbroker import CreateBroker
 from src.finanzas.application.createdividendo import CreateDividendo
-from src.finanzas.application.createposicionaccion import CreatePosicionAccion
+from src.finanzas.application.createposicion import CreatePosicion
 from src.finanzas.application.createproducto import CreateProducto
-from src.finanzas.application.createvaloraccion import CreateValorAccion
+from src.finanzas.application.createvalorparticipacion import CreateValorParticipacion
 from src.finanzas.application.deletedividendo import DeleteDividendo
-from src.finanzas.application.deleteposicionaccion import DeletePosicionAccion
-from src.finanzas.application.deletevaloraccion import DeleteValorAccion
-from src.finanzas.application.deshacercerrarposicionaccion import DeshacerCerrarPosicionAccion
+from src.finanzas.application.deleteposicion import DeletePosicion
+from src.finanzas.application.deletevalorparticipacion import DeleteValorParticipacion
+from src.finanzas.application.deshacercerrarposicion import DeshacerCerrarPosicion
 from src.finanzas.application.getbolsa import GetBolsa
 from src.finanzas.application.getbroker import GetBroker
 from src.finanzas.application.getdividendo import GetDividendo
-from src.finanzas.application.getposicionaccion import GetPosicionAccion
+from src.finanzas.application.getposicion import GetPosicion
 from src.finanzas.application.getproducto import GetProducto
 from src.finanzas.application.listbolsa import ListBolsa
 from src.finanzas.application.listbroker import ListBroker
 from src.finanzas.application.listdividendorango import ListDividendoRango
 from src.finanzas.application.listdividendos import ListDividendos
-from src.finanzas.application.listposicionaccion import ListPosicionAccion
+from src.finanzas.application.listposicion import ListPosicion
 from src.finanzas.application.listproducto import ListProducto
-from src.finanzas.application.listvaloraccion import ListValorAccion
+from src.finanzas.application.listvalorparticipacion import ListValorParticipacion
 from src.finanzas.application.updatebolsa import UpdateBolsa
 from src.finanzas.application.updatebroker import UpdateBroker
 from src.finanzas.application.updatedividendo import UpdateDividendo
-from src.finanzas.application.updateposicionaccion import UpdatePosicionAccion
+from src.finanzas.application.updateposicion import UpdatePosicion
 from src.finanzas.application.updateproducto import UpdateProducto
-from src.finanzas.domain.dividendo_rango import DividendoRango
 from src.finanzas.infrastructure.persistence.bolsarepositorysqlalchemy import BolsaRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.brokerrepositorysqlalchemy import BrokerRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.dividendorepositorysqlalchemy import DividendoRepositorySQLAlchemy
-from src.finanzas.infrastructure.persistence.posicionaccionrepositorysqlalchemy import \
-    PosicionAccionRepositorySQLAlchemy
+from src.finanzas.infrastructure.persistence.posicionrepositorysqlalchemy import \
+    PosicionRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.productorepositorysqlalchemy import ProductoRepositorySQLAlchemy
-from src.finanzas.infrastructure.persistence.valoraccionnrepositorysqlalchemy import ValorAccionRepositorySQLAlchemy
+from src.finanzas.infrastructure.persistence.valorparticipacionrepositorysqlalchemy import ValorParticipacionRepositorySQLAlchemy
 from src.finanzas.infrastructure.rest.localeutils import apply_locale_float, apply_locale_int, apply_locale_date, \
     apply_locale_bool, apply_locale_datetime, apply_locale_list_int, apply_locale_list
 from src.shared.domain.exceptions.messageerror import MessageError
@@ -63,10 +62,10 @@ get_bolsa_use_case = GetBolsa(bolsa_repository=bolsa_repository)
 create_bolsa_use_case = CreateBolsa(bolsa_repository=bolsa_repository)
 update_bolsa_use_case = UpdateBolsa(bolsa_repository=bolsa_repository)
 
-valor_accion_repository = ValorAccionRepositorySQLAlchemy()
-list_valor_accion_use_case = ListValorAccion(valor_accion_repository=valor_accion_repository)
-create_valor_accion_use_case = CreateValorAccion(valor_accion_repository=valor_accion_repository)
-delete_valor_accion_use_case = DeleteValorAccion(valor_accion_repository=valor_accion_repository)
+valor_participacion_repository = ValorParticipacionRepositorySQLAlchemy()
+list_valor_participacion_use_case = ListValorParticipacion(valor_participacion_repository=valor_participacion_repository)
+create_valor_participacion_use_case = CreateValorParticipacion(valor_participacion_repository=valor_participacion_repository)
+delete_valor_participacion_use_case = DeleteValorParticipacion(valor_participacion_repository=valor_participacion_repository)
 
 dividendo_repository = DividendoRepositorySQLAlchemy()
 list_dividendos_use_case = ListDividendos(dividendo_repository=dividendo_repository)
@@ -75,17 +74,16 @@ get_dividendo_use_case = GetDividendo(dividendo_repository=dividendo_repository)
 update_dividendo_use_case = UpdateDividendo(dividendo_repository=dividendo_repository)
 delete_dividendo_use_case = DeleteDividendo(dividendo_repository=dividendo_repository)
 
-posicion_accion_repository = PosicionAccionRepositorySQLAlchemy()
+posicion_repository = PosicionRepositorySQLAlchemy()
 
-list_posicion_accion_use_case = ListPosicionAccion(posicion_accion_repository=posicion_accion_repository)
-get_posicion_accion_use_case = GetPosicionAccion(posicion_accion_repository=posicion_accion_repository)
-create_posicion_accion_use_case = CreatePosicionAccion(posicion_accion_repository=posicion_accion_repository)
-update_posicion_accion_use_case = UpdatePosicionAccion(posicion_accion_repository=posicion_accion_repository)
-delete_posicion_accion_use_case = DeletePosicionAccion(posicion_accion_repository=posicion_accion_repository)
-cerrar_posicion_accion_use_case = CerrarPosicionAccion(posicion_accion_repository=posicion_accion_repository)
-deshacer_cerrar_posicion_accion_use_case = DeshacerCerrarPosicionAccion(
-    posicion_accion_repository=posicion_accion_repository)
-list_dividendo_rango_use_case = ListDividendoRango(posicion_accion_repository=posicion_accion_repository)
+list_posicion_use_case = ListPosicion(posicion_repository=posicion_repository)
+get_posicion_use_case = GetPosicion(posicion_repository=posicion_repository)
+create_posicion_use_case = CreatePosicion(posicion_repository=posicion_repository)
+update_posicion_use_case = UpdatePosicion(posicion_repository=posicion_repository)
+delete_posicion_use_case = DeletePosicion(posicion_repository=posicion_repository)
+cerrar_posicion_use_case = CerrarPosicion(posicion_repository=posicion_repository)
+deshacer_cerrar_posicion_use_case = DeshacerCerrarPosicion(posicion_repository=posicion_repository)
+list_dividendo_rango_use_case = ListDividendoRango(posicion_repository=posicion_repository)
 
 
 def list_productos(params: dict) -> Tuple[Any, int]:
@@ -246,39 +244,39 @@ def update_bolsa(params: dict) -> Tuple[Any, int]:
     return response, code
 
 
-def list_valores_acciones(params: dict) -> Tuple[Any, int]:
+def list_valores_participaciones(params: dict) -> Tuple[Any, int]:
     code = 200
     __cast_params(params)
-    elements, total_elements = list_valor_accion_use_case.execute(params)
+    elements, total_elements = list_valor_participacion_use_case.execute(params)
     response_elements = []
     for element in elements:
         response_elements.append(element.get_dto())
     return Pagination(response_elements, params["offset"], params["count"], total_elements), code
 
 
-def create_valor_accion(params: dict) -> Tuple[Any, int]:
+def create_valor_participacion(params: dict) -> Tuple[Any, int]:
     code = 201
     __cast_params(params)
     if params.get("fecha") is not None:
         params["fecha"] = apply_locale_datetime(params["fecha"])
-    valor_accion = create_valor_accion_use_case.execute(params)
-    if valor_accion:
-        response = valor_accion.get_dto()
+    valor_participacion = create_valor_participacion_use_case.execute(params)
+    if valor_participacion:
+        response = valor_participacion.get_dto()
     else:
-        logger.warning("Error al crear el valor acción {}")
-        raise MessageError("Error al crear el valor acción {}", code)
+        logger.warning("Error al crear el valor participacón {}")
+        raise MessageError("Error al crear el valor participación {}", code)
     return response, code
 
 
-def delete_valor_accion(id_valor_accion: int) -> Tuple[Any, int]:
+def delete_valor_participacion(id_valor_participacion: int) -> Tuple[Any, int]:
     code = 200
-    deleted = delete_valor_accion_use_case.execute(apply_locale_int(id_valor_accion))
+    deleted = delete_valor_participacion_use_case.execute(apply_locale_int(id_valor_participacion))
     if deleted:
         response = {}
     else:
         code = 400
-        logger.warning("Error al eliminar el valor acción con id: {}".format(id_valor_accion))
-        raise MessageError("Error al eliminar el valor acción con id: {}".format(id_valor_accion), code)
+        logger.warning("Error al eliminar el valor participación con id: {}".format(id_valor_participacion))
+        raise MessageError("Error al eliminar el valor participación con id: {}".format(id_valor_participacion), code)
     return response, code
 
 
@@ -365,95 +363,95 @@ def list_dividendo_rango(params: dict) -> Tuple[Any, int]:
     return response_elements, code
 
 
-def list_posiciones_acciones(params: dict) -> Tuple[Pagination, int]:
+def list_posiciones(params: dict) -> Tuple[Pagination, int]:
     code = 200
     __cast_params(params)
-    elements, total_elements = list_posicion_accion_use_case.execute(params)
+    elements, total_elements = list_posicion_use_case.execute(params)
     response_elements = []
     for element in elements:
         response_elements.append(element.get_dto())
     return Pagination(response_elements, params["offset"], params["count"], total_elements), code
 
 
-def get_posicion_accion(id_posicion_accion: int) -> Tuple[Any, int]:
+def get_posicion(id_posicion: int) -> Tuple[Any, int]:
     code = 200
-    cuenta = get_posicion_accion_use_case.execute(apply_locale_int(id_posicion_accion))
+    cuenta = get_posicion_use_case.execute(apply_locale_int(id_posicion))
     if cuenta:
         response = cuenta.get_dto()
     else:
         code = 404
         logger.warning(
-            "Por alguna razón no devuelve la posición acción con id {} y no da la excepción de not found".format(
-                id_posicion_accion))
-        raise MessageError("No se ha podido obtener la posición acción con id: {}".format(id_posicion_accion), code)
+            "Por alguna razón no devuelve la posición con id {} y no da la excepción de not found".format(
+                id_posicion))
+        raise MessageError("No se ha podido obtener la posición con id: {}".format(id_posicion), code)
     return response, code
 
 
-def create_posicion_accion(params: dict) -> Tuple[Any, int]:
+def create_posicion(params: dict) -> Tuple[Any, int]:
     code = 201
     __cast_params(params)
-    created = create_posicion_accion_use_case.execute(params)
+    created = create_posicion_use_case.execute(params)
     if created:
         response = {}
     else:
         code = 400
-        logger.warning("Error al crear la posición acción: {}".format(params.get("nombre")))
-        raise MessageError("Error al crear la posición acción: {}".format(params.get("nombre")), code)
+        logger.warning("Error al crear la posición: {}".format(params.get("nombre")))
+        raise MessageError("Error al crear la posición: {}".format(params.get("nombre")), code)
     return response, code
 
 
-def update_posicion_accion(params: dict) -> Tuple[Any, int]:
+def update_posicion(params: dict) -> Tuple[Any, int]:
     code = 200
 
     __cast_params(params)
-    posicion_accion = update_posicion_accion_use_case.execute(params)
-    if posicion_accion:
-        response = posicion_accion.get_dto()
+    posicion = update_posicion_use_case.execute(params)
+    if posicion:
+        response = posicion.get_dto()
     else:
         code = 400
-        logger.warning("Error al actualizar la posición acción con id: {}".format(params.get("id")))
-        raise MessageError("Error al actualizar la posición acción con id: {}".format(params.get("id")), code)
+        logger.warning("Error al actualizar la posición con id: {}".format(params.get("id")))
+        raise MessageError("Error al actualizar la posición con id: {}".format(params.get("id")), code)
     return response, code
 
 
-def delete_posicion_accion(id_posicion_accion: int) -> Tuple[Any, int]:
+def delete_posicion(id_posicion: int) -> Tuple[Any, int]:
     code = 200
-    deleted = delete_posicion_accion_use_case.execute(apply_locale_int(id_posicion_accion))
+    deleted = delete_posicion_use_case.execute(apply_locale_int(id_posicion))
     if deleted:
         response = {}
     else:
         code = 400
-        logger.warning("Error al eliminar la posición acción con id: {}".format(id_posicion_accion))
-        raise MessageError("Error al eliminar la posición acción con id: {}".format(id_posicion_accion), code)
+        logger.warning("Error al eliminar la posición con id: {}".format(id_posicion))
+        raise MessageError("Error al eliminar la posición con id: {}".format(id_posicion), code)
     return response, code
 
 
-def cerrar_posicion_accion(params: dict) -> Tuple[Any, int]:
+def cerrar_posicion(params: dict) -> Tuple[Any, int]:
     code = 200
 
     __cast_params(params)
-    posicion_accion = cerrar_posicion_accion_use_case.execute(params)
-    if posicion_accion:
-        response = posicion_accion.get_dto()
+    posicion = cerrar_posicion_use_case.execute(params)
+    if posicion:
+        response = posicion.get_dto()
 
     else:
         code = 400
-        logger.warning("Error al cerrar la posición acción con id: {}".format(params.get("id")))
-        raise MessageError("Error al cerrar la posición acción con id: {}".format(params.get("id")), code)
+        logger.warning("Error al cerrar la posición con id: {}".format(params.get("id")))
+        raise MessageError("Error al cerrar la posición con id: {}".format(params.get("id")), code)
     return response, code
 
 
-def deshacer_cerrar_posicion_accion(params: dict) -> Tuple[Any, int]:
+def deshacer_cerrar_posicion(params: dict) -> Tuple[Any, int]:
     code = 200
 
     __cast_params(params)
-    posicion_accion = deshacer_cerrar_posicion_accion_use_case.execute(params)
-    if posicion_accion:
-        response = posicion_accion.get_dto()
+    posicion = deshacer_cerrar_posicion_use_case.execute(params)
+    if posicion:
+        response = posicion.get_dto()
     else:
         code = 400
-        logger.warning("Error al deshacer-cerrar la posición acción con id: {}".format(params.get("id")))
-        raise MessageError("Error al deshacer-cerrar la posición acción con id: {}".format(params.get("id")), code)
+        logger.warning("Error al deshacer-cerrar la posición con id: {}".format(params.get("id")))
+        raise MessageError("Error al deshacer-cerrar la posición con id: {}".format(params.get("id")), code)
     return response, code
 
 
@@ -497,19 +495,19 @@ def __cast_params(params: dict):
     if params.get("end_fecha_venta") is not None:
         params["end_fecha_venta"] = apply_locale_date(params["end_fecha_venta"])
 
-    if params.get("numero_acciones") is not None:
-        params["numero_acciones"] = apply_locale_int(params["numero_acciones"])
-    if params.get("begin_numero_acciones") is not None:
-        params["begin_numero_acciones"] = apply_locale_int(params["begin_numero_acciones"])
-    if params.get("end_numero_acciones") is not None:
-        params["end_numero_acciones"] = apply_locale_int(params["end_numero_acciones"])
+    if params.get("numero_participaciones") is not None:
+        params["numero_participaciones"] = apply_locale_float(params["numero_participaciones"])
+    if params.get("begin_numero_participaciones") is not None:
+        params["begin_numero_participaciones"] = apply_locale_float(params["begin_numero_participaciones"])
+    if params.get("end_numero_participaciones") is not None:
+        params["end_numero_participaciones"] = apply_locale_float(params["end_numero_participaciones"])
 
-    if params.get("precio_accion_sin_comision") is not None:
-        params["precio_accion_sin_comision"] = apply_locale_float(params["precio_accion_sin_comision"])
-    if params.get("begin_precio_accion_sin_comision") is not None:
-        params["begin_precio_accion_sin_comision"] = apply_locale_float(params["begin_precio_accion_sin_comision"])
-    if params.get("end_precio_accion_sin_comision") is not None:
-        params["end_precio_accion_sin_comision"] = apply_locale_float(params["end_precio_accion_sin_comision"])
+    if params.get("precio_compra_sin_comision") is not None:
+        params["precio_compra_sin_comision"] = apply_locale_float(params["precio_compra_sin_comision"])
+    if params.get("begin_precio_compra_sin_comision") is not None:
+        params["begin_precio_compra_sin_comision"] = apply_locale_float(params["begin_precio_compra_sin_comision"])
+    if params.get("end_precio_compra_sin_comision") is not None:
+        params["end_precio_compra_sin_comision"] = apply_locale_float(params["end_precio_compra_sin_comision"])
 
     if params.get("comision_compra") is not None:
         params["comision_compra"] = apply_locale_float(params["comision_compra"])
@@ -537,7 +535,7 @@ def __cast_params(params: dict):
     if params.get("abierta") is not None:
         params["abierta"] = apply_locale_bool(params["abierta"])
 
-    if params.get("dividendo_por_accion") is not None:
-        params["dividendo_por_accion"] = apply_locale_float(params["dividendo_por_accion"])
-    if params.get("retencion_por_accion") is not None:
-        params["retencion_por_accion"] = apply_locale_float(params["retencion_por_accion"])
+    if params.get("dividendo_por_participacion") is not None:
+        params["dividendo_por_participacion"] = apply_locale_float(params["dividendo_por_participacion"])
+    if params.get("retencion_por_participacion") is not None:
+        params["retencion_por_participacion"] = apply_locale_float(params["retencion_por_participacion"])

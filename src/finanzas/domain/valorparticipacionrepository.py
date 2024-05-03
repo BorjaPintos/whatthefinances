@@ -1,14 +1,14 @@
 from abc import ABC, abstractmethod
 from typing import List, Tuple
 
-from src.finanzas.domain.valoraccion import ValorAccion
+from src.finanzas.domain.valorparticipacion import ValorParticipacion
 from src.persistence.domain.criteria import Criteria
 
 
-class ValorAccionRepository(ABC):
+class ValorParticipacionRepository(ABC):
 
     @abstractmethod
-    def list(self, criteria: Criteria) -> Tuple[List[ValorAccion], int]:
+    def list(self, criteria: Criteria) -> Tuple[List[ValorParticipacion], int]:
         pass
 
     @abstractmethod
@@ -16,9 +16,9 @@ class ValorAccionRepository(ABC):
         pass
 
     @abstractmethod
-    def new(self, params: dict) -> ValorAccion:
+    def new(self, params: dict) -> ValorParticipacion:
         pass
 
     @abstractmethod
-    def delete(self, id_valor_accion: int) -> bool:
+    def delete(self, id_valor_participacion: int) -> bool:
         pass

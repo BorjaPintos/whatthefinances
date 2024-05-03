@@ -8,7 +8,7 @@ from src.finanzas.domain.resumeningreso import ResumenIngreso
 from src.finanzas.domain.resumenmonedero import ResumenMonedero
 from src.finanzas.domain.resumenrepository import ResumenRepository
 from src.finanzas.domain.resumentotal import ResumenTotal
-from src.finanzas.domain.resumenvaloraccion import ResumenValorAccion
+from src.finanzas.domain.resumenvalorparticipacion import ResumenValorParticipacion
 from src.finanzas.infrastructure.persistence.orm.categoriagastoentity import CategoriaGastoEntity
 from src.finanzas.infrastructure.persistence.orm.categoriaingresoentity import CategoriaIngresoEntity
 from src.finanzas.infrastructure.persistence.orm.cuentaentity import CuentaEntity
@@ -16,7 +16,7 @@ from src.finanzas.infrastructure.persistence.orm.monederoentity import MonederoE
 from src.finanzas.infrastructure.persistence.orm.movimientocuentaentity import MovimientoCuentaEntity
 from src.finanzas.infrastructure.persistence.orm.movimientomonederoentity import MovimientoMonederoEntity
 from src.finanzas.infrastructure.persistence.orm.operacionentity import OperacionEntity
-from src.finanzas.infrastructure.persistence.orm.valoraccionentity import ValorAccionEntity
+from src.finanzas.infrastructure.persistence.orm.valorparticipacionentity import ValorParticipacionEntity
 from src.persistence.application.databasemanager import DatabaseManager
 from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.itransactionalrepository import ITransactionalRepository
@@ -212,46 +212,46 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
 
         return elements
 
-    def resumen_valor_accion_meses(self, criteria: Criteria) -> List[ResumenValorAccion]:
+    def resumen_valor_participacion_meses(self, criteria: Criteria) -> List[ResumenValorParticipacion]:
         elements = []
         try:
 
             """
             select fvc.year, fvc.month, fvc.fecha, fvc.isin, fvc.valor
-            FROM finanzas_valor_acciones fvc
-            join (SELECT fac.isin AS isin, max(fac.fecha) AS max_1, fac.year as year, fac.month as month FROM finanzas_valor_acciones fac GROUP BY fac.isin, fac.year, fac.month) fvc2
+            FROM finanzas_valor_participaciones fvc
+            join (SELECT fac.isin AS isin, max(fac.fecha) AS max_1, fac.year as year, fac.month as month FROM finanzas_valor_participaciones fac GROUP BY fac.isin, fac.year, fac.month) fvc2
             on fvc.isin = fvc2.isin and fvc.fecha = fvc2.max_1
             """
 
             columnas = (
-                ValorAccionEntity.isin,
-                func.max(ValorAccionEntity.fecha),
-                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
-                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
+                ValorParticipacionEntity.isin,
+                func.max(ValorParticipacionEntity.fecha),
+                DatabaseManager.get_database().year(ValorParticipacionEntity.fecha),
+                DatabaseManager.get_database().month(ValorParticipacionEntity.fecha),
             )
 
 
-            subquery_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas)
+            subquery_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas)
             subquery = subquery_builder.build_query(Criteria())
             subquery = subquery.group_by(
-                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
-                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
-                ValorAccionEntity.isin).subquery()
+                DatabaseManager.get_database().year(ValorParticipacionEntity.fecha),
+                DatabaseManager.get_database().month(ValorParticipacionEntity.fecha),
+                ValorParticipacionEntity.isin).subquery()
 
             columnas2 = (
-                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
-                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
-                ValorAccionEntity.fecha,
-                ValorAccionEntity.isin,
-                ValorAccionEntity.valor
+                DatabaseManager.get_database().year(ValorParticipacionEntity.fecha),
+                DatabaseManager.get_database().month(ValorParticipacionEntity.fecha),
+                ValorParticipacionEntity.fecha,
+                ValorParticipacionEntity.isin,
+                ValorParticipacionEntity.valor
             )
-            query_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas2)
+            query_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas2)
             query = (query_builder.build_query(Criteria())
-                     .join(subquery, and_(ValorAccionEntity.isin == subquery.columns[0],
-                                          ValorAccionEntity.fecha == subquery.columns[1]), isouter=False))
-            query = query.order_by(DatabaseManager.get_database().year(ValorAccionEntity.fecha).desc(),
-                                   DatabaseManager.get_database().month(ValorAccionEntity.fecha).desc(),
-                                   func.upper(ValorAccionEntity.isin).asc())
+                     .join(subquery, and_(ValorParticipacionEntity.isin == subquery.columns[0],
+                                          ValorParticipacionEntity.fecha == subquery.columns[1]), isouter=False))
+            query = query.order_by(DatabaseManager.get_database().year(ValorParticipacionEntity.fecha).desc(),
+                                   DatabaseManager.get_database().month(ValorParticipacionEntity.fecha).desc(),
+                                   func.upper(ValorParticipacionEntity.isin).asc())
 
             result = query.all()
             if result is not None:
@@ -262,54 +262,54 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
                                "isin": row[3],
                                "ultimo_valor": float(row[4]),
                                }
-                    elements.append(ResumenValorAccion(element))
+                    elements.append(ResumenValorParticipacion(element))
         except Exception as e:
             traceback.print_exc()
 
         return elements
 
-    def resumen_valor_accion_dias(self, criteria: Criteria) -> List[ResumenValorAccion]:
+    def resumen_valor_participacion_dias(self, criteria: Criteria) -> List[ResumenValorParticipacion]:
         elements = []
         try:
             """
             select fvc.year, fvc.month, fvc.fecha, fvc.isin, fvc.valor, fvc.day
-            FROM finanzas_valor_acciones fvc
+            FROM finanzas_valor_participaciones fvc
             join (SELECT fac.isin AS isin, max(fac.fecha) AS max_1, fac.year as year, fac.month as month 
-            FROM finanzas_valor_acciones fac GROUP BY fac.isin, fac.year, fac.month, fac.day) fvc2
+            FROM finanzas_valor_participaciones fac GROUP BY fac.isin, fac.year, fac.month, fac.day) fvc2
             on fvc.isin = fvc2.isin and fvc.fecha = fvc2.max_1
             """
 
             columnas = (
-                ValorAccionEntity.isin,
-                func.max(ValorAccionEntity.fecha),
-                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
-                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
-                DatabaseManager.get_database().day(ValorAccionEntity.fecha),
+                ValorParticipacionEntity.isin,
+                func.max(ValorParticipacionEntity.fecha),
+                DatabaseManager.get_database().year(ValorParticipacionEntity.fecha),
+                DatabaseManager.get_database().month(ValorParticipacionEntity.fecha),
+                DatabaseManager.get_database().day(ValorParticipacionEntity.fecha),
             )
 
 
-            subquery_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas)
+            subquery_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas)
             subquery = subquery_builder.build_query(Criteria())
             subquery = subquery.group_by(
-                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
-                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
-                ValorAccionEntity.isin).subquery()
+                DatabaseManager.get_database().year(ValorParticipacionEntity.fecha),
+                DatabaseManager.get_database().month(ValorParticipacionEntity.fecha),
+                ValorParticipacionEntity.isin).subquery()
 
             columnas2 = (
-                DatabaseManager.get_database().year(ValorAccionEntity.fecha),
-                DatabaseManager.get_database().month(ValorAccionEntity.fecha),
-                ValorAccionEntity.fecha,
-                ValorAccionEntity.isin,
-                ValorAccionEntity.valor,
-                DatabaseManager.get_database().day(ValorAccionEntity.fecha)
+                DatabaseManager.get_database().year(ValorParticipacionEntity.fecha),
+                DatabaseManager.get_database().month(ValorParticipacionEntity.fecha),
+                ValorParticipacionEntity.fecha,
+                ValorParticipacionEntity.isin,
+                ValorParticipacionEntity.valor,
+                DatabaseManager.get_database().day(ValorParticipacionEntity.fecha)
             )
-            query_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas2)
+            query_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas2)
             query = (query_builder.build_query(Criteria())
-                     .join(subquery, and_(ValorAccionEntity.isin == subquery.columns[0],
-                                          ValorAccionEntity.fecha == subquery.columns[1]), isouter=False))
-            query = query.order_by(DatabaseManager.get_database().year(ValorAccionEntity.fecha).desc(),
-                                   DatabaseManager.get_database().month(ValorAccionEntity.fecha).desc(),
-                                   func.upper(ValorAccionEntity.isin).asc())
+                     .join(subquery, and_(ValorParticipacionEntity.isin == subquery.columns[0],
+                                          ValorParticipacionEntity.fecha == subquery.columns[1]), isouter=False))
+            query = query.order_by(DatabaseManager.get_database().year(ValorParticipacionEntity.fecha).desc(),
+                                   DatabaseManager.get_database().month(ValorParticipacionEntity.fecha).desc(),
+                                   func.upper(ValorParticipacionEntity.isin).asc())
 
             result = query.all()
             if result is not None:
@@ -321,7 +321,7 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
                                "ultimo_valor": float(row[4]),
                                "dia": row[5]
                                }
-                    elements.append(ResumenValorAccion(element))
+                    elements.append(ResumenValorParticipacion(element))
         except Exception as e:
             traceback.print_exc()
 

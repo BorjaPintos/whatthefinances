@@ -1,7 +1,7 @@
 import locale
 
 from src.finanzas.infrastructure.rest import finanzascuentascontroller, finanzasmonederoscontroller, \
-    finanzascategoriasingresocontroller, finanzascategoriasgastocontroller, finanzasposicionaccioncontroller
+    finanzascategoriasingresocontroller, finanzascategoriasgastocontroller, finanzasposicioncontroller
 from src.shared.infraestructure.rest.response import serialize_response
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
@@ -137,13 +137,13 @@ def import_routes(rootpath, app):
                                title="Bolsas",
                                lista_headers=lista_headers)
 
-    @app.route(rootpath + "valores_acciones.html", methods=['GET'])
+    @app.route(rootpath + "valores_participaciones.html", methods=['GET'])
     @login_required
-    def valores_acciones():
+    def valores_participaciones():
         user = request.user
-        lista_productos, code = finanzasposicionaccioncontroller.list_productos({})
-        return render_template('/valores_acciones.html', username=user.get_name(),
-                               title="Valores de Acciones",
+        lista_productos, code = finanzasposicioncontroller.list_productos({})
+        return render_template('/valores_participaciones.html', username=user.get_name(),
+                               title="Valores de Participaciones",
                                lista_productos=lista_productos
                                )
 
@@ -151,29 +151,29 @@ def import_routes(rootpath, app):
     @login_required
     def dividendos():
         user = request.user
-        lista_productos, code = finanzasposicionaccioncontroller.list_productos({})
-        lista_headers = ["Fecha", "Nombre", "Dividendo por Acción", "Retención por acción"]
+        lista_productos, code = finanzasposicioncontroller.list_productos({})
+        lista_headers = ["Fecha", "Nombre", "Dividendo por Participación", "Retención por Participación"]
         return render_template('/dividendos.html', username=user.get_name(),
                                title="Dividendos",
                                lista_headers=lista_headers,
                                lista_productos=lista_productos
                                )
 
-    @app.route(rootpath + "posiciones_acciones.html", methods=['GET'])
+    @app.route(rootpath + "posiciones.html", methods=['GET'])
     @login_required
-    def posiciones_acciones():
+    def posiciones():
         user = request.user
-        lista_brokers, code = finanzasposicionaccioncontroller.list_brokers({})
-        lista_bolsas, code = finanzasposicionaccioncontroller.list_bolsas({})
-        lista_productos, code = finanzasposicionaccioncontroller.list_productos({})
+        lista_brokers, code = finanzasposicioncontroller.list_brokers({})
+        lista_bolsas, code = finanzasposicioncontroller.list_bolsas({})
+        lista_productos, code = finanzasposicioncontroller.list_productos({})
         lista_headers = ["Fecha", "Nombre", "Bolsa", "Broker",
-                         "Precio por accion", "Número de acciones",
+                         "Precio por Participación", "Número de Participaciones",
                          "Total Compra",
                          "Valor actual", "Total Actual", "Ganacia SC", "Ganacia CC",
                          "Dividendos Acumulados", "Ganancia CC y Dividendos"]
 
-        return render_template('/posiciones_acciones.html', username=user.get_name(),
-                               title="Posiciones de Acciones",
+        return render_template('/posiciones.html', username=user.get_name(),
+                               title="Posiciones",
                                lista_headers=lista_headers,
                                lista_brokers=lista_brokers,
                                lista_bolsas=lista_bolsas,

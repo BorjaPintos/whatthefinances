@@ -1,7 +1,7 @@
 from typing import List, Tuple, Union, Any
 
-from src.finanzas.domain.valoraccion import ValorAccion
-from src.finanzas.domain.valoraccionrepository import ValorAccionRepository
+from src.finanzas.domain.valorparticipacion import ValorParticipacion
+from src.finanzas.domain.valorparticipacionrepository import ValorParticipacionRepository
 from src.persistence.application.transactionalusecase import transactional, TransactionalUseCase
 from src.persistence.domain.criteria import Criteria, OrderType, Order, OrderBy
 from src.persistence.domain.filter import Filter
@@ -10,14 +10,14 @@ from src.persistence.domain.filterutils import combine_filters
 from src.persistence.domain.simplefilter import SimpleFilter, WhereOperator
 
 
-class ListValorAccion(TransactionalUseCase):
+class ListValorParticipacion(TransactionalUseCase):
 
-    def __init__(self, valor_accion_repository: ValorAccionRepository):
-        super().__init__([valor_accion_repository])
-        self._valor_accion_repository = valor_accion_repository
+    def __init__(self, valor_participacion_repository: ValorParticipacionRepository):
+        super().__init__([valor_participacion_repository])
+        self._valor_participacion_repository = valor_participacion_repository
 
     @transactional(readonly=True)
-    def execute(self, params: dict) -> Tuple[List[ValorAccion], Union[bool, Any]]:
+    def execute(self, params: dict) -> Tuple[List[ValorParticipacion], Union[bool, Any]]:
 
         criteria = Criteria(
             order=Order(OrderBy(params.get("order_property", "fecha")), OrderType(params.get("order_type", "desc"))),
@@ -25,7 +25,7 @@ class ListValorAccion(TransactionalUseCase):
             offset=params["offset"],
             limit=params["count"]
             )
-        return self._valor_accion_repository.list(criteria)
+        return self._valor_participacion_repository.list(criteria)
 
     @staticmethod
     def _create_filters(params: dict) -> Filter:
