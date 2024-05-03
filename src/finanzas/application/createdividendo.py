@@ -22,7 +22,7 @@ class CreateDividendo(TransactionalUseCase):
             raise InvalidParamError("campo fecha obligatorio")
         if "isin" not in params or params["isin"] is None:
             raise InvalidParamError("campo isin obligatorio")
-        if "dividendo_por_accion" not in params or params["dividendo_por_accion"] is None:
-            raise InvalidParamError("campo dividendo_por_accion obligatorio")
-        if "retencion_por_accion" not in params or params["retencion_por_accion"] is None:
-            raise InvalidParamError("campo retencion_por_accion obligatorio")
+        if "dividendo_por_participacion" not in params or params["dividendo_por_participacion"] is None:
+            raise InvalidParamError("campo dividendo_por_participacion obligatorio")
+        if "retencion_por_participacion" not in params or params["retencion_por_participacion"] is None:
+            raise InvalidParamError("campo retencion_por_participacion obligatorio")

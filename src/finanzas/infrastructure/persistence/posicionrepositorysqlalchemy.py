@@ -7,14 +7,14 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Query
 
 from src.finanzas.domain.dividendo_rango import DividendoRango
-from src.finanzas.domain.posicionaccion import PosicionAccion
-from src.finanzas.domain.posicionaccionrepository import PosicionAccionRepository
+from src.finanzas.domain.posicion import Posicion
+from src.finanzas.domain.posicionrepository import PosicionRepository
 from src.finanzas.infrastructure.persistence.orm.bolsaentity import BolsaEntity
 from src.finanzas.infrastructure.persistence.orm.brokerentity import BrokerEntity
 from src.finanzas.infrastructure.persistence.orm.dividendoentity import DividendoEntity
-from src.finanzas.infrastructure.persistence.orm.posicionaccionentity import PosicionAccionEntity
+from src.finanzas.infrastructure.persistence.orm.posicionentity import PosicionEntity
 from src.finanzas.infrastructure.persistence.orm.productoentity import ProductoEntity
-from src.finanzas.infrastructure.persistence.orm.valoraccionentity import ValorAccionEntity
+from src.finanzas.infrastructure.persistence.orm.valorparticipacionentity import ValorParticipacionEntity
 from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.itransactionalrepository import ITransactionalRepository
 from src.persistence.domain.simplefilter import SimpleFilter, WhereOperator
@@ -22,33 +22,33 @@ from src.persistence.infrastructure.sqlalchmeyquerybuilder import SQLAlchemyQuer
 from src.shared.domain.exceptions.notfounderror import NotFoundError
 
 
-class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccionRepository):
+class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository):
 
-    def __get_subquery_valor_accion(self) -> Subquery:
+    def __get_subquery_valor_participacion(self) -> Subquery:
 
         """
         select fvc.isin, fvc.fecha, fvc.valor
-        FROM finanzas_valor_acciones fvc
-        join (SELECT fac.isin AS isin, max(fac.fecha) AS max_1 FROM finanzas_valor_acciones fac GROUP BY fac.isin) fvc2
+        FROM finanzas_valor_participaciones fvc
+        join (SELECT fac.isin AS isin, max(fac.fecha) AS max_1 FROM finanzas_valor_participaciones fac GROUP BY fac.isin) fvc2
         on fvc.isin = fvc2.isin and fvc.fecha = fvc2.max_1
         """
 
-        columnas = (ValorAccionEntity.isin, func.max(ValorAccionEntity.fecha))
-        subquery_builder = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas)
+        columnas = (ValorParticipacionEntity.isin, func.max(ValorParticipacionEntity.fecha))
+        subquery_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas)
         subquery = subquery_builder.build_query(Criteria())
-        subquery = subquery.group_by(ValorAccionEntity.isin).subquery()
+        subquery = subquery.group_by(ValorParticipacionEntity.isin).subquery()
 
-        columnas2 = (ValorAccionEntity.isin, ValorAccionEntity.fecha, ValorAccionEntity.valor)
-        subquery_builder2 = SQLAlchemyQueryBuilder(ValorAccionEntity, self._session, selected_columns=columnas2)
+        columnas2 = (ValorParticipacionEntity.isin, ValorParticipacionEntity.fecha, ValorParticipacionEntity.valor)
+        subquery_builder2 = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas2)
         subquery2 = (subquery_builder2.build_query(Criteria())
-                     .join(subquery, and_(ValorAccionEntity.isin == subquery.columns[0],
-                                          ValorAccionEntity.fecha == subquery.columns[1]), isouter=False))
+                     .join(subquery, and_(ValorParticipacionEntity.isin == subquery.columns[0],
+                                          ValorParticipacionEntity.fecha == subquery.columns[1]), isouter=False))
 
         return subquery2.subquery()
 
-    def __get_subquery_dividendo(self, alias: Type[PosicionAccionEntity]) -> Label:
+    def __get_subquery_dividendo(self, alias: Type[PosicionEntity]) -> Label:
         columnas = (
-            func.sum(DividendoEntity.dividendo_por_accion),
+            func.sum(DividendoEntity.dividendo_por_participacion),
         )
         subquery_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
         subquery = ((subquery_builder.build_query(Criteria())).
@@ -63,9 +63,9 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
                           ))
         return subquery.label('dividendo')
 
-    def __get_subquery_retencion(self, alias: Type[PosicionAccionEntity]) -> Label:
+    def __get_subquery_retencion(self, alias: Type[PosicionEntity]) -> Label:
         columnas = (
-            func.sum(DividendoEntity.retencion_por_accion),
+            func.sum(DividendoEntity.retencion_por_participacion),
         )
         subquery_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
         subquery = ((subquery_builder.build_query(Criteria())).
@@ -82,16 +82,16 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
 
     def __get_complete_join_query(self, criteria: Criteria) -> Query:
 
-        alias_posicion = PosicionAccionEntity
-        subquery_valor = self.__get_subquery_valor_accion()
+        alias_posicion = PosicionEntity
+        subquery_valor = self.__get_subquery_valor_participacion()
         dividendo_label = self.__get_subquery_dividendo(alias_posicion)
         retencion_label = self.__get_subquery_retencion(alias_posicion)
 
         columnas = (
             alias_posicion.id, ProductoEntity.nombre, alias_posicion.isin,
             alias_posicion.fecha_compra, alias_posicion.fecha_venta,
-            alias_posicion.numero_acciones, alias_posicion.id_bolsa, alias_posicion.id_broker,
-            alias_posicion.precio_accion_sin_comision, alias_posicion.precio_venta_sin_comision,
+            alias_posicion.numero_participaciones, alias_posicion.id_bolsa, alias_posicion.id_broker,
+            alias_posicion.precio_compra_sin_comision, alias_posicion.precio_venta_sin_comision,
             alias_posicion.comision_compra, alias_posicion.otras_comisiones,
             alias_posicion.comision_venta, alias_posicion.abierta,
             BolsaEntity.nombre, BrokerEntity.nombre, subquery_valor.columns[2],
@@ -108,16 +108,16 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
         return query
 
     @staticmethod
-    def __get_posicion_accion_from_complete_join_row(row) -> PosicionAccion:
+    def __get_posicion_participacion_from_complete_join_row(row) -> Posicion:
         params = {"id": row[0],
                   "nombre": row[1],
                   "isin": row[2],
                   "fecha_compra": row[3],
                   "fecha_venta": row[4],
-                  "numero_acciones": row[5],
+                  "numero_participaciones": row[5],
                   "id_bolsa": row[6],
                   "id_broker": row[7],
-                  "precio_accion_sin_comision": row[8],
+                  "precio_compra_sin_comision": row[8],
                   "precio_venta_sin_comision": row[9],
                   "comision_compra": row[10],
                   "otras_comisiones": row[11],
@@ -125,17 +125,17 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
                   "abierta": row[13],
                   "nombre_bolsa": row[14],
                   "nombre_broker": row[15],
-                  "valor_accion": row[16],
-                  "dividendos_por_accion": row[17],
-                  "retencion_por_accion": row[18]
+                  "valor_participacion": row[16],
+                  "dividendos_por_participacion": row[17],
+                  "retencion_por_participacion": row[18]
                   }
-        return PosicionAccion(params)
+        return Posicion(params)
 
     def __get_complete_pagination_join_query(self, criteria: Criteria) -> Query:
         query = self.__get_complete_join_query(criteria)
         return query.offset(criteria.offset()).limit(criteria.limit())
 
-    def list(self, criteria: Criteria) -> Tuple[List[PosicionAccion], int]:
+    def list(self, criteria: Criteria) -> Tuple[List[Posicion], int]:
         elements = []
         try:
             query_elements = self.__get_complete_pagination_join_query(criteria)
@@ -143,7 +143,7 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
             n_elements = min(len(result), criteria.limit())
             if result is not None:
                 for i in range(n_elements):
-                    elements.append(self.__get_posicion_accion_from_complete_join_row(result[i]))
+                    elements.append(self.__get_posicion_participacion_from_complete_join_row(result[i]))
             return elements, self.count(criteria)
         except Exception as e:
             traceback.print_exc()
@@ -161,17 +161,17 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
     def __get_join_query_dividendo_rango(self, criteria: Criteria) -> Query:
 
         columnas = (
-            PosicionAccionEntity.isin,
-            func.sum(DividendoEntity.dividendo_por_accion * PosicionAccionEntity.numero_acciones),
-            func.sum(DividendoEntity.retencion_por_accion * PosicionAccionEntity.numero_acciones)
+            PosicionEntity.isin,
+            func.sum(DividendoEntity.dividendo_por_participacion * PosicionEntity.numero_participaciones),
+            func.sum(DividendoEntity.retencion_por_participacion * PosicionEntity.numero_participaciones)
         )
         query_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
         query = query_builder.build_query(criteria) \
-            .join(PosicionAccionEntity, DividendoEntity.isin == PosicionAccionEntity.isin) \
-            .where(DividendoEntity.fecha > PosicionAccionEntity.fecha_compra) \
-            .where(or_(PosicionAccionEntity.abierta == True, and_(PosicionAccionEntity.abierta == False,
-                                                                  DividendoEntity.fecha < PosicionAccionEntity.fecha_venta))) \
-            .group_by(PosicionAccionEntity.isin)
+            .join(PosicionEntity, DividendoEntity.isin == PosicionEntity.isin) \
+            .where(DividendoEntity.fecha > PosicionEntity.fecha_compra) \
+            .where(or_(PosicionEntity.abierta == True, and_(PosicionEntity.abierta == False,
+                                                            DividendoEntity.fecha < PosicionEntity.fecha_venta))) \
+            .group_by(PosicionEntity.isin)
 
         return query
 
@@ -192,22 +192,22 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
 
     def count(self, criteria: Criteria) -> int:
         try:
-            query_builder = SQLAlchemyQueryBuilder(PosicionAccionEntity, self._session)
+            query_builder = SQLAlchemyQueryBuilder(PosicionEntity, self._session)
             query = query_builder.build_order_query(criteria)
             return query.count()
         except Exception as e:
             traceback.print_exc()
         return 0
 
-    def get(self, id_posicion_accion: int) -> PosicionAccion:
+    def get(self, id_posicion: int) -> Posicion:
         try:
             query = self.__get_complete_join_query(
-                Criteria(filter=SimpleFilter("id", WhereOperator.IS, id_posicion_accion)))
+                Criteria(filter=SimpleFilter("id", WhereOperator.IS, id_posicion)))
             result = query.one_or_none()
             if result is None:
-                raise NotFoundError("No se encuentra la PosicionAccion con id:  {}".format(id_posicion_accion))
+                raise NotFoundError("No se encuentra la Posicion con id:  {}".format(id_posicion))
             else:
-                return self.__get_posicion_accion_from_complete_join_row(result)
+                return self.__get_posicion_participacion_from_complete_join_row(result)
         except NotFoundError as e:
             logger.info(e)
             raise e
@@ -215,19 +215,19 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
             traceback.print_exc()
         return None
 
-    def new(self, params: dict) -> PosicionAccion:
+    def new(self, params: dict) -> Posicion:
         try:
             self.check_isin(params.get("isin"))
             self.check_broker(params.get("id_broker"))
             self.check_bolsa(params.get("id_bolsa"))
 
-            entity = PosicionAccionEntity(
+            entity = PosicionEntity(
                 isin=params.get("isin"),
                 fecha_compra=params.get("fecha_compra"),
-                numero_acciones=params.get("numero_acciones"),
+                numero_participaciones=params.get("numero_participaciones"),
                 id_bolsa=params.get("id_bolsa"),
                 id_broker=params.get("id_broker"),
-                precio_accion_sin_comision=params.get("precio_accion_sin_comision"),
+                precio_compra_sin_comision=params.get("precio_compra_sin_comision"),
                 comision_compra=params.get("comision_compra"),
                 otras_comisiones=params.get("otras_comisiones"),
                 abierta=params.get("abierta")
@@ -244,19 +244,19 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
             traceback.print_exc()
         return None
 
-    def update(self, posicion_accion: PosicionAccion) -> bool:
+    def update(self, posicion: Posicion) -> bool:
         try:
 
-            self.check_isin(posicion_accion.get_isin())
-            self.check_broker(posicion_accion.get_id_broker())
-            self.check_bolsa(posicion_accion.get_id_bolsa())
+            self.check_isin(posicion.get_isin())
+            self.check_broker(posicion.get_id_broker())
+            self.check_bolsa(posicion.get_id_bolsa())
 
-            query_builder = SQLAlchemyQueryBuilder(PosicionAccionEntity, self._session).build_base_query()
-            entity = query_builder.filter_by(id=posicion_accion.get_id()).one_or_none()
+            query_builder = SQLAlchemyQueryBuilder(PosicionEntity, self._session).build_base_query()
+            entity = query_builder.filter_by(id=posicion.get_id()).one_or_none()
             if entity is None:
-                raise NotFoundError("No se encuentra la PosicionAccion con id:  {}".format(posicion_accion.get_id()))
+                raise NotFoundError("No se encuentra la Posicion con id:  {}".format(posicion.get_id()))
             else:
-                entity.update(posicion_accion)
+                entity.update(posicion)
                 return True
         except NotFoundError as e:
             logger.info(e)
@@ -265,12 +265,12 @@ class PosicionAccionRepositorySQLAlchemy(ITransactionalRepository, PosicionAccio
             traceback.print_exc()
         return False
 
-    def delete(self, id_posicion_accion: int) -> bool:
+    def delete(self, id_posicion: int) -> bool:
         try:
-            query_builder = SQLAlchemyQueryBuilder(PosicionAccionEntity, self._session).build_base_query()
-            entity = query_builder.filter_by(id=id_posicion_accion).one_or_none()
+            query_builder = SQLAlchemyQueryBuilder(PosicionEntity, self._session).build_base_query()
+            entity = query_builder.filter_by(id=id_posicion).one_or_none()
             if entity is None:
-                raise NotFoundError("No se encuentra la PosicionAccion con id:  {}".format(id_posicion_accion))
+                raise NotFoundError("No se encuentra la Posicion con id:  {}".format(id_posicion))
             self._session.delete(entity)
             return True
         except Exception as e:

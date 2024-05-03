@@ -40,7 +40,7 @@ async function  get_total_brokers_extrangeros(data, callback, suma_parcial){
     data.abierto = true
     data.end_fecha_compra = data.end_fecha
     $.ajax({
-        url: "/finanzas/posicionaccion",
+        url: "/finanzas/posicion",
         contentType: "application/json",
         data: data,
         type: "get",
@@ -58,7 +58,7 @@ async function  get_total_brokers_extrangeros(data, callback, suma_parcial){
     })
 }
 
-function get_suma_total_compra_acciones(response_operaciones){
+function get_suma_total_compra_participaciones(response_operaciones){
     var suma_total = 0;
     for (var i in response_operaciones.elements){
         suma_total += response_operaciones.elements[i].valor_adquisicion
@@ -66,7 +66,7 @@ function get_suma_total_compra_acciones(response_operaciones){
     return suma_total
 }
 
-function get_suma_total_venta_acciones(response_operaciones){
+function get_suma_total_venta_participaciones(response_operaciones){
     var suma_total = 0;
     for (var i in response_operaciones.elements){
         suma_total += response_operaciones.elements[i].valor_transmision
@@ -74,21 +74,21 @@ function get_suma_total_venta_acciones(response_operaciones){
     return suma_total
 }
 
-async function get_total_acciones(data, callback, suma_parcial_compra, suma_parcial_venta){
+async function get_total_participaciones(data, callback, suma_parcial_compra, suma_parcial_venta){
     var suma_total_compra = (suma_parcial_compra === undefined) ? 0 : suma_parcial_compra;
     var suma_total_venta = (suma_parcial_venta === undefined) ? 0 : suma_parcial_venta;
     data.abierta = false
     $.ajax({
-        url: "/finanzas/posicionaccion",
+        url: "/finanzas/posicion",
         contentType: "application/json",
         data: data,
         type: "get",
         success: function(response){
-            suma_total_compra += get_suma_total_compra_acciones(response)
-            suma_total_venta += get_suma_total_venta_acciones(response)
+            suma_total_compra += get_suma_total_compra_participaciones(response)
+            suma_total_venta += get_suma_total_venta_participaciones(response)
             if (response.has_more_elements) {
                 data.offset = response.offset + response.pagination_size
-                get_total_acciones(data, callback, suma_total_compra, suma_total_venta)
+                get_total_participaciones(data, callback, suma_total_compra, suma_total_venta)
             } else {
                 callback(suma_total_compra, suma_total_venta);
             }
@@ -290,13 +290,13 @@ async function regalos(begin_date, end_date){
     })
 }
 
-async function compraventaacciones(begin_date, end_date){
+async function compraventaparticipaciones(begin_date, end_date){
 
     var data = {"begin_fecha_venta":begin_date, "end_fecha_venta":end_date}
 
-    get_total_acciones(data, function(adquisicion, transmision){
-        $("#accionesadquisicion").text(adquisicion.toFixed(2));
-        $("#accionestansmision").text(transmision.toFixed(2));
+    get_total_participaciones(data, function(adquisicion, transmision){
+        $("#participacionesadquisicion").text(adquisicion.toFixed(2));
+        $("#participacionestransmision").text(transmision.toFixed(2));
     })
 }
 
@@ -380,7 +380,7 @@ async function hacer_hacienda() {
         guarderia(begin_date, end_date),
         rehabilitacion_vivienda(begin_date, end_date),
         brokers_extrangeros(begin_date, end_date),
-        compraventaacciones(begin_date, end_date),
+        compraventaparticipaciones(begin_date, end_date),
         dividendos(begin_date, end_date),
     ]);
 }

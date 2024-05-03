@@ -1,7 +1,7 @@
 from datetime import datetime
 
 
-class ValorAccion:
+class ValorParticipacion:
 
     def __init__(self, params: dict):
         self._id = params.get("id")

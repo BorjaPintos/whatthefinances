@@ -1,20 +1,21 @@
 from loguru import logger
 
-from src.finanzas.domain.valoraccionrepository import ValorAccionRepository
+from src.finanzas.domain.posicionrepository import PosicionRepository
 from src.persistence.application.transactionalusecase import transactional, TransactionalUseCase
 from src.shared.domain.exceptions.messageerror import MessageError
 
 
-class DeleteValorAccion(TransactionalUseCase):
+class DeletePosicion(TransactionalUseCase):
 
-    def __init__(self, valor_accion_repository: ValorAccionRepository):
-        super().__init__([valor_accion_repository])
-        self._valor_accion_repository = valor_accion_repository
+    def __init__(self, posicion_repository: PosicionRepository
+                 ):
+        super().__init__([posicion_repository])
+        self._posicion_repository = posicion_repository
 
     @transactional(readonly=False)
-    def execute(self, id_valor_accion: int) -> bool:
+    def execute(self, id_posicion: int) -> bool:
 
-        deleted = self._valor_accion_repository.delete(id_valor_accion)
+        deleted = self._posicion_repository.delete(id_posicion)
         if deleted:
             try:
                 self._session.flush()

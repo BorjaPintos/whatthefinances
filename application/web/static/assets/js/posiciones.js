@@ -1,12 +1,12 @@
 
 
-function add_posicion_accion() {
+function add_posicion() {
     var fecha_compra = $("#addFechaCompraDataPicker").val()
     var isin = $("#addTypeISINX").val();
     var id_bolsa = $("#add-bolsa-select").val();
     var id_broker = $("#add-broker-select").val();
-    var precio_accion = $("#addTypePrecioAccionX").val();
-    var numero_acciones = $("#addTypeNumeroAccionesX").val();
+    var precio_compra = $("#addTypePrecioCompraX").val();
+    var numero_participaciones = $("#addTypeNumeroParticipacionesX").val();
     var comisiones_compra = $("#addTypeComisionesCompraX").val();
     var otras_comisiones = $("#addTypeOtrasComisionesX").val();
 
@@ -16,14 +16,14 @@ function add_posicion_accion() {
         isin: isin,
         id_bolsa: id_bolsa,
         id_broker: id_broker,
-        precio_accion_sin_comision: parseFloat(precio_accion).toFixed(4) ? precio_accion : null,
-        numero_acciones: parseInt(numero_acciones) ? numero_acciones : null,
+        precio_compra_sin_comision: parseFloat(precio_compra).toFixed(4) ? precio_compra : null,
+        numero_participaciones: parseFloat(numero_participaciones).toFixed(4) ? numero_participaciones : null,
         comision_compra: parseFloat(comisiones_compra).toFixed(4) ? comisiones_compra : 0,
         otras_comisiones: parseFloat(otras_comisiones).toFixed(4) ? otras_comisiones : 0.0
     }
     var xhttp = new XMLHttpRequest();
 
-    xhttp.open("POST", "/finanzas/posicionaccion", true);
+    xhttp.open("POST", "/finanzas/posicion", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
 
@@ -41,9 +41,9 @@ function add_posicion_accion() {
 
 }
 
-function delete_posicion_accion(id) {
+function delete_posicion(id) {
     var xhttp = new XMLHttpRequest();
-    xhttp.open("DELETE", "/finanzas/posicionaccion/"+id, true);
+    xhttp.open("DELETE", "/finanzas/posicion/"+id, true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
 
@@ -64,15 +64,15 @@ function delete_posicion_accion(id) {
     xhttp.send();
 }
 
-function update_posicion_accion() {
+function update_posicion() {
     var id = $.trim($("#editTypeIdX").val())
 
     var fecha_compra = $("#editFechaCompraDataPicker").val()
     var isin = $("#editTypeISINX").val();
     var id_bolsa = $("#edit-bolsa-select").val();
     var id_broker = $("#edit-broker-select").val();
-    var precio_accion = $("#editTypePrecioAccionX").val();
-    var numero_acciones = $("#editTypeNumeroAccionesX").val();
+    var precio_compra = $("#editTypePrecioCompraX").val();
+    var numero_participaciones = $("#editTypeNumeroParticipacionesX").val();
     var comisiones_compra = $("#editTypeComisionesCompraX").val();
     var otras_comisiones = $("#editTypeOtrasComisionesX").val();
 
@@ -82,14 +82,14 @@ function update_posicion_accion() {
         isin: isin,
         id_bolsa: id_bolsa,
         id_broker: id_broker,
-        precio_accion_sin_comision: parseFloat(precio_accion).toFixed(4) ? precio_accion : 0.0,
-        numero_acciones: parseInt(numero_acciones) ? numero_acciones : 0,
+        precio_compra_sin_comision: parseFloat(precio_compra).toFixed(4) ? precio_compra : 0.0,
+        numero_participaciones: parseFloat(numero_participaciones).toFixed(4) ? numero_participaciones : 0.0,
         comision_compra: parseFloat(comisiones_compra).toFixed(4) ? comisiones_compra : 0.0,
         otras_comisiones: parseFloat(otras_comisiones).toFixed(4) ? otras_comisiones : 0.0
     }
 
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "/finanzas/posicionaccion/"+id, true);
+    xhttp.open("POST", "/finanzas/posicion/"+id, true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
 
@@ -125,11 +125,11 @@ render_dinero = function (data, type) {
 render_total_dinero = function (data, type, row) {
     var number = get_local_number(data);
     if (type === 'display') {
-        explicacion = '( numero_acciones * precio_accion_sin_comision ) + comision_compra + otras_comisiones'
+        explicacion = '( numero_participaciones * precio_compra_sin_comision ) + comision_compra + otras_comisiones'
         if (! row['abierta']){
             explicacion += '+ comision_venta'
         }
-        explicacion += ' = (' + row['numero_acciones'] + ' * ' +  row['precio_accion_sin_comision'] + ') + ' + row['comision_compra'] + ' + ' + row['otras_comisiones']
+        explicacion += ' = (' + row['numero_participaciones'] + ' * ' +  row['precio_compra_sin_comision'] + ') + ' + row['comision_compra'] + ' + ' + row['otras_comisiones']
         if (! row['abierta']){
             explicacion += ' + ' + row['comision_venta']
         }
@@ -257,7 +257,7 @@ $(document).ready(function() {
         dom: '<flrt<"#table_fotter"ip>',
         serverSide:true,
         ajax: {
-            url:'/finanzas/posicionaccion',
+            url:'/finanzas/posicion',
             data: function (d) {
                 var begin_fecha_compra = $('#search-fecha-compra-begin-datapicker').val()
                 var end_fecha_compra = $('#search-fecha-compra-end-datapicker').val()
@@ -294,13 +294,13 @@ $(document).ready(function() {
                 render: render_texto,
                 width: "7%"
             },{
-                data:'precio_accion_sin_comision',
+                data:'precio_compra_sin_comision',
                 type: "num",
                 render: render_dinero,
                 width: "10%"
             },
             {
-                data:'numero_acciones',
+                data:'numero_participaciones',
                 type: "num",
                 render: render_texto,
                 width: "5%"
@@ -312,7 +312,7 @@ $(document).ready(function() {
                 width: "10%"
             },
             {
-                data:'valor_accion',
+                data:'valor_participacion',
                 type: "num",
                 render: render_dinero,
                 width: "10%"
@@ -365,9 +365,9 @@ $(document).ready(function() {
         scrollX: false,
         responsive: true,
         language: {
-            info: 'Total _MAX_ Posiciones de Acciones',
-            infoEmpty: 'No hay Posiciones de Acciones',
-            zeroRecords: "No hay Posiciones de Acciones",
+            info: 'Total _MAX_ Posiciones',
+            infoEmpty: 'No hay Posiciones',
+            zeroRecords: "No hay Posiciones",
             loadingRecords: "Cargando...",
             decimal:",",
         }
@@ -379,16 +379,16 @@ $(document).ready(function() {
 
         $('.edit-element').on( "click", function() {
 
-            var posicion_accion = table.row($(this).parents('tr')).data()
-            var id = posicion_accion.id
-            var fecha_compra = posicion_accion.fecha_compra
-            var isin = posicion_accion.isin;
-            var id_bolsa = posicion_accion.id_bolsa;
-            var id_broker = posicion_accion.id_broker;
-            var numero_acciones = get_local_integer(posicion_accion.numero_acciones);
-            var precio_accion = get_local_number(posicion_accion.precio_accion_sin_comision);
-            var comision_compra = get_local_number(posicion_accion.comision_compra)
-            var otras_comisiones = get_local_number(posicion_accion.otras_comisiones)
+            var posicion = table.row($(this).parents('tr')).data()
+            var id = posicion.id
+            var fecha_compra = posicion.fecha_compra
+            var isin = posicion.isin;
+            var id_bolsa = posicion.id_bolsa;
+            var id_broker = posicion.id_broker;
+            var numero_participaciones = get_local_number(posicion.numero_participaciones);
+            var precio_compra = get_local_number(posicion.precio_compra_sin_comision);
+            var comision_compra = get_local_number(posicion.comision_compra)
+            var otras_comisiones = get_local_number(posicion.otras_comisiones)
 
 
             $("#editTypeIdX").val(id)
@@ -396,8 +396,8 @@ $(document).ready(function() {
             $("#editTypeISINX").val(isin)
             $("#edit-bolsa-select").val(id_bolsa).change();
             $("#edit-broker-select").val(id_broker).change();
-            $("#editTypePrecioAccionX").val(precio_accion)
-            $("#editTypeNumeroAccionesX").val(numero_acciones)
+            $("#editTypePrecioCompraX").val(precio_compra)
+            $("#editTypeNumeroParticipacionesX").val(numero_participaciones)
             $("#editTypeComisionesCompraX").val(comision_compra)
             $("#editTypeOtrasComisionesX").val(otras_comisiones)
 
@@ -405,7 +405,7 @@ $(document).ready(function() {
 
         });
         $('.delete-element').on( "click", function() {
-           delete_posicion_accion($(this).attr("data-element"))
+           delete_posicion($(this).attr("data-element"))
         });
 
 
@@ -421,8 +421,8 @@ $(document).ready(function() {
         $("#addTypeISINX").val('');
         $("#add-bolsa-select").val('')
         $("#add-broker-select").val('')
-        $("#addTypePrecioAccionX").val('');
-        $("#addTypeNumeroAccionesX").val('');
+        $("#addTypePrecioCompraX").val('');
+        $("#addTypeNumeroParticipacionesX").val('');
         $("#addTypeComisionesCompraX").val('');
         $("#addTypeOtrasComisionesX").val('');
 
@@ -434,7 +434,7 @@ $(document).ready(function() {
     });
 
     $('#add-submit-button').on( "click", function() {
-       add_posicion_accion();
+       add_posicion();
     });
 
     $('#edit-close-button').on( "click", function() {
@@ -442,7 +442,7 @@ $(document).ready(function() {
     } );
 
     $('#edit-submit-button').on( "click", function() {
-       update_posicion_accion()
+       update_posicion()
     });
 
 });

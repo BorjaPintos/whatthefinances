@@ -1,7 +1,7 @@
 from datetime import datetime
 
 
-class ResumenValorAccion:
+class ResumenValorParticipacion:
 
     def __init__(self, params: dict):
         self._año = params.get("año")

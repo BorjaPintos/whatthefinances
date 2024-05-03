@@ -1,10 +1,9 @@
 from datetime import datetime, date
 from typing import Any
 
-from sqlalchemy import Column, Date, Float, Text, Integer
+from sqlalchemy import Column, Date, Float, Text
 
 from src.finanzas.domain.dividendo import Dividendo
-from src.finanzas.domain.operacion import Operacion
 from src.persistence.domain.init_table import InitTable
 from src.persistence.infrastructure.orm.baseentity import BaseEntity
 
@@ -14,8 +13,8 @@ class DividendoEntity(BaseEntity):
     __tablename__ = 'finanzas_dividendos'
     fecha = Column(Date, nullable=False)
     isin = Column(Text, nullable=False)
-    dividendo_por_accion = Column(Float(precision=2), nullable=False)
-    retencion_por_accion = Column(Float(precision=2), nullable=False)
+    dividendo_por_participacion = Column(Float(precision=2), nullable=False)
+    retencion_por_participacion = Column(Float(precision=2), nullable=False)
 
     @staticmethod
     def get_order_column(str_property) -> Column:
@@ -23,8 +22,8 @@ class DividendoEntity(BaseEntity):
             "id": DividendoEntity.id,
             "fecha": DividendoEntity.fecha,
             "isin": DividendoEntity.isin,
-            "dividendo_por_accion": DividendoEntity.dividendo_por_accion,
-            "retencion_por_accion": DividendoEntity.retencion_por_accion
+            "dividendo_por_participacion": DividendoEntity.dividendo_por_participacion,
+            "retencion_por_participacion": DividendoEntity.retencion_por_participacion
         }
         return switcher.get(str_property, DividendoEntity.id)
 
@@ -45,8 +44,8 @@ class DividendoEntity(BaseEntity):
                 DividendoEntity.id: int,
                 DividendoEntity.fecha: date,
                 DividendoEntity.isin: str,
-                DividendoEntity.dividendo_por_accion: float,
-                DividendoEntity.retencion_por_accion: float
+                DividendoEntity.dividendo_por_participacion: float,
+                DividendoEntity.retencion_por_participacion: float
             }
             return caster.get(column)(value)
         else:
@@ -56,11 +55,11 @@ class DividendoEntity(BaseEntity):
         return Dividendo({"id": self.id,
                           "isin": self.isin,
                           "fecha": self.fecha,
-                          "dividendo_por_accion": self.dividendo_por_accion,
-                          "retencion_por_accion": self.retencion_por_accion})
+                          "dividendo_por_participacion": self.dividendo_por_participacion,
+                          "retencion_por_participacion": self.retencion_por_participacion})
 
     def update(self, dividendo: Dividendo):
         self.fecha = dividendo.get_fecha()
         self.isin = dividendo.get_isin()
-        self.dividendo_por_accion = dividendo.get_dividendo_por_accion()
-        self.retencion_por_accion = dividendo.get_retencion_por_accion()
+        self.dividendo_por_participacion = dividendo.get_dividendo_por_participacion()
+        self.retencion_por_participacion = dividendo.get_retencion_por_participacion()

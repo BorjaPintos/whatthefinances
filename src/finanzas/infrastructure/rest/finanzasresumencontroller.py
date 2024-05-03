@@ -3,8 +3,8 @@ from src.finanzas.application.resumengastos import ResumenGastos
 from src.finanzas.application.resumeningresos import ResumenIngresos
 from src.finanzas.application.resumenmonederos import ResumenMonederos
 from src.finanzas.application.resumentotales import ResumenTotales
-from src.finanzas.application.resumenvaloresaccionesdias import ResumenValoresAccionesDias
-from src.finanzas.application.resumenvaloresaccionesmeses import ResumenValoresAccionesMeses
+from src.finanzas.application.resumenvaloresparticipacionesdias import ResumenValoresParticipacionesDias
+from src.finanzas.application.resumenvaloresparticipacionesmeses import ResumenValoresParticipacionesMeses
 from src.finanzas.infrastructure.persistence.resumenrepositorysqlalchemy import ResumenRepositorySQLAlchemy
 from src.finanzas.infrastructure.rest.localeutils import apply_locale_date, apply_locale_float, apply_locale_int
 from src.shared.infraestructure.rest.pagination import Pagination
@@ -19,8 +19,9 @@ resumen_gastos_use_case = ResumenGastos(resumen_repository=resumen_repository)
 resumen_cuentas_use_case = ResumenCuentas(resumen_repository=resumen_repository)
 resumen_monederos_use_case = ResumenMonederos(resumen_repository=resumen_repository)
 resumen_total_use_case = ResumenTotales(resumen_repository=resumen_repository)
-resumen_valores_acciones_meses_use_case = ResumenValoresAccionesMeses(resumen_repository=resumen_repository)
-resumen_valores_acciones_dias_use_case = ResumenValoresAccionesDias(resumen_repository=resumen_repository)
+resumen_valores_participaciones_meses_use_case = ResumenValoresParticipacionesMeses(
+    resumen_repository=resumen_repository)
+resumen_valores_participaciones_dias_use_case = ResumenValoresParticipacionesDias(resumen_repository=resumen_repository)
 
 
 def resumen_ingresos(params: dict) -> Tuple[Any, int]:
@@ -73,20 +74,20 @@ def resumen_total(params: dict) -> Tuple[Any, int]:
     return response_elements, code
 
 
-def resumen_valores_acciones_meses(params) -> Tuple[Any, int]:
+def resumen_valores_participaciones_meses(params) -> Tuple[Any, int]:
     code = 200
     __cast_params(params)
-    response = resumen_valores_acciones_meses_use_case.execute(params)
+    response = resumen_valores_participaciones_meses_use_case.execute(params)
     response_elements = []
     for element in response:
         response_elements.append(element.get_dto())
     return response_elements, code
 
 
-def resumen_valores_acciones_dias(params) -> Tuple[Any, int]:
+def resumen_valores_participaciones_dias(params) -> Tuple[Any, int]:
     code = 200
     __cast_params(params)
-    response = resumen_valores_acciones_meses_use_case.execute(params)
+    response = resumen_valores_participaciones_dias_use_case.execute(params)
     response_elements = []
     for element in response:
         response_elements.append(element.get_dto())
