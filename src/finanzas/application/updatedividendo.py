@@ -21,8 +21,8 @@ class UpdateDividendo(TransactionalUseCase):
 
         dividendo.set_isin(params.get("isin"))
         dividendo.set_fecha(params.get("fecha"))
-        dividendo.set_dividendo_por_accion(params.get("dividendo_por_accion"))
-        dividendo.set_retencion_por_accion(params.get("retencion_por_accion"))
+        dividendo.set_dividendo_por_participacion(params.get("dividendo_por_participacion"))
+        dividendo.set_retencion_por_participacion(params.get("retencion_por_participacion"))
 
         updated = self._dividendo_repository.update(dividendo)
         if updated:
@@ -40,7 +40,7 @@ class UpdateDividendo(TransactionalUseCase):
             raise InvalidParamError("campo fecha obligatorio")
         if "isin" not in params or params["isin"] is None:
             raise InvalidParamError("campo isin obligatorio")
-        if "dividendo_por_accion" not in params or params["dividendo_por_accion"] is None:
-            raise InvalidParamError("campo dividendo_por_accion obligatorio")
-        if "retencion_por_accion" not in params or params["retencion_por_accion"] is None:
-            raise InvalidParamError("campo retencion_por_accion obligatorio")
+        if "dividendo_por_participacion" not in params or params["dividendo_por_participacion"] is None:
+            raise InvalidParamError("campo dividendo_por_participacion obligatorio")
+        if "retencion_por_participacion" not in params or params["retencion_por_participacion"] is None:
+            raise InvalidParamError("campo retencion_por_participacion obligatorio")

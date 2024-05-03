@@ -1,16 +1,16 @@
-function add_valor_accion() {
+function add_valor_participacion() {
     var fecha = $("#addFechaDataPicker").val()
     var isin = $("#add-isin-select").val();
-    var valor_accion = $("#addTypeValorAccionX").val();
+    var valor_participacion = $("#addTypeValorParticipacionX").val();
 
     var data = {
         fecha: fecha,
         isin: isin,
-        valor: parseFloat(valor_accion).toFixed(4) ? valor_accion : null,
+        valor: parseFloat(valor_participacion).toFixed(4) ? valor_participacion : null,
     }
     var xhttp = new XMLHttpRequest();
 
-    xhttp.open("POST", "/finanzas/valoraccion", true);
+    xhttp.open("POST", "/finanzas/valorparticipacion", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
     xhttp.onreadystatechange = function () {
@@ -27,9 +27,9 @@ function add_valor_accion() {
 
 }
 
-function delete_valor_accion(id) {
+function delete_valor_participacion(id) {
     var xhttp = new XMLHttpRequest();
-    xhttp.open("DELETE", "/finanzas/valoraccion/"+id, true);
+    xhttp.open("DELETE", "/finanzas/valorparticipacion/"+id, true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
 
@@ -94,7 +94,7 @@ get_local_number = function(num){
     return $.fn.dataTable.render.number('', ',', 2).display(num);
 }
 
-function create_tabla_valores_acciones_meses(data_productos, callback){
+function create_tabla_valores_participaciones_meses(data_productos, callback){
 
     var today = new Date()
     var año_antes_today = new Date(today)
@@ -102,8 +102,8 @@ function create_tabla_valores_acciones_meses(data_productos, callback){
     var end_date = today.getDate()+"/"+ (today.getMonth()+1) + "/" + today.getFullYear()
     var begin_date = "1/"+ (año_antes_today.getMonth()+1) + "/" + año_antes_today.getFullYear()
 
-    $.get("finanzas/resumen/valores_acciones_meses?begin_fecha="+begin_date+"&end_fecha="+end_date, function(resultado) {
-        var valores_acciones={}
+    $.get("finanzas/resumen/valores_participaciones_meses?begin_fecha="+begin_date+"&end_fecha="+end_date, function(resultado) {
+        var valores_participaciones={}
         var labels = []
         var fecha_iterada = new Date(año_antes_today)
 
@@ -111,9 +111,9 @@ function create_tabla_valores_acciones_meses(data_productos, callback){
             label = (fecha_iterada.getMonth()+1) + "/" + fecha_iterada.getFullYear()
             labels.push(label)
             for (var j in data_productos){
-                valores_acciones[data_productos[j].isin] = {}
-                valores_acciones[data_productos[j].isin]["nombre"] = data_productos[j].nombre + ' - ' + data_productos[j].isin
-                valores_acciones[data_productos[j].isin][label] = 0
+                valores_participaciones[data_productos[j].isin] = {}
+                valores_participaciones[data_productos[j].isin]["nombre"] = data_productos[j].nombre + ' - ' + data_productos[j].isin
+                valores_participaciones[data_productos[j].isin][label] = 0
             }
             fecha_iterada.setMonth(fecha_iterada.getMonth()+1)
         }
@@ -121,28 +121,28 @@ function create_tabla_valores_acciones_meses(data_productos, callback){
         for (var i in resultado){
             label = resultado[i].mes+"/"+resultado[i].año
             try {
-                valores_acciones[resultado[i].isin][label] = resultado[i].ultimo_valor
+                valores_participaciones[resultado[i].isin][label] = resultado[i].ultimo_valor
             } catch (error) {
-                valores_acciones[resultado[i].isin] = {}
-                valores_acciones[resultado[i].isin][label] = resultado[i].ultimo_valor
+                valores_participaciones[resultado[i].isin] = {}
+                valores_participaciones[resultado[i].isin][label] = resultado[i].ultimo_valor
             }
         }
 
 
-        var tr = $("#resumen-valores-acciones thead tr")
-        tr.append($('<th></th>').text("valores-acciones"))
+        var tr = $("#resumen-valores-participaciones thead tr")
+        tr.append($('<th></th>').text("valores-participaciones"))
         for (var i in labels){
             tr.append($('<th></th>').text(labels[i]))
         }
 
-        var tbody = $("#resumen-valores-acciones tbody")
-        for (var valor_accion in valores_acciones){
+        var tbody = $("#resumen-valores-participaciones tbody")
+        for (var valor_participacion in valores_participaciones){
             var row = $('<tr></tr>')
-            row.append($('<td></td>').text(valores_acciones[valor_accion].nombre))
+            row.append($('<td></td>').text(valores_participaciones[valor_participacion].nombre))
             for (var j in labels){
                 var value = "-"
-                if (valores_acciones[valor_accion][labels[j]] != undefined){
-                    value = parseFloat(valores_acciones[valor_accion][labels[j]]).toFixed(2)
+                if (valores_participaciones[valor_participacion][labels[j]] != undefined){
+                    value = parseFloat(valores_participaciones[valor_participacion][labels[j]]).toFixed(2)
                 }
                 row.append($('<td></td>').text(value))
             }
@@ -174,7 +174,7 @@ create_table = function(labels){
                 render: render_nombre
             }]
 
-        render_valor_accion = function (data, type, row, meta) {
+        render_valor_participacion = function (data, type, row, meta) {
             var number = get_local_number(data);
             var add_class = ""
             if (type === 'display') {
@@ -199,13 +199,13 @@ create_table = function(labels){
             columns.push({
                     data: labels[i],
                     type: "num",
-                    render: render_valor_accion
+                    render: render_valor_participacion
                 }
             )
         }
 
 
-        table = $("#resumen-valores-acciones")
+        table = $("#resumen-valores-participaciones")
             .on('init.dt', function () {
                 activar_elements();
             }).DataTable({
@@ -231,14 +231,14 @@ create_table = function(labels){
 reload_table = function() {
 
     table.destroy()
-    var thead= $("#resumen-valores-acciones thead")
+    var thead= $("#resumen-valores-participaciones thead")
     thead.empty()
     thead.append($('<tr></tr>'))
 
-    tbody= $("#resumen-valores-acciones tbody").empty()
+    tbody= $("#resumen-valores-participaciones tbody").empty()
 
     $.get("finanzas/producto", function( data_isin ) {
-        create_tabla_valores_acciones_meses(data_isin, function(labels) {
+        create_tabla_valores_participaciones_meses(data_isin, function(labels) {
             create_table(labels);
         });
     });
@@ -247,7 +247,7 @@ reload_table = function() {
 $(document).ready(function() {
 
     $.get("finanzas/producto", function( data_productos ) {
-        create_tabla_valores_acciones_meses(data_productos, create_table);
+        create_tabla_valores_participaciones_meses(data_productos, create_table);
     });
 
     $('#addFechaDataPicker').daterangepicker(get_daterangepicker_config());
@@ -255,7 +255,7 @@ $(document).ready(function() {
     $('#add-button').on( "click", function() {
         $('#addFechaDataPicker').val(moment().format("DD/MM/YYYY HH:mm"));
         $("#add-isin-select").val('')
-        $("#addTypeValorAccionX").val('')
+        $("#addTypeValorParticipacionX").val('')
         $("#addTypeMessageX").text('')
         $('#add').modal('show')
     } );
@@ -265,7 +265,7 @@ $(document).ready(function() {
     });
 
     $('#add-submit-button').on( "click", function() {
-       add_valor_accion();
+       add_valor_participacion();
     });
 
 

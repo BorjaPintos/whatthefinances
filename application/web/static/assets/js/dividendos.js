@@ -1,14 +1,14 @@
 function add_dividendo() {
     var fecha = $("#addFechaDataPicker").val()
     var isin = $("#add-isin-select").val();
-    var dividendo_por_accion = $("#addTypeDividendoPorAccionX").val();
-    var retencion_por_accion = $("#addTypeRetencionPorAccionX").val();
+    var dividendo_por_participacion = $("#addTypeDividendoPorParticipacionX").val();
+    var retencion_por_participacion = $("#addTypeRetencionPorParticipacionX").val();
 
     var data = {
         fecha: fecha,
         isin: isin,
-        dividendo_por_accion: parseFloat(dividendo_por_accion).toFixed(2) ? dividendo_por_accion : null,
-        retencion_por_accion: parseFloat(retencion_por_accion).toFixed(2) ? retencion_por_accion : null,
+        dividendo_por_participacion: parseFloat(dividendo_por_participacion).toFixed(2) ? dividendo_por_participacion : null,
+        retencion_por_participacion: parseFloat(retencion_por_participacion).toFixed(2) ? retencion_por_participacion : null,
     }
     var xhttp = new XMLHttpRequest();
 
@@ -56,14 +56,14 @@ function update_dividendo() {
     var id = $.trim($("#editTypeIdX").val())
     var fecha = $("#editFechaDataPicker").val()
     var isin = $("#edit-isin-select").val();
-    var dividendo_por_accion = $("#editTypeDividendoPorAccionX").val();
-    var retencion_por_accion = $("#editTypeRetencionPorAccionX").val();
+    var dividendo_por_participacion = $("#editTypeDividendoPorParticipacionX").val();
+    var retencion_por_participacion = $("#editTypeRetencionPorParticipacionX").val();
 
     var data = {
         fecha: fecha,
         isin: isin,
-        dividendo_por_accion: parseFloat(dividendo_por_accion).toFixed(2) ? dividendo_por_accion : null,
-        retencion_por_accion: parseFloat(retencion_por_accion).toFixed(2) ? retencion_por_accion : null,
+        dividendo_por_participacion: parseFloat(dividendo_por_participacion).toFixed(2) ? dividendo_por_participacion : null,
+        retencion_por_participacion: parseFloat(retencion_por_participacion).toFixed(2) ? retencion_por_participacion : null,
     }
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", "/finanzas/dividendo/"+id, true);
@@ -174,12 +174,12 @@ $(document).ready(function() {
                 render: render_nombre,
             },
             {
-                data:'dividendo_por_accion',
+                data:'dividendo_por_participacion',
                 type: "num",
                 render: render_dinero,
             },
             {
-                data:'retencion_por_accion',
+                data:'retencion_por_participacion',
                 type: "num",
                 render: render_dinero,
             },
@@ -211,14 +211,14 @@ $(document).ready(function() {
             var id = data.id
             var isin = data.isin
             var fecha = data.fecha
-            var dividendo_por_accion = get_local_number(data.dividendo_por_accion)
-            var retencion_por_accion = get_local_number(data.retencion_por_accion)
+            var dividendo_por_participacion = get_local_number(data.dividendo_por_participacion)
+            var retencion_por_participacion = get_local_number(data.retencion_por_participacion)
 
             $("#editTypeIdX").val(id)
             $('#editFechaDataPicker').val(fecha);
             $("#edit-isin-select").val(isin)
-            $("#editTypeDividendoPorAccionX").val(dividendo_por_accion)
-            $("#editTypeRetencionPorAccionX").val(retencion_por_accion)
+            $("#editTypeDividendoPorParticipacionX").val(dividendo_por_participacion)
+            $("#editTypeRetencionPorParticipacionX").val(retencion_por_participacion)
             $("#editTypeMessageX").text('')
             $('#edit').modal('show')
         });
@@ -235,8 +235,8 @@ $(document).ready(function() {
     $('#add-button').on( "click", function() {
         $('#addFechaDataPicker').val(moment().format("DD/MM/YYYY"));
         $("#add-isin-select").val('')
-        $("#addTypeDividendopPorAccionX").val('')
-        $("#addTypeRetencionPorAccionX").val('')
+        $("#addTypeDividendopPorParticipacionX").val('')
+        $("#addTypeRetencionPorParticipacionX").val('')
         $("#addTypeMessageX").text('')
         $('#add').modal('show')
     } );

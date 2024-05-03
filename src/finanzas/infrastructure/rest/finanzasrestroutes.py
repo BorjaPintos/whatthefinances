@@ -3,7 +3,7 @@ from flask_login import login_required
 
 from src.finanzas.infrastructure.rest import finanzascuentascontroller, finanzasmonederoscontroller, \
     finanzascategoriasingresocontroller, finanzascategoriasgastocontroller, finanzasoperacionescontroller, \
-    finanzasresumencontroller, finanzasposicionaccioncontroller
+    finanzasresumencontroller, finanzasposicioncontroller
 from src.shared.infraestructure.rest.response import serialize_response
 
 
@@ -252,13 +252,13 @@ def import_routes(rootpath, app):
             "nombre": request.args.get('nombre', None),
             "isin": request.args.get('isin', None)
         }
-        return finanzasposicionaccioncontroller.list_productos(params)
+        return finanzasposicioncontroller.list_productos(params)
 
     @app.route(rootpath + "/producto/<id_producto>", methods=['GET'])
     @login_required
     @serialize_response
     def get_producto(id_producto: int):
-        return finanzasposicionaccioncontroller.get_producto(id_producto)
+        return finanzasposicioncontroller.get_producto(id_producto)
 
     @app.route(rootpath + "/producto", methods=['POST'])
     @login_required
@@ -268,7 +268,7 @@ def import_routes(rootpath, app):
             "nombre": request.json.get('nombre'),
             "isin": request.json.get('isin')
         }
-        return finanzasposicionaccioncontroller.create_producto(params)
+        return finanzasposicioncontroller.create_producto(params)
 
     @app.route(rootpath + "/producto/<id_producto>", methods=['POST'])
     @login_required
@@ -279,7 +279,7 @@ def import_routes(rootpath, app):
             "nombre": request.json.get('nombre', None),
             "isin": request.json.get('isin', None)
         }
-        return finanzasposicionaccioncontroller.update_producto(params)
+        return finanzasposicioncontroller.update_producto(params)
 
 
     @app.route(rootpath + "/broker", methods=['GET'])
@@ -292,13 +292,13 @@ def import_routes(rootpath, app):
             "nombre": request.args.get('nombre', None),
             "extrangero": request.args.get('extrangero', None)
         }
-        return finanzasposicionaccioncontroller.list_brokers(params)
+        return finanzasposicioncontroller.list_brokers(params)
 
     @app.route(rootpath + "/broker/<id_broker>", methods=['GET'])
     @login_required
     @serialize_response
     def get_broker(id_broker: int):
-        return finanzasposicionaccioncontroller.get_broker(id_broker)
+        return finanzasposicioncontroller.get_broker(id_broker)
 
     @app.route(rootpath + "/broker", methods=['POST'])
     @login_required
@@ -308,7 +308,7 @@ def import_routes(rootpath, app):
             "nombre": request.json.get('nombre'),
             "extrangero": request.json.get('extrangero')
         }
-        return finanzasposicionaccioncontroller.create_broker(params)
+        return finanzasposicioncontroller.create_broker(params)
 
     @app.route(rootpath + "/broker/<id_broker>", methods=['POST'])
     @login_required
@@ -319,7 +319,7 @@ def import_routes(rootpath, app):
             "nombre": request.json.get('nombre', None),
             "extrangero": request.json.get('extrangero', None)
         }
-        return finanzasposicionaccioncontroller.update_broker(params)
+        return finanzasposicioncontroller.update_broker(params)
 
     @app.route(rootpath + "/bolsa", methods=['GET'])
     @login_required
@@ -330,13 +330,13 @@ def import_routes(rootpath, app):
             "order_type": request.args.get('order_type', 'asc'),
             "nombre": request.args.get('nombre', None)
         }
-        return finanzasposicionaccioncontroller.list_bolsas(params)
+        return finanzasposicioncontroller.list_bolsas(params)
 
     @app.route(rootpath + "/bolsa/<id_bolsa>", methods=['GET'])
     @login_required
     @serialize_response
     def get_bolsa(id_bolsa: int):
-        return finanzasposicionaccioncontroller.get_bolsa(id_bolsa)
+        return finanzasposicioncontroller.get_bolsa(id_bolsa)
 
     @app.route(rootpath + "/bolsa", methods=['POST'])
     @login_required
@@ -345,7 +345,7 @@ def import_routes(rootpath, app):
         params = {
             "nombre": request.json.get('nombre')
         }
-        return finanzasposicionaccioncontroller.create_bolsa(params)
+        return finanzasposicioncontroller.create_bolsa(params)
 
     @app.route(rootpath + "/bolsa/<id_bolsa>", methods=['POST'])
     @login_required
@@ -355,12 +355,12 @@ def import_routes(rootpath, app):
             "id": id_bolsa,
             "nombre": request.json.get('nombre', None)
         }
-        return finanzasposicionaccioncontroller.update_bolsa(params)
+        return finanzasposicioncontroller.update_bolsa(params)
 
-    @app.route(rootpath + "/valoraccion", methods=['GET'])
+    @app.route(rootpath + "/valorparticipacion", methods=['GET'])
     @login_required
     @serialize_response
-    def list_valor_accion():
+    def list_valor_participacion():
         params = {
             "order_property": request.args.get('order_property', 'fecha'),
             "order_type": request.args.get('order_type', 'desc'),
@@ -372,24 +372,24 @@ def import_routes(rootpath, app):
             "begin_valor": request.args.get('begin_valor', None),
             "end_valor": request.args.get('end_valor', None),
         }
-        return finanzasposicionaccioncontroller.list_valores_acciones(params)
+        return finanzasposicioncontroller.list_valores_participaciones(params)
 
-    @app.route(rootpath + "/valoraccion", methods=['POST'])
+    @app.route(rootpath + "/valorparticipacion", methods=['POST'])
     @login_required
     @serialize_response
-    def create_valor_accion():
+    def create_valor_participacion():
         params = {
             "isin": request.json.get('isin', None),
             "fecha": request.json.get('fecha', None),
             "valor": request.json.get('valor', None)
         }
-        return finanzasposicionaccioncontroller.create_valor_accion(params)
+        return finanzasposicioncontroller.create_valor_participacion(params)
 
-    @app.route(rootpath + "/valoraccion/<id_valor_accion>", methods=['DELETE'])
+    @app.route(rootpath + "/valorparticipacion/<id_valor_participacion>", methods=['DELETE'])
     @login_required
     @serialize_response
-    def delete_valor_accion(id_valor_accion: int):
-        return finanzasposicionaccioncontroller.delete_valor_accion(id_valor_accion)
+    def delete_valor_participacion(id_valor_participacion: int):
+        return finanzasposicioncontroller.delete_valor_participacion(id_valor_participacion)
 
     @app.route(rootpath + "/dividendo", methods=['GET'])
     @login_required
@@ -402,13 +402,13 @@ def import_routes(rootpath, app):
             "begin_fecha": request.args.get('begin_fecha', None),
             "end_fecha": request.args.get('end_fecha', None)
         }
-        return finanzasposicionaccioncontroller.list_dividendos(params)
+        return finanzasposicioncontroller.list_dividendos(params)
 
     @app.route(rootpath + "/dividendo/<id_dividendo>", methods=['GET'])
     @login_required
     @serialize_response
     def get_dividendo(id_dividendo: int):
-        return finanzasposicionaccioncontroller.get_dividendo(id_dividendo)
+        return finanzasposicioncontroller.get_dividendo(id_dividendo)
 
     @app.route(rootpath + "/dividendo", methods=['POST'])
     @login_required
@@ -417,10 +417,10 @@ def import_routes(rootpath, app):
         params = {
             "isin": request.json.get('isin'),
             "fecha": request.json.get('fecha'),
-            "dividendo_por_accion": request.json.get('dividendo_por_accion'),
-            "retencion_por_accion": request.json.get('retencion_por_accion')
+            "dividendo_por_participacion": request.json.get('dividendo_por_participacion'),
+            "retencion_por_participacion": request.json.get('retencion_por_participacion')
         }
-        return finanzasposicionaccioncontroller.create_dividendo(params)
+        return finanzasposicioncontroller.create_dividendo(params)
 
     @app.route(rootpath + "/dividendo/<id_dividendo>", methods=['POST'])
     @login_required
@@ -430,16 +430,16 @@ def import_routes(rootpath, app):
             "id": id_dividendo,
             "isin": request.json.get('isin', None),
             "fecha": request.json.get('fecha', None),
-            "dividendo_por_accion": request.json.get('dividendo_por_accion', None),
-            "retencion_por_accion": request.json.get('retencion_por_accion', None)
+            "dividendo_por_participacion": request.json.get('dividendo_por_participacion', None),
+            "retencion_por_participacion": request.json.get('retencion_por_participacion', None)
         }
-        return finanzasposicionaccioncontroller.update_dividendo(params)
+        return finanzasposicioncontroller.update_dividendo(params)
 
     @app.route(rootpath + "/dividendo/<id_dividendo>", methods=['DELETE'])
     @login_required
     @serialize_response
     def delete_dividendo(id_dividendo: int):
-        return finanzasposicionaccioncontroller.delete_dividendo(id_dividendo)
+        return finanzasposicioncontroller.delete_dividendo(id_dividendo)
 
     @app.route(rootpath + "/dividendorango", methods=['GET'])
     @login_required
@@ -452,12 +452,12 @@ def import_routes(rootpath, app):
             "begin_fecha": request.args.get('begin_fecha', None),
             "end_fecha": request.args.get('end_fecha', None)
         }
-        return finanzasposicionaccioncontroller.list_dividendo_rango(params)
+        return finanzasposicioncontroller.list_dividendo_rango(params)
 
-    @app.route(rootpath + "/posicionaccion", methods=['GET'])
+    @app.route(rootpath + "/posicion", methods=['GET'])
     @login_required
     @serialize_response
-    def list_posicion_accion():
+    def list_posicion():
         params = {
             "order_property": request.args.get('order_property', 'fecha_compra'),
             "order_type": request.args.get('order_type', 'desc'),
@@ -473,85 +473,85 @@ def import_routes(rootpath, app):
             "end_fecha_compra": request.args.get('end_fecha_compra', None),
             "begin_fecha_venta": request.args.get('begin_fecha_venta', None),
             "end_fecha_venta": request.args.get('end_fecha_venta', None),
-            "begin_numero_acciones": request.args.get('begin_numero_acciones', None),
-            "end_numero_acciones": request.args.get('end_numero_acciones', None),
-            "begin_precio_accion_sin_comision": request.args.get('begin_precio_accion_sin_comision', None),
-            "end_precio_accion_sin_comision": request.args.get('end_precio_accion_sin_comision', None),
+            "begin_numero_participaciones": request.args.get('begin_numero_participaciones', None),
+            "end_numero_participaciones": request.args.get('end_numero_participaciones', None),
+            "begin_precio_compra_sin_comision": request.args.get('begin_precio_compra_sin_comision', None),
+            "end_precio_compra_sin_comision": request.args.get('end_precio_compra_sin_comision', None),
             "begin_comision_compra": request.args.get('begin_comision_compra', None),
             "end_comision_compra": request.args.get('end_comision_compra', None),
             "begin_otras_comisiones": request.args.get('begin_otras_comisiones', None),
             "end_otras_comisiones": request.args.get('end_otras_comisiones', None),
         }
-        return finanzasposicionaccioncontroller.list_posiciones_acciones(params)
+        return finanzasposicioncontroller.list_posiciones(params)
 
-    @app.route(rootpath + "/posicionaccion/<id_posicion_accion>", methods=['GET'])
+    @app.route(rootpath + "/posicion/<id_posicion>", methods=['GET'])
     @login_required
     @serialize_response
-    def get_posicion_accion(id_posicion_accion: int):
-        return finanzasposicionaccioncontroller.get_posicion_accion(id_posicion_accion)
+    def get_posicion(id_posicion: int):
+        return finanzasposicioncontroller.get_posicion(id_posicion)
 
-    @app.route(rootpath + "/posicionaccion", methods=['POST'])
+    @app.route(rootpath + "/posicion", methods=['POST'])
     @login_required
     @serialize_response
-    def create_posicion_accion():
+    def create_posicion():
         params = {
             "nombre": request.json.get('nombre', None),
             "isin": request.json.get('isin', None),
             "id_bolsa": request.json.get('id_bolsa', None),
             "id_broker": request.json.get('id_broker', None),
             "fecha_compra": request.json.get('fecha_compra', None),
-            "numero_acciones": request.json.get('numero_acciones', None),
-            "precio_accion_sin_comision": request.json.get('precio_accion_sin_comision', None),
+            "numero_participaciones": request.json.get('numero_participaciones', None),
+            "precio_compra_sin_comision": request.json.get('precio_compra_sin_comision', None),
             "comision_compra": request.json.get('comision_compra', None),
             "otras_comisiones": request.json.get('otras_comisiones', None),
         }
-        return finanzasposicionaccioncontroller.create_posicion_accion(params)
+        return finanzasposicioncontroller.create_posicion(params)
 
-    @app.route(rootpath + "/posicionaccion/<id_posicion_accion>", methods=['POST'])
+    @app.route(rootpath + "/posicion/<id_posicion>", methods=['POST'])
     @login_required
     @serialize_response
-    def update_posicion_accion(id_posicion_accion: int):
+    def update_posicion(id_posicion: int):
         params = {
-            "id": id_posicion_accion,
+            "id": id_posicion,
             "nombre": request.json.get('nombre', None),
             "isin": request.json.get('isin', None),
             "id_bolsa": request.json.get('id_bolsa', None),
             "id_broker": request.json.get('id_broker', None),
             "fecha_compra": request.json.get('fecha_compra', None),
             "fecha_venta": request.json.get('fecha_venta', None),
-            "numero_acciones": request.json.get('numero_acciones', None),
-            "precio_accion_sin_comision": request.json.get('precio_accion_sin_comision', None),
+            "numero_participaciones": request.json.get('numero_participaciones', None),
+            "precio_compra_sin_comision": request.json.get('precio_compra_sin_comision', None),
             "precio_venta_sin_comision": request.json.get('precio_venta_sin_comision', None),
             "comision_compra": request.json.get('comision_compra', None),
             "otras_comisiones": request.json.get('otras_comisiones', None),
         }
-        return finanzasposicionaccioncontroller.update_posicion_accion(params)
+        return finanzasposicioncontroller.update_posicion(params)
 
-    @app.route(rootpath + "/posicionaccion/cerrar/<id_posicion_accion>", methods=['POST'])
+    @app.route(rootpath + "/posicion/cerrar/<id_posicion>", methods=['POST'])
     @login_required
     @serialize_response
-    def cerrar_posicion_accion(id_posicion_accion: int):
+    def cerrar_posicion(id_posicion: int):
         params = {
-            "id": id_posicion_accion,
+            "id": id_posicion,
             "fecha_venta": request.json.get('fecha_venta', None),
             "precio_venta_sin_comision": request.json.get('precio_venta_sin_comision', None)
         }
-        return finanzasposicionaccioncontroller.cerrar_posicion_accion(params)
+        return finanzasposicioncontroller.cerrar_posicion(params)
 
-    @app.route(rootpath + "/posicionaccion/deshacer-cerrar/<id_posicion_accion>", methods=['POST'])
+    @app.route(rootpath + "/posicion/deshacer-cerrar/<id_posicion>", methods=['POST'])
     @login_required
     @serialize_response
-    def deshacer_cerrar_posicion_accion(id_posicion_accion: int):
+    def deshacer_cerrar_posicion(id_posicion: int):
         params = {
-            "id": id_posicion_accion,
+            "id": id_posicion,
         }
-        return finanzasposicionaccioncontroller.deshacer_cerrar_posicion_accion(params)
+        return finanzasposicioncontroller.deshacer_cerrar_posicion(params)
 
-    @app.route(rootpath + "/posicionaccion/<id_posicion_accion>", methods=['DELETE'])
+    @app.route(rootpath + "/posicion/<id_posicion>", methods=['DELETE'])
     @login_required
     @serialize_response
-    def delete_posicion_accion(id_posicion_accion: int):
-        return finanzasposicionaccioncontroller.delete_posicion_accion(id_posicion_accion)
+    def delete_posicion(id_posicion: int):
+        return finanzasposicioncontroller.delete_posicion(id_posicion)
 
     @app.route(rootpath + "/resumen/ingresos", methods=['GET'])
     @login_required
@@ -669,22 +669,22 @@ def import_routes(rootpath, app):
         }
         return finanzasresumencontroller.resumen_total(params)
 
-    @app.route(rootpath + "/resumen/valores_acciones_meses", methods=['GET'])
+    @app.route(rootpath + "/resumen/valores_participaciones_meses", methods=['GET'])
     @login_required
     @serialize_response
-    def resumen_valores_acciones_meses():
+    def resumen_valores_participaciones_meses():
         params = {
             "begin_fecha": request.args.get('begin_fecha', None),
             "end_fecha": request.args.get('end_fecha', None),
         }
-        return finanzasresumencontroller.resumen_valores_acciones_meses(params)
+        return finanzasresumencontroller.resumen_valores_participaciones_meses(params)
 
-    @app.route(rootpath + "/resumen/valores_acciones_dias", methods=['GET'])
+    @app.route(rootpath + "/resumen/valores_participaciones_dias", methods=['GET'])
     @login_required
     @serialize_response
-    def resumen_valores_acciones_dias():
+    def resumen_valores_participaciones_dias():
         params = {
             "begin_fecha": request.args.get('begin_fecha', None),
             "end_fecha": request.args.get('end_fecha', None),
         }
-        return finanzasresumencontroller.resumen_valores_acciones_dias(params)
+        return finanzasresumencontroller.resumen_valores_participaciones_dias(params)
