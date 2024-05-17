@@ -5,7 +5,6 @@ from src.finanzas.domain.movimientocuentarepository import MovimientoCuentaRepos
 from src.finanzas.domain.movimientomonederorepository import MovimientoMonederoRepository
 from src.finanzas.domain.operacionrepository import OperacionRepository
 from src.persistence.application.transactionalusecase import transactional, TransactionalUseCase
-from src.shared.domain.exceptions.invalidparamerror import InvalidParamError
 
 
 class CreateOperacion(TransactionalUseCase):
