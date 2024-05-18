@@ -15,6 +15,7 @@ from src.finanzas.infrastructure.persistence.orm.monederoentity import MonederoE
 from src.finanzas.infrastructure.persistence.orm.operacionfavoritaentity import OperacionFavoritaEntity
 from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.itransactionalrepository import ITransactionalRepository
+from src.persistence.domain.simplefilter import SimpleFilter, WhereOperator
 from src.persistence.infrastructure.sqlalchmeyquerybuilder import SQLAlchemyQueryBuilder
 from src.shared.domain.exceptions.notfounderror import NotFoundError
 
@@ -77,12 +78,28 @@ class OperacionFavoritaRepositorySQLAlchemy(ITransactionalRepository, OperacionF
             result = query_elements.all()
             if result is not None:
                 for i in result:
-                    elements.append(self.__get_operation_favorita_from_complete_join_row(result[i]))
+                    elements.append(self.__get_operation_favorita_from_complete_join_row(i))
             return elements
         except Exception as e:
             traceback.print_exc()
 
         return elements
+
+    def get(self, id_operacion_favorita: int) -> OperacionFavorita:
+        try:
+            query = self.__get_complete_join_query(
+                Criteria(filter=SimpleFilter("id", WhereOperator.IS, id_operacion_favorita)))
+            result = query.one_or_none()
+            if result is None:
+                raise NotFoundError("No se encuentra la operación favorita con id:  {}".format(id_operacion_favorita))
+            else:
+                return self.__get_operation_favorita_from_complete_join_row(result)
+        except NotFoundError as e:
+            logger.info(e)
+            raise e
+        except Exception as e:
+            traceback.print_exc()
+        return None
 
     def new(self, params: dict) -> int:
         try:
@@ -114,6 +131,30 @@ class OperacionFavoritaRepositorySQLAlchemy(ITransactionalRepository, OperacionF
         except Exception as e:
             traceback.print_exc()
         return None
+
+    def update(self, operacion_favorita: OperacionFavorita) -> bool:
+        try:
+            self.check_cuenta(operacion_favorita.get_id_cuenta_cargo())
+            self.check_cuenta(operacion_favorita.get_id_cuenta_abono())
+            self.check_monedero(operacion_favorita.get_id_monedero_cargo())
+            self.check_monedero(operacion_favorita.get_id_monedero_abono())
+            self.check_categoria_ingreso(operacion_favorita.get_id_categoria_ingreso())
+            self.check_categoria_gasto(operacion_favorita.get_id_categoria_gasto())
+
+            query_builder = SQLAlchemyQueryBuilder(OperacionFavoritaEntity, self._session).build_base_query()
+            entity = query_builder.filter_by(id=operacion_favorita.get_id()).one_or_none()
+            if entity is None:
+                raise NotFoundError(
+                    "No se encuentra la operation favorita con id:  {}".format(operacion_favorita.get_id()))
+            else:
+                entity.update(operacion_favorita)
+                return True
+        except NotFoundError as e:
+            logger.info(e)
+            raise e
+        except Exception as e:
+            traceback.print_exc()
+        return False
 
     def delete(self, id_operacion_favorita: int) -> bool:
         try:

@@ -2,6 +2,7 @@ from typing import Any
 
 from sqlalchemy import Column,  Float, Text, Integer
 
+from src.finanzas.domain.operacionFavorita import OperacionFavorita
 from src.persistence.domain.init_table import InitTable
 from src.persistence.infrastructure.orm.baseentity import BaseEntity
 
@@ -53,3 +54,14 @@ class OperacionFavoritaEntity(BaseEntity):
             return caster.get(column)(value)
         else:
             return value
+
+    def update(self, operacion_favorita: OperacionFavorita):
+        self.nombre = operacion_favorita.get_nombre()
+        self.cantidad = operacion_favorita.get_cantidad()
+        self.descripcion = operacion_favorita.get_descripcion()
+        self.id_categoria_gasto = operacion_favorita.get_id_categoria_gasto()
+        self.id_categoria_ingreso = operacion_favorita.get_id_categoria_ingreso()
+        self.id_cuenta_cargo = operacion_favorita.get_id_cuenta_cargo()
+        self.id_cuenta_abono = operacion_favorita.get_id_cuenta_abono()
+        self.id_monedero_cargo = operacion_favorita.get_id_monedero_cargo()
+        self.id_monedero_abono = operacion_favorita.get_id_monedero_abono()

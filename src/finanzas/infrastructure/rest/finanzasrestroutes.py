@@ -264,6 +264,12 @@ def import_routes(rootpath, app):
         }
         return finanzasoperacionesfavoritascontroller.list_operaciones_favoritas(params)
 
+    @app.route(rootpath + "/operacion_favorita/<id_operacion_favorita>", methods=['GET'])
+    @login_required
+    @serialize_response
+    def get_operacion_favorita(id_operacion_favorita: int):
+        return finanzasoperacionesfavoritascontroller.get_operacion_favorita(id_operacion_favorita)
+
     @app.route(rootpath + "/operacion_favorita", methods=['POST'])
     @login_required
     @serialize_response
@@ -280,6 +286,24 @@ def import_routes(rootpath, app):
             "id_categoria_ingreso": request.json.get('id_categoria_ingreso', None),
         }
         return finanzasoperacionesfavoritascontroller.create_operacion_favorita(params)
+
+    @app.route(rootpath + "/operacion_favorita/<id_operacion_favorita>", methods=['POST'])
+    @login_required
+    @serialize_response
+    def update_operacion_favorita(id_operacion_favorita: int):
+        params = {
+            "id": id_operacion_favorita,
+            "descripcion": request.json.get('descripcion', None),
+            "nombre": request.json.get('nombre', None),
+            "cantidad": request.json.get('cantidad', None),
+            "id_monedero_cargo": request.json.get('id_monedero_cargo', None),
+            "id_cuenta_cargo": request.json.get('id_cuenta_cargo', None),
+            "id_monedero_abono": request.json.get('id_monedero_abono', None),
+            "id_cuenta_abono": request.json.get('id_cuenta_abono', None),
+            "id_categoria_gasto": request.json.get('id_categoria_gasto', None),
+            "id_categoria_ingreso": request.json.get('id_categoria_ingreso', None),
+        }
+        return finanzasoperacionesfavoritascontroller.update_operacion_favorita(params)
 
     @app.route(rootpath + "/operacion_favorita/<id_operacion_favorita>", methods=['DELETE'])
     @login_required
