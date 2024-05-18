@@ -15,5 +15,13 @@ class OperacionFavoritaRepository(ABC):
         pass
 
     @abstractmethod
+    def update(self, operacion_favorita: OperacionFavorita) -> bool:
+        pass
+
+    @abstractmethod
+    def get(self, id_operacion_favorita: int) -> OperacionFavorita:
+        pass
+
+    @abstractmethod
     def delete(self, id_operacion: int) -> bool:
         pass

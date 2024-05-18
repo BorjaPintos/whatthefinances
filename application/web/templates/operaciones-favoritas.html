@@ -1,0 +1,259 @@
+{% extends 'lista.html'%}
+
+{% block titulo_add %}
+Añadir operación favorita
+{% endblock %}
+
+
+{% block contenido_add %}
+<div class="form-outline form-white mb-4">
+
+    <div class="form-floating mb-3">
+        <input type="text" id="addTypeNombreX" class="form-control"/>
+        <label for="addTypeNombreX">Nombre</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        <input type="text" id="addTypeDescripcionX" class="form-control"/>
+        <label for="addTypeDescripcionX">Descripción</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" id="addTypeCantidadX" class="form-control"/>
+        <label for="addTypeCantidadX">Cantidad</label>
+    </div>
+    <div id="add-seleccion_tipo" class="form-check form-check-inline">
+        <input type="radio" class="btn-check" name="add_tipo" id="add-tipo-gasto" autocomplete="off" checked>
+        <label class="btn btn-primary btn-radios" for="add-tipo-gasto">Gasto</label>
+
+        <input type="radio" class="btn-check" name="add_tipo" id="add-tipo-ingreso" autocomplete="off">
+        <label class="btn btn-primary btn-radios" for="add-tipo-ingreso">Ingreso</label>
+
+        <input type="radio" class="btn-check" name="add_tipo" id="add-tipo-transferencia" autocomplete="off">
+        <label class="btn btn-primary btn-radios" for="add-tipo-transferencia">Transferencia</label>
+    </div>
+
+    <div id="add-div-gasto" class="collapse">
+        <select class="form-select mt-2" id="add-gasto-categoria-gasto-select">
+            <option value="">Seleccione un Gasto</option>
+            {% for categoria_gasto in lista_categorias_gasto %}
+            <option value="{{categoria_gasto.id}}" data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
+                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">{{categoria_gasto.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="add-gasto-cuenta-cargo-select">
+            <option value="None">Ninguna</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="add-gasto-monedero-cargo-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div id="add-div-ingreso" class="collapse">
+        <select class="form-select mt-2" id="add-ingreso-categoria-ingreso-select">
+            <option value="">Seleccione un ingreso</option>
+            {% for categoria_ingreso in lista_categorias_ingreso %}
+            <option value="{{categoria_ingreso.id}}"
+                    data-id-cuenta-defecto="{{categoria_ingreso.id_cuenta_abono_defecto}}"
+                    data-id-monedero-defecto="{{categoria_ingreso.id_monedero_defecto}}">
+                {{categoria_ingreso.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="add-ingreso-cuenta-abono-select">
+            <option value="None">Todas</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="add-ingreso-monedero-abono-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div id="add-div-transferencia" class="collapse">
+        <select class="form-select mt-2" id="add-transferencia-categoria-gasto-select">
+            <option value="">Seleccione un gasto</option>
+            {% for categoria_gasto in lista_categorias_gasto %}
+            <option value="{{categoria_gasto.id}}" data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
+                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">{{categoria_gasto.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="add-transferencia-categoria-ingreso-select">
+            <option value="">Seleccione un ingreso</option>
+            {% for categoria_ingreso in lista_categorias_ingreso %}
+            <option value="{{categoria_ingreso.id}}"
+                    data-id-cuenta-defecto="{{categoria_ingreso.id_cuenta_abono_defecto}}"
+                    data-id-monedero-defecto="{{categoria_ingreso.id_monedero_defecto}}">
+                {{categoria_ingreso.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="add-transferencia-cuenta-cargo-select">
+            <option value="">Ninguna</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="add-transferencia-cuenta-abono-select">
+            <option value="">Ninguna</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="add-transferencia-monedero-cargo-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="add-transferencia-monedero-abono-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+{% endblock %}
+
+{% block titulo_edit %}
+Editar Operacion Favorita
+{% endblock %}
+
+{% block contenido_edit %}
+<div class="form-outline form-white mb-4">
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeNombreX" class="form-control"/>
+        <label for="editTypeNombreX">Nombre</label>
+    </div>
+
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeDescripcionX" class="form-control"/>
+        <label for="editTypeDescripcionX">Descripción</label>
+    </div>
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeCantidadX" class="form-control"/>
+        <label for="editTypeCantidadX">Cantidad</label>
+    </div>
+    <div id="edit-seleccion_tipo" class="form-check form-check-inline">
+        <input type="radio" class="btn-check" name="edit_tipo" id="edit-tipo-gasto" autocomplete="off">
+        <label class="btn btn-primary btn-radios" for="edit-tipo-gasto">Gasto</label>
+
+        <input type="radio" class="btn-check" name="edit_tipo" id="edit-tipo-ingreso" autocomplete="off">
+        <label class="btn btn-primary btn-radios" for="edit-tipo-ingreso">Ingreso</label>
+
+        <input type="radio" class="btn-check" name="edit_tipo" id="edit-tipo-transferencia" autocomplete="off">
+        <label class="btn btn-primary btn-radios" for="edit-tipo-transferencia">Transferencia</label>
+    </div>
+
+    <div id="edit-div-gasto" class="collapse">
+        <select class="form-select mt-2" id="edit-gasto-categoria-gasto-select">
+            <option value="">Seleccione un Gasto</option>
+            {% for categoria_gasto in lista_categorias_gasto %}
+            <option value="{{categoria_gasto.id}}" data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
+                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">{{categoria_gasto.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="edit-gasto-cuenta-cargo-select">
+            <option value="None">Todas</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="edit-gasto-monedero-cargo-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div id="edit-div-ingreso" class="collapse">
+        <select class="form-select mt-2" id="edit-ingreso-categoria-ingreso-select">
+            <option value="">Seleccione un ingreso</option>
+            {% for categoria_ingreso in lista_categorias_ingreso %}
+            <option value="{{categoria_ingreso.id}}"
+                    data-id-cuenta-defecto="{{categoria_ingreso.id_cuenta_abono_defecto}}"
+                    data-id-monedero-defecto="{{categoria_ingreso.id_monedero_defecto}}">
+                {{categoria_ingreso.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="edit-ingreso-cuenta-abono-select">
+            <option value="">Ninguna</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="edit-ingreso-monedero-abono-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+    <div id="edit-div-transferencia" class="collapse">
+        <select class="form-select mt-2" id="edit-transferencia-categoria-gasto-select">
+            <option value="">Seleccione un gasto</option>
+            {% for categoria_gasto in lista_categorias_gasto %}
+            <option value="{{categoria_gasto.id}}" data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
+                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">{{categoria_gasto.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="edit-transferencia-categoria-ingreso-select">
+            <option value="">Seleccione un ingreso</option>
+            {% for categoria_ingreso in lista_categorias_ingreso %}
+            <option value="{{categoria_ingreso.id}}"
+                    data-id-cuenta-defecto="{{categoria_ingreso.id_cuenta_abono_defecto}}"
+                    data-id-monedero-defecto="{{categoria_ingreso.id_monedero_defecto}}">
+                {{categoria_ingreso.descripcion}}
+            </option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="edit-transferencia-cuenta-cargo-select">
+            <option value="">Ninguna</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="edit-transferencia-cuenta-abono-select">
+            <option value="">Ninguna</option>
+            {% for cuenta in lista_cuentas %}
+            <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="edit-transferencia-monedero-cargo-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+        <select class="form-select mt-2" id="edit-transferencia-monedero-abono-select">
+            <option value="">Ninguno</option>
+            {% for monedero in lista_monederos %}
+            <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endfor %}
+        </select>
+    </div>
+</div>
+<input type="hidden" id="editTypeIdX"/>
+{% endblock %}
+
+{% block listaextendsscript %}
+<script type="text/javascript" src="assets/js/operaciones-favoritas.js"></script>
+{% endblock%}
