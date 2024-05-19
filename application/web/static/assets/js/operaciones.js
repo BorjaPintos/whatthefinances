@@ -149,6 +149,107 @@ function update_operacion() {
     xhttp.send(JSON.stringify(data));
 }
 
+function update_operacion() {
+    var id = $.trim($("#editTypeIdX").val())
+    var fecha = $("#editFechaDataPicker").val()
+    var descripcion = $("#editTypeDescripcionX").val();
+    var cantidad = $("#editTypeCantidadX").val();
+
+    tipo_opcion = $('#edit-seleccion_tipo input:radio[name=edit_tipo]:checked').attr('id')
+   if (tipo_opcion == "edit-tipo-gasto"){
+    var id_categoria_ingreso = undefined;
+    var id_cuenta_abono = undefined;
+    var id_monedero_abono = undefined;
+    var id_categoria_gasto = $("#edit-gasto-categoria-gasto-select").val();
+    var id_cuenta_cargo = $("#edit-gasto-cuenta-cargo-select").val();
+    var id_monedero_cargo = $("#edit-gasto-monedero-cargo-select").val();
+   }
+   else if (tipo_opcion == "edit-tipo-ingreso"){
+    var id_categoria_ingreso = $("#edit-ingreso-categoria-ingreso-select").val();
+    var id_cuenta_abono = $("#edit-ingreso-cuenta-abono-select").val();
+    var id_monedero_abono = $("#edit-ingreso-monedero-abono-select").val();
+    var id_categoria_gasto = undefined;
+    var id_cuenta_cargo = undefined;
+    var id_monedero_cargo = undefined;
+   }
+   else if (tipo_opcion == "edit-tipo-transferencia"){
+    var id_categoria_ingreso = $("#edit-transferencia-categoria-ingreso-select").val();
+    var id_cuenta_abono = $("#edit-transferencia-cuenta-abono-select").val();
+    var id_monedero_abono = $("#edit-transferencia-monedero-abono-select").val();
+    var id_categoria_gasto = $("#edit-transferencia-categoria-gasto-select").val();
+    var id_cuenta_cargo = $("#edit-transferencia-cuenta-cargo-select").val();
+    var id_monedero_cargo = $("#edit-transferencia-monedero-cargo-select").val();
+   }
+
+   var data = {
+        fecha: fecha,
+        descripcion: descripcion,
+        cantidad: cantidad ? cantidad : null,
+        id_categoria_gasto: parseInt(id_categoria_gasto) ? id_categoria_gasto : null,
+        id_monedero_cargo: parseInt(id_monedero_cargo) ? id_monedero_cargo : null,
+        id_cuenta_cargo: parseInt(id_cuenta_cargo) ? id_cuenta_cargo : null,
+        id_categoria_ingreso: parseInt(id_categoria_ingreso) ? id_categoria_ingreso : null,
+        id_monedero_abono: parseInt(id_monedero_abono) ? id_monedero_abono : null,
+        id_cuenta_abono: parseInt(id_cuenta_abono) ? id_cuenta_abono : null
+   }
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "/finanzas/operacion/"+id, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+
+
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4)
+            if (xhttp.status === 200) {
+                $('#edit').modal('hide')
+                table.ajax.reload( null, false );
+            } else if (xhttp.status != 201){
+                var respuesta = JSON.parse(xhttp.responseText).message;
+                $("#editTypeMessageX").text(respuesta)
+            }
+    };
+    xhttp.send(JSON.stringify(data));
+}
+
+
+
+
+
+
+function do_favorito(operacion) {
+    var nombre = $("#addFavoritoNombreX").val()
+
+    var data = {
+        nombre: nombre,
+        descripcion: operacion.descripcion,
+        cantidad: operacion.cantidad,
+        id_categoria_gasto: operacion.id_categoria_gasto,
+        id_monedero_cargo:operacion.id_monedero_cargo,
+        id_cuenta_cargo: operacion.id_cuenta_cargo,
+        id_categoria_ingreso: operacion.id_categoria_ingreso,
+        id_monedero_abono: operacion.id_monedero_abono,
+        id_cuenta_abono: operacion.id_cuenta_abono
+    }
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.open("POST", "/finanzas/operacion_favorita", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+
+
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4)
+            if (xhttp.status === 201) {
+                $('#create_favorito').modal('hide')
+                table.ajax.reload( null, false );
+            } else if (xhttp.status != 201){
+                var respuesta = JSON.parse(xhttp.responseText).message;
+                $("#favoritoTypeMessageX").text(respuesta)
+            }
+    };
+    xhttp.send(JSON.stringify(data));
+
+}
+
 get_local_number = function(num){
     return $.fn.dataTable.render.number('', ',', 2).display(num);
 }
@@ -163,9 +264,10 @@ render_dinero = function (data, type) {
 
 render_actions = function (data, type) {
     if (type === 'display') {
+        fav =  '<a class="fav-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Favorito" data-bs-original-title="Favorito" data-element="'+data+'"><i class="uil uil-star"></i></a>'
         edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
         del = '<a class="delete-element font-18 text-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete" data-bs-original-title="Borrar" data-element="'+data+'"><i class="uil uil-trash"></i></a>'
-        return edit + del
+        return fav + edit + del
     }
     return data
 }
@@ -258,6 +360,7 @@ get_datapicker_conf = function(){
 }
 
 lista_operaciones_favoritas = undefined
+selected_favorito = undefined
 
 function get_operaciones_favoritas(){
 
@@ -267,7 +370,6 @@ function get_operaciones_favoritas(){
         for (i in operaciones_favoritas) {
             selector.append(new Option(operaciones_favoritas[i].nombre, operaciones_favoritas[i].id))
         }
-
     });
 }
 
@@ -575,7 +677,6 @@ $(document).ready(function() {
                 $("#edit-ingreso-monedero-abono-select").val(id_monedero_abono).change();
                 radio_ingreso.prop("checked", true)
                 div_ingreso.collapse('show');
-
            }
 
            $('#edit').modal('show')
@@ -585,6 +686,11 @@ $(document).ready(function() {
            delete_operacion($(this).attr("data-element"))
         });
 
+        $('.fav-element').on( "click", function() {
+           selected_favorito = table.row($(this).parents('tr')).data()
+           $("#addFavoritoNombreX").val('')
+           $('#create_favorito').modal('show')
+        });
 
     });
 
@@ -649,6 +755,14 @@ $(document).ready(function() {
     $('#save-load-operation-button-modal').on( "click", function() {
         $('#load-operation').modal('hide')
         load_operacion_favorita()
+    });
+
+    $('#close-create-favorito-button-modal').on( "click", function() {
+        $('#create_favorito').modal('hide')
+    });
+
+    $('#save-create-favorito-button-modal').on( "click", function() {
+        do_favorito(selected_favorito)
     });
 
 

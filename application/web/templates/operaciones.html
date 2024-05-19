@@ -387,7 +387,8 @@ Editar Operacion
             <div class="modal-header">
                 <h5 class="modal-title">
                     Selecciona Operación Favorita</h5>
-                <button type="button" class="close" id="close-load-operation-button-modal" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" id="close-load-operation-button-modal" data-dismiss="modal"
+                        aria-label="Close">
                     <i class="uil-times"></i>
                 </button>
             </div>
@@ -401,6 +402,38 @@ Editar Operacion
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" id="save-load-operation-button-modal">Cargar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="create_favorito" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog row d-flex justify-content-center align-items-center h-100" role="document">
+        <div class="modal-content modal-body card bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Nuevo Favorito</h5>
+                <button type="button" class="close" id="close-create-favorito-button-modal" data-dismiss="modal"
+                        aria-label="Close">
+                    <i class="uil-times"></i>
+                </button>
+            </div>
+            <div class="">
+                <div class="card-body text-center">
+                    <div class="mb-md-5 mt-md-4">
+                        <div class="form-floating mb-3">
+                            <input type="text" id="addFavoritoNombreX" class="form-control"/>
+                            <label for="addFavoritoNombreX">Nombre</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body text-center">
+                    <p class="mb-5 text-danger" id="favoritoTypeMessageX"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="save-create-favorito-button-modal">Guardar
+                    </button>
                 </div>
             </div>
         </div>
