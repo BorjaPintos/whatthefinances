@@ -1,9 +1,7 @@
 
 
-
-
-function add_operacion() {
-    var fecha = $("#addFechaDataPicker").val()
+function add_operacion_favorita() {
+    var nombre = $("#addTypeNombreX").val()
     var descripcion = $("#addTypeDescripcionX").val();
     var cantidad = $("#addTypeCantidadX").val();
 
@@ -34,7 +32,7 @@ function add_operacion() {
    }
 
     var data = {
-        fecha: fecha,
+        nombre: nombre,
         descripcion: descripcion,
         cantidad: cantidad ? cantidad : null,
         id_categoria_gasto: parseInt(id_categoria_gasto) ? id_categoria_gasto : null,
@@ -46,7 +44,7 @@ function add_operacion() {
     }
     var xhttp = new XMLHttpRequest();
 
-    xhttp.open("POST", "/finanzas/operacion", true);
+    xhttp.open("POST", "/finanzas/operacion_favorita", true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
 
@@ -64,9 +62,9 @@ function add_operacion() {
 
 }
 
-function delete_operacion(id) {
+function delete_operacion_favorita(id) {
     var xhttp = new XMLHttpRequest();
-    xhttp.open("DELETE", "/finanzas/operacion/"+id, true);
+    xhttp.open("DELETE", "/finanzas/operacion_favorita/"+id, true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
 
@@ -87,9 +85,9 @@ function delete_operacion(id) {
     xhttp.send();
 }
 
-function update_operacion() {
+function update_operacion_favorita() {
     var id = $.trim($("#editTypeIdX").val())
-    var fecha = $("#editFechaDataPicker").val()
+    var nombre = $("#editTypeNombreX").val()
     var descripcion = $("#editTypeDescripcionX").val();
     var cantidad = $("#editTypeCantidadX").val();
 
@@ -120,134 +118,33 @@ function update_operacion() {
    }
 
    var data = {
-        fecha: fecha,
-        descripcion: descripcion,
-        cantidad: cantidad ? cantidad : null,
-        id_categoria_gasto: parseInt(id_categoria_gasto) ? id_categoria_gasto : null,
-        id_monedero_cargo: parseInt(id_monedero_cargo) ? id_monedero_cargo : null,
-        id_cuenta_cargo: parseInt(id_cuenta_cargo) ? id_cuenta_cargo : null,
-        id_categoria_ingreso: parseInt(id_categoria_ingreso) ? id_categoria_ingreso : null,
-        id_monedero_abono: parseInt(id_monedero_abono) ? id_monedero_abono : null,
-        id_cuenta_abono: parseInt(id_cuenta_abono) ? id_cuenta_abono : null
-   }
-
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "/finanzas/operacion/"+id, true);
-    xhttp.setRequestHeader("Content-Type", "application/json");
-
-
-    xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4)
-            if (xhttp.status === 200) {
-                $('#edit').modal('hide')
-                table.ajax.reload( null, false );
-            } else if (xhttp.status != 201){
-                var respuesta = JSON.parse(xhttp.responseText).message;
-                $("#editTypeMessageX").text(respuesta)
-            }
-    };
-    xhttp.send(JSON.stringify(data));
-}
-
-function update_operacion() {
-    var id = $.trim($("#editTypeIdX").val())
-    var fecha = $("#editFechaDataPicker").val()
-    var descripcion = $("#editTypeDescripcionX").val();
-    var cantidad = $("#editTypeCantidadX").val();
-
-    tipo_opcion = $('#edit-seleccion_tipo input:radio[name=edit_tipo]:checked').attr('id')
-   if (tipo_opcion == "edit-tipo-gasto"){
-    var id_categoria_ingreso = undefined;
-    var id_cuenta_abono = undefined;
-    var id_monedero_abono = undefined;
-    var id_categoria_gasto = $("#edit-gasto-categoria-gasto-select").val();
-    var id_cuenta_cargo = $("#edit-gasto-cuenta-cargo-select").val();
-    var id_monedero_cargo = $("#edit-gasto-monedero-cargo-select").val();
-   }
-   else if (tipo_opcion == "edit-tipo-ingreso"){
-    var id_categoria_ingreso = $("#edit-ingreso-categoria-ingreso-select").val();
-    var id_cuenta_abono = $("#edit-ingreso-cuenta-abono-select").val();
-    var id_monedero_abono = $("#edit-ingreso-monedero-abono-select").val();
-    var id_categoria_gasto = undefined;
-    var id_cuenta_cargo = undefined;
-    var id_monedero_cargo = undefined;
-   }
-   else if (tipo_opcion == "edit-tipo-transferencia"){
-    var id_categoria_ingreso = $("#edit-transferencia-categoria-ingreso-select").val();
-    var id_cuenta_abono = $("#edit-transferencia-cuenta-abono-select").val();
-    var id_monedero_abono = $("#edit-transferencia-monedero-abono-select").val();
-    var id_categoria_gasto = $("#edit-transferencia-categoria-gasto-select").val();
-    var id_cuenta_cargo = $("#edit-transferencia-cuenta-cargo-select").val();
-    var id_monedero_cargo = $("#edit-transferencia-monedero-cargo-select").val();
-   }
-
-   var data = {
-        fecha: fecha,
-        descripcion: descripcion,
-        cantidad: cantidad ? cantidad : null,
-        id_categoria_gasto: parseInt(id_categoria_gasto) ? id_categoria_gasto : null,
-        id_monedero_cargo: parseInt(id_monedero_cargo) ? id_monedero_cargo : null,
-        id_cuenta_cargo: parseInt(id_cuenta_cargo) ? id_cuenta_cargo : null,
-        id_categoria_ingreso: parseInt(id_categoria_ingreso) ? id_categoria_ingreso : null,
-        id_monedero_abono: parseInt(id_monedero_abono) ? id_monedero_abono : null,
-        id_cuenta_abono: parseInt(id_cuenta_abono) ? id_cuenta_abono : null
-   }
-
-    var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "/finanzas/operacion/"+id, true);
-    xhttp.setRequestHeader("Content-Type", "application/json");
-
-
-    xhttp.onreadystatechange = function () {
-        if (xhttp.readyState === 4)
-            if (xhttp.status === 200) {
-                $('#edit').modal('hide')
-                table.ajax.reload( null, false );
-            } else if (xhttp.status != 201){
-                var respuesta = JSON.parse(xhttp.responseText).message;
-                $("#editTypeMessageX").text(respuesta)
-            }
-    };
-    xhttp.send(JSON.stringify(data));
-}
-
-
-
-
-
-
-function do_favorito(operacion) {
-    var nombre = $("#addFavoritoNombreX").val()
-
-    var data = {
         nombre: nombre,
-        descripcion: operacion.descripcion,
-        cantidad: operacion.cantidad,
-        id_categoria_gasto: operacion.id_categoria_gasto,
-        id_monedero_cargo:operacion.id_monedero_cargo,
-        id_cuenta_cargo: operacion.id_cuenta_cargo,
-        id_categoria_ingreso: operacion.id_categoria_ingreso,
-        id_monedero_abono: operacion.id_monedero_abono,
-        id_cuenta_abono: operacion.id_cuenta_abono
-    }
-    var xhttp = new XMLHttpRequest();
+        descripcion: descripcion,
+        cantidad: cantidad ? cantidad : null,
+        id_categoria_gasto: parseInt(id_categoria_gasto) ? id_categoria_gasto : null,
+        id_monedero_cargo: parseInt(id_monedero_cargo) ? id_monedero_cargo : null,
+        id_cuenta_cargo: parseInt(id_cuenta_cargo) ? id_cuenta_cargo : null,
+        id_categoria_ingreso: parseInt(id_categoria_ingreso) ? id_categoria_ingreso : null,
+        id_monedero_abono: parseInt(id_monedero_abono) ? id_monedero_abono : null,
+        id_cuenta_abono: parseInt(id_cuenta_abono) ? id_cuenta_abono : null
+   }
 
-    xhttp.open("POST", "/finanzas/operacion_favorita", true);
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "/finanzas/operacion_favorita/"+id, true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
 
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4)
-            if (xhttp.status === 201) {
-                $('#create_favorito').modal('hide')
+            if (xhttp.status === 200) {
+                $('#edit').modal('hide')
                 table.ajax.reload( null, false );
             } else if (xhttp.status != 201){
                 var respuesta = JSON.parse(xhttp.responseText).message;
-                $("#favoritoTypeMessageX").text(respuesta)
+                $("#editTypeMessageX").text(respuesta)
             }
     };
     xhttp.send(JSON.stringify(data));
-
 }
 
 get_local_number = function(num){
@@ -264,10 +161,9 @@ render_dinero = function (data, type) {
 
 render_actions = function (data, type) {
     if (type === 'display') {
-        fav =  '<a class="fav-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Favorito" data-bs-original-title="Favorito" data-element="'+data+'"><i class="uil uil-star"></i></a>'
         edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
         del = '<a class="delete-element font-18 text-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete" data-bs-original-title="Borrar" data-element="'+data+'"><i class="uil uil-trash"></i></a>'
-        return fav + edit + del
+        return edit + del
     }
     return data
 }
@@ -320,185 +216,30 @@ render_texto = function(data, type){
     return data
 }
 
-get_datapicker_conf = function(){
-    return {
-        singleDatePicker: true,
-        timePicker: false,
-        autoApply: false,
-        autoUpdateInput: true,
-        locale: {
-          format: "DD/MM/YYYY",
-          applyLabel: "Aplicar",
-          cancelLabel: "Limpiar",
-          weekLabel: "S",
-          daysOfWeek: [
-                "Do",
-                "Lu",
-                "Ma",
-                "Mi",
-                "Ju",
-                "Vi",
-                "Sa"
-            ],
-            monthNames: [
-                "Enero",
-                "Febrero",
-                "Marzo",
-                "Abril",
-                "Mayo",
-                "Junio",
-                "Julio",
-                "Agosto",
-                "Septiembre",
-                "Octuber",
-                "Noviembre",
-                "Diciembre"
-            ],
-            firstDay: 1
-        }
-    }
-}
-
-lista_operaciones_favoritas = undefined
-selected_favorito = undefined
-
-function get_operaciones_favoritas(){
-
-    $.get("finanzas/operacion_favorita?order_property=nombre&order_type=asc", function(operaciones_favoritas) {
-        lista_operaciones_favoritas = operaciones_favoritas
-        selector = $("#operacionFavorita-select")
-        for (i in operaciones_favoritas) {
-            selector.append(new Option(operaciones_favoritas[i].nombre, operaciones_favoritas[i].id))
-        }
-    });
-}
-
-get_operacion_favorita_by_id = function(id){
-    console.log(lista_operaciones_favoritas)
-    for (i in lista_operaciones_favoritas) {
-            if (id == lista_operaciones_favoritas[i].id)
-                return lista_operaciones_favoritas[i]
-    }
-    return undefined
-};
-
-load_operacion_favorita = function(){
-
-    var operacion_favorita_id = $("#operacionFavorita-select").val()
-    operacion_favorita = get_operacion_favorita_by_id(operacion_favorita_id)
-    if (operacion_favorita == undefined){
-        console.log("Error al obtener la operacion favorita con id: " + operacion_favorita_id)
-        return
-    }
-    var descripcion = operacion_favorita.descripcion;
-    console.log(typeof(operacion_favorita))
-    console.log(descripcion)
-    var cantidad = get_local_number(operacion_favorita.cantidad)
-
-    var id_cuenta_cargo=operacion_favorita.id_cuenta_cargo
-    var id_monedero_cargo= operacion_favorita.id_monedero_cargo
-    var id_categoria_gasto=operacion_favorita.id_categoria_gasto
-    var id_cuenta_abono= operacion_favorita.id_cuenta_abono
-    var id_monedero_abono=operacion_favorita.id_monedero_abono
-    var id_categoria_ingreso= operacion_favorita.id_categoria_ingreso
-
-
-    $('#addFechaDataPicker').daterangepicker(get_datapicker_conf());
-    $("#addTypeDescripcionX").val(descripcion)
-    $("#addTypeCantidadX").val(cantidad)
-
-
-   var div_gasto = $("#add-div-gasto")
-   var div_ingreso = $("#add-div-ingreso")
-   var div_transferencia = $("#add-div-transferencia")
-   var radio_transferencia = $("#add-tipo-transferencia")
-   var radio_gasto = $("#add-tipo-gasto")
-   var radio_ingreso = $("#add-tipo-ingreso")
-
-   div_gasto.collapse('hide');
-   div_ingreso.collapse('hide');
-   div_transferencia.collapse('hide');
-   radio_transferencia.prop("checked", false)
-   radio_gasto.prop("checked", false)
-   radio_ingreso.prop("checked", false)
-
-
-   if ((id_categoria_gasto) && (id_categoria_ingreso)){
-        $("#add-transferencia-categoria-ingreso-select").val(id_categoria_ingreso).change();
-        $("#add-transferencia-cuenta-abono-select").val(id_cuenta_abono).change();
-        $("#add-transferencia-monedero-abono-select").val(id_monedero_abono).change();
-        $("#add-transferencia-categoria-gasto-select").val(id_categoria_gasto).change();
-        $("#add-transferencia-cuenta-cargo-select").val(id_cuenta_cargo).change();
-        $("#add-transferencia-monedero-cargo-select").val(id_monedero_cargo).change();
-        radio_transferencia.prop("checked", true)
-        div_transferencia.collapse('show');
-
-   } else if (id_categoria_gasto){
-        $("#add-gasto-categoria-gasto-select").val(id_categoria_gasto).change();
-        $("#add-gasto-cuenta-cargo-select").val(id_cuenta_cargo).change();
-        $("#add-gasto-monedero-cargo-select").val(id_monedero_cargo).change();
-        radio_gasto.prop("checked", true)
-        div_gasto.collapse('show');
-
-   } else if(id_categoria_ingreso){
-        $("#add-ingreso-categoria-ingreso-select").val(id_categoria_ingreso).change();
-        $("#add-ingreso-cuenta-abono-select").val(id_cuenta_abono).change();
-        $("#add-ingreso-monedero-abono-select").val(id_monedero_abono).change();
-        radio_ingreso.prop("checked", true)
-        div_ingreso.collapse('show');
-
-   }
-
-   $('#add').modal('show')
-}
-
-
-
-
 $(document).ready(function() {
-    get_operaciones_favoritas()
-    $('#addFechaDataPicker').daterangepicker(get_datapicker_conf());
-    $('#editFechaDataPicker').daterangepicker(get_datapicker_conf());
-    $('#search-fecha-begin-datapicker').daterangepicker(get_datapicker_conf());
-    $('#search-fecha-begin-datapicker').val('')
-    $('#search-fecha-end-datapicker').daterangepicker(get_datapicker_conf());
-    $('#search-fecha-end-datapicker').val('')
-
-    $('#search-fecha-begin-datapicker').on('cancel.daterangepicker', function(ev, picker) {
-      $('#search-fecha-begin-datapicker').val('');
-    });
-    $('#search-fecha-end-datapicker').on('cancel.daterangepicker', function(ev, picker) {
-      $('#search-fecha-end-datapicker').val('');
-    });
-
-
     table = $('#lista_tabla')
          .on('preXhr.dt', function ( e, settings, data ) {
-               data.count = data.length
-               data.offset = data.start
                data.order_property = data.columns[data.order[0].column].data
                data.order_type = data.order[0].dir
          })
-         .on('xhr.dt', function ( e, settings, json, xhr ) {
-            for (var i=0; i<json.elements.length; i++) {
-                if (json.elements[i].id_categoria_ingreso != undefined && json.elements[i].id_categoria_gasto != undefined)
-                    json.elements[i].DT_RowClass = "transferencia"
-                else if (json.elements[i].id_categoria_ingreso != undefined)
-                    json.elements[i].DT_RowClass = "ingreso"
+         .on('xhr.dt', function ( e, settings, elements, xhr ) {
+            for (var i=0; i<elements.length; i++) {
+                if (elements[i].id_categoria_ingreso != undefined && elements[i].id_categoria_gasto != undefined)
+                    elements[i].DT_RowClass = "transferencia"
+                else if (elements[i].id_categoria_ingreso != undefined)
+                    elements[i].DT_RowClass = "ingreso"
                 else
-                    json.elements[i].DT_RowClass = "gasto"
+                    elements[i].DT_RowClass = "gasto"
             }
-            json.recordsTotal = json.total_elements
-            json.recordsFiltered = json.total_elements
+            elements.recordsTotal = elements.length
+            elements.recordsFiltered = elements.length
          })
         .DataTable({
         dom: '<flrt<"#table_fotter"ip>',
         serverSide:true,
         ajax: {
-            url:'/finanzas/operacion',
+            url:'/finanzas/operacion_favorita',
             data: function (d) {
-                var begin_fecha = $('#search-fecha-begin-datapicker').val()
-                var end_fecha = $('#search-fecha-end-datapicker').val()
                 var id_categoria_ingreso = $("#search-categoria-ingreso-select").val();
                 var id_categoria_gasto = $("#search-categoria-gasto-select").val();
                 var id_cuenta_cargo = $("#search-cuenta-cargo-select").val();
@@ -506,10 +247,6 @@ $(document).ready(function() {
                 var id_cuenta_abono = $("#search-cuenta-abono-select").val();
                 var id_monedero_abono = $("#search-monedero-abono-select").val();
 
-                if (begin_fecha != '')
-                    d.begin_fecha = begin_fecha
-                if (end_fecha != '')
-                    d.end_fecha = end_fecha
                 if (id_categoria_gasto != '')
                     d.id_categoria_gasto = id_categoria_gasto
                 if (id_categoria_ingreso != '')
@@ -524,11 +261,11 @@ $(document).ready(function() {
                     d.id_monedero_abono = id_monedero_abono
 
             },
-            dataSrc: 'elements',
+            dataSrc: '',
         },
         columns: [
             {
-                data:'fecha',
+                data:'nombre',
                 type: "string",
                 render: render_texto,
                 width: "5%"
@@ -599,15 +336,13 @@ $(document).ready(function() {
         ],
         order: [[0, 'desc']],
         info: true,
-        lengthChange: false,
-        paging: true,
-        pageLength: 30,
+        paging: false,
         searching: false,
         scrollX: false,
         language: {
-            info: 'Total _MAX_ Operaciones',
-            infoEmpty: 'No hay Operaciones',
-            zeroRecords: "No hay Operaciones",
+            info: 'Total _MAX_ Operaciones Favoritas',
+            infoEmpty: 'No hay Operaciones Favoritas',
+            zeroRecords: "No hay Operaciones Favoritas",
             loadingRecords: "Cargando...",
             decimal:",",
         }
@@ -621,7 +356,7 @@ $(document).ready(function() {
 
             var operacion = table.row($(this).parents('tr')).data()
             var id = operacion.id
-            var fecha = operacion.fecha
+            var nombre = operacion.nombre
             var descripcion = operacion.descripcion;
             var cantidad = get_local_number(operacion.cantidad)
 
@@ -634,7 +369,7 @@ $(document).ready(function() {
 
 
             $("#editTypeIdX").val(id)
-            $('#editFechaDataPicker').val(fecha);
+            $('#editTypeNombreX').val(nombre);
             $("#editTypeDescripcionX").val(descripcion)
             $("#editTypeCantidadX").val(cantidad)
 
@@ -677,33 +412,24 @@ $(document).ready(function() {
                 $("#edit-ingreso-monedero-abono-select").val(id_monedero_abono).change();
                 radio_ingreso.prop("checked", true)
                 div_ingreso.collapse('show');
+
            }
 
            $('#edit').modal('show')
 
         });
         $('.delete-element').on( "click", function() {
-           delete_operacion($(this).attr("data-element"))
+           delete_operacion_favorita($(this).attr("data-element"))
         });
 
-        $('.fav-element').on( "click", function() {
-           selected_favorito = table.row($(this).parents('tr')).data()
-           $("#addFavoritoNombreX").val('')
-           $('#create_favorito').modal('show')
-        });
 
     });
 
-    $('#search-button').on( "click", function() {
-        table.ajax.reload(null, false);
-    } );
-
-
     $('#add-button').on( "click", function() {
+        $("#addTypeNombreX").val('')
         $("#addTypeDescripcionX").val('')
         $("#addTypeCantidadX").val('')
         $("#addTypeMessageX").text('')
-        $('#addFechaDataPicker').val(moment().format("DD/MM/YYYY"));
 
         $("#add-gasto-categoria-gasto-select").val('');
         $("#add-gasto-cuenta-cargo-select").val('None');
@@ -733,36 +459,15 @@ $(document).ready(function() {
     });
 
     $('#add-submit-button').on( "click", function() {
-       add_operacion();
+       add_operacion_favorita();
     });
 
     $('#edit-close-button').on( "click", function() {
         $('#edit').modal('hide')
-    });
+    } );
 
     $('#edit-submit-button').on( "click", function() {
-       update_operacion()
-    });
-
-    $('#load-button').on( "click", function() {
-        $('#load-operation').modal('show')
-    });
-
-    $('#close-load-operation-button-modal').on( "click", function() {
-        $('#load-operation').modal('hide')
-    });
-
-    $('#save-load-operation-button-modal').on( "click", function() {
-        $('#load-operation').modal('hide')
-        load_operacion_favorita()
-    });
-
-    $('#close-create-favorito-button-modal').on( "click", function() {
-        $('#create_favorito').modal('hide')
-    });
-
-    $('#save-create-favorito-button-modal').on( "click", function() {
-        do_favorito(selected_favorito)
+       update_operacion_favorita()
     });
 
 
