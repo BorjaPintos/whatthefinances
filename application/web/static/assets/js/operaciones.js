@@ -1,5 +1,7 @@
 
 
+
+
 function add_operacion() {
     var fecha = $("#addFechaDataPicker").val()
     var descripcion = $("#addTypeDescripcionX").val();
@@ -255,7 +257,104 @@ get_datapicker_conf = function(){
     }
 }
 
+lista_operaciones_favoritas = undefined
+
+function get_operaciones_favoritas(){
+
+    $.get("finanzas/operacion_favorita?order_property=nombre&order_type=asc", function(operaciones_favoritas) {
+        lista_operaciones_favoritas = operaciones_favoritas
+        selector = $("#operacionFavorita-select")
+        for (i in operaciones_favoritas) {
+            selector.append(new Option(operaciones_favoritas[i].nombre, operaciones_favoritas[i].id))
+        }
+
+    });
+}
+
+get_operacion_favorita_by_id = function(id){
+    console.log(lista_operaciones_favoritas)
+    for (i in lista_operaciones_favoritas) {
+            if (id == lista_operaciones_favoritas[i].id)
+                return lista_operaciones_favoritas[i]
+    }
+    return undefined
+};
+
+load_operacion_favorita = function(){
+
+    var operacion_favorita_id = $("#operacionFavorita-select").val()
+    operacion_favorita = get_operacion_favorita_by_id(operacion_favorita_id)
+    if (operacion_favorita == undefined){
+        console.log("Error al obtener la operacion favorita con id: " + operacion_favorita_id)
+        return
+    }
+    var descripcion = operacion_favorita.descripcion;
+    console.log(typeof(operacion_favorita))
+    console.log(descripcion)
+    var cantidad = get_local_number(operacion_favorita.cantidad)
+
+    var id_cuenta_cargo=operacion_favorita.id_cuenta_cargo
+    var id_monedero_cargo= operacion_favorita.id_monedero_cargo
+    var id_categoria_gasto=operacion_favorita.id_categoria_gasto
+    var id_cuenta_abono= operacion_favorita.id_cuenta_abono
+    var id_monedero_abono=operacion_favorita.id_monedero_abono
+    var id_categoria_ingreso= operacion_favorita.id_categoria_ingreso
+
+
+    $('#addFechaDataPicker').daterangepicker(get_datapicker_conf());
+    $("#addTypeDescripcionX").val(descripcion)
+    $("#addTypeCantidadX").val(cantidad)
+
+
+   var div_gasto = $("#add-div-gasto")
+   var div_ingreso = $("#add-div-ingreso")
+   var div_transferencia = $("#add-div-transferencia")
+   var radio_transferencia = $("#add-tipo-transferencia")
+   var radio_gasto = $("#add-tipo-gasto")
+   var radio_ingreso = $("#add-tipo-ingreso")
+
+   div_gasto.collapse('hide');
+   div_ingreso.collapse('hide');
+   div_transferencia.collapse('hide');
+   radio_transferencia.prop("checked", false)
+   radio_gasto.prop("checked", false)
+   radio_ingreso.prop("checked", false)
+
+
+   if ((id_categoria_gasto) && (id_categoria_ingreso)){
+        $("#add-transferencia-categoria-ingreso-select").val(id_categoria_ingreso).change();
+        $("#add-transferencia-cuenta-abono-select").val(id_cuenta_abono).change();
+        $("#add-transferencia-monedero-abono-select").val(id_monedero_abono).change();
+        $("#add-transferencia-categoria-gasto-select").val(id_categoria_gasto).change();
+        $("#add-transferencia-cuenta-cargo-select").val(id_cuenta_cargo).change();
+        $("#add-transferencia-monedero-cargo-select").val(id_monedero_cargo).change();
+        radio_transferencia.prop("checked", true)
+        div_transferencia.collapse('show');
+
+   } else if (id_categoria_gasto){
+        $("#add-gasto-categoria-gasto-select").val(id_categoria_gasto).change();
+        $("#add-gasto-cuenta-cargo-select").val(id_cuenta_cargo).change();
+        $("#add-gasto-monedero-cargo-select").val(id_monedero_cargo).change();
+        radio_gasto.prop("checked", true)
+        div_gasto.collapse('show');
+
+   } else if(id_categoria_ingreso){
+        $("#add-ingreso-categoria-ingreso-select").val(id_categoria_ingreso).change();
+        $("#add-ingreso-cuenta-abono-select").val(id_cuenta_abono).change();
+        $("#add-ingreso-monedero-abono-select").val(id_monedero_abono).change();
+        radio_ingreso.prop("checked", true)
+        div_ingreso.collapse('show');
+
+   }
+
+   $('#add').modal('show')
+}
+
+
+
+
 $(document).ready(function() {
+    get_operaciones_favoritas()
     $('#addFechaDataPicker').daterangepicker(get_datapicker_conf());
     $('#editFechaDataPicker').daterangepicker(get_datapicker_conf());
     $('#search-fecha-begin-datapicker').daterangepicker(get_datapicker_conf());
@@ -533,10 +632,23 @@ $(document).ready(function() {
 
     $('#edit-close-button').on( "click", function() {
         $('#edit').modal('hide')
-    } );
+    });
 
     $('#edit-submit-button').on( "click", function() {
        update_operacion()
+    });
+
+    $('#load-button').on( "click", function() {
+        $('#load-operation').modal('show')
+    });
+
+    $('#close-load-operation-button-modal').on( "click", function() {
+        $('#load-operation').modal('hide')
+    });
+
+    $('#save-load-operation-button-modal').on( "click", function() {
+        $('#load-operation').modal('hide')
+        load_operacion_favorita()
     });
 
 

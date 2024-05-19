@@ -15,7 +15,7 @@ Añadir operación
 
 
     <div class="input-group">
-        <div class="input-group form-floating">
+        <div class="mt-2 px-2 input-group form-floating">
             <input type="text" class="form-control" id="search-fecha-begin-datapicker" data-toggle="date-picker"
                    data-time-picker="true">
             <div class="input-group-text bg-primary border-primary text-white">
@@ -25,7 +25,7 @@ Añadir operación
         </div>
 
 
-        <div class="input-group date form-floating">
+        <div class="mt-2 px-2 input-group date form-floating">
             <input type="text" class="form-control" id="search-fecha-end-datapicker" data-toggle="date-picker"
                    data-time-picker="true">
             <div class="input-group-text bg-primary border-primary text-white">
@@ -33,7 +33,15 @@ Añadir operación
             </div>
             <label for="search-fecha-end-datapicker">Hasta:</label>
         </div>
+
+
+        <button type="button" class="mt-2 btn btn-secondary px-2 text-end" id="load-button"><i
+                class="uil-upload"></i> Cargar Operación Favorita
+        </button>
+
     </div>
+
+
     <label class="mt-2 px-2 search-label" for="search-categoria-gasto-select">Categoria Gasto</label>
 
     <select class="mt-2 px-2 form-select filtro-search" id="search-categoria-gasto-select">
@@ -98,6 +106,8 @@ Añadir operación
     <button type="button" class="btn btn-info px-2" id="search-button"><i
             class="uil-search"></i> Buscar
     </button>
+
+
 </div>
 
 {% endblock %}
@@ -137,8 +147,10 @@ Añadir operación
         <select class="form-select mt-2" id="add-gasto-categoria-gasto-select">
             <option value="">Seleccione un Gasto</option>
             {% for categoria_gasto in lista_categorias_gasto %}
-            <option value="{{categoria_gasto.id}}" data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
-                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">{{categoria_gasto.descripcion}}
+            <option value="{{categoria_gasto.id}}"
+                    data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
+                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">
+                {{categoria_gasto.descripcion}}
             </option>
             {% endfor %}
         </select>
@@ -186,8 +198,10 @@ Añadir operación
         <select class="form-select mt-2" id="add-transferencia-categoria-gasto-select">
             <option value="">Seleccione un gasto</option>
             {% for categoria_gasto in lista_categorias_gasto %}
-            <option value="{{categoria_gasto.id}}" data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
-                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">{{categoria_gasto.descripcion}}
+            <option value="{{categoria_gasto.id}}"
+                    data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
+                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">
+                {{categoria_gasto.descripcion}}
             </option>
             {% endfor %}
         </select>
@@ -268,8 +282,10 @@ Editar Operacion
         <select class="form-select mt-2" id="edit-gasto-categoria-gasto-select">
             <option value="">Seleccione un Gasto</option>
             {% for categoria_gasto in lista_categorias_gasto %}
-            <option value="{{categoria_gasto.id}}" data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
-                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">{{categoria_gasto.descripcion}}
+            <option value="{{categoria_gasto.id}}"
+                    data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
+                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">
+                {{categoria_gasto.descripcion}}
             </option>
             {% endfor %}
         </select>
@@ -317,8 +333,10 @@ Editar Operacion
         <select class="form-select mt-2" id="edit-transferencia-categoria-gasto-select">
             <option value="">Seleccione un gasto</option>
             {% for categoria_gasto in lista_categorias_gasto %}
-            <option value="{{categoria_gasto.id}}" data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
-                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">{{categoria_gasto.descripcion}}
+            <option value="{{categoria_gasto.id}}"
+                    data-id-cuenta-defecto="{{categoria_gasto.id_cuenta_cargo_defecto}}"
+                    data-id-monedero-defecto="{{categoria_gasto.id_monedero_defecto}}">
+                {{categoria_gasto.descripcion}}
             </option>
             {% endfor %}
         </select>
@@ -359,6 +377,36 @@ Editar Operacion
     </div>
 </div>
 <input type="hidden" id="editTypeIdX"/>
+{% endblock %}
+
+{% block extend_lista %}
+
+<div class="modal" id="load-operation" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog row d-flex justify-content-center align-items-center h-100" role="document">
+        <div class="modal-content modal-body card bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    Selecciona Operación Favorita</h5>
+                <button type="button" class="close" id="close-load-operation-button-modal" data-dismiss="modal" aria-label="Close">
+                    <i class="uil-times"></i>
+                </button>
+            </div>
+            <div class="">
+                <div class="card-body text-center">
+                    <div class="mb-md-5 mt-md-4">
+                        <select class="form-select" id="operacionFavorita-select">
+                            <option value="">Selecciona Operación Favorita</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="save-load-operation-button-modal">Cargar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 

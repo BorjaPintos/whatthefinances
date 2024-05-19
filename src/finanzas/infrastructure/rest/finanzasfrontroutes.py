@@ -1,7 +1,8 @@
 import locale
 
 from src.finanzas.infrastructure.rest import finanzascuentascontroller, finanzasmonederoscontroller, \
-    finanzascategoriasingresocontroller, finanzascategoriasgastocontroller, finanzasposicioncontroller
+    finanzascategoriasingresocontroller, finanzascategoriasgastocontroller, finanzasposicioncontroller, \
+    finanzasoperacionesfavoritascontroller
 from src.shared.infraestructure.rest.response import serialize_response
 
 locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
@@ -107,7 +108,7 @@ def import_routes(rootpath, app):
                                lista_categorias_gasto=lista_categorias_gasto,
                                lista_categorias_ingreso=lista_categorias_ingreso,
                                lista_cuentas=lista_cuentas,
-                               lista_monederos=lista_monederos,
+                               lista_monederos=lista_monederos
                                )
 
     @app.route(rootpath + "operaciones_favoritas.html", methods=['GET'])
