@@ -1,11 +1,18 @@
 import locale
+import traceback
+
+from loguru import logger
 
 from src.finanzas.infrastructure.rest import finanzascuentascontroller, finanzasmonederoscontroller, \
     finanzascategoriasingresocontroller, finanzascategoriasgastocontroller, finanzasposicioncontroller, \
     finanzasoperacionesfavoritascontroller
 from src.shared.infraestructure.rest.response import serialize_response
 
-locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
+try:
+    locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
+except Exception:
+    traceback.print_exc()
+    logger.warning("No ha sido posible establecer el lenguaje local")
 from flask import request, render_template
 from flask_login import login_required
 import datetime

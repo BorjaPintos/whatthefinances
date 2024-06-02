@@ -11,6 +11,7 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 @InitTable()
 class DividendoEntity(BaseEntity):
     __tablename__ = 'finanzas_dividendos'
+    __table_args__ = {'extend_existing': True}
     fecha = Column(Date, nullable=False)
     isin = Column(Text, nullable=False)
     dividendo_por_participacion = Column(Float(precision=2), nullable=False)

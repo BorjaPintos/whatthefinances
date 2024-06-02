@@ -10,6 +10,7 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 @InitTable()
 class OperacionFavoritaEntity(BaseEntity):
     __tablename__ = 'finanzas_operaciones_favoritas'
+    __table_args__ = {'extend_existing': True}
     nombre = Column(Text, nullable=False, unique=True)
     cantidad = Column(Float(precision=2), nullable=False)
     descripcion = Column(Text, nullable=False)

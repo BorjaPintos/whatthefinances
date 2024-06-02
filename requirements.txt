@@ -2,7 +2,6 @@ loguru==0.7.2
 requests==2.31.0
 SQLAlchemy==2.0.23
 SQLAlchemy-Utils==0.41.1
-psycopg2==2.9.9
 flask==3.0.0
 flask-cors==4.0.0
 flask-login==0.6.3
@@ -10,4 +9,3 @@ pyjwt==2.8.0
 pyOpenSSL==23.3.0
 uvicorn==0.17.4
 pywebview==4.4.1
-auto-py-to-exe==2.43.3

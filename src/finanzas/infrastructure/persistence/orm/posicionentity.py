@@ -12,6 +12,7 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 @InitTable()
 class PosicionEntity(BaseEntity):
     __tablename__ = 'finanzas_posiciones'
+    __table_args__ = {'extend_existing': True}
     isin = Column(Text, nullable=False)
     fecha_compra = Column(Date, nullable=False)
     fecha_venta = Column(Date, nullable=True)

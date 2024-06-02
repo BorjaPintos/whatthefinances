@@ -1,11 +1,8 @@
-import pytest
-
 from src.login.application.login import Login
 from src.login.domain.exceptions.unauthorizederror import UnauthorizedError
-from tests.pytest.shared.environment import *
+from tests.pytest.shared.environmentpytest import *
 import unittest
 from unittest.mock import Mock
-from src.login.application.getuser import GetUser
 from src.login.domain.user import User
 
 

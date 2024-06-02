@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.12']
-        os: [ubuntu-latest]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -40,7 +40,12 @@ jobs:
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{always()}}
 
-    - name: Zip test result
+    - name: Zip test result windows
+      if: ${{ success() && runner.os == 'Windows'}}
+      run: Compress-Archive html-${{matrix.os}}-${{matrix.python-version}}/ html-${{matrix.os}}-${{matrix.python-version}}.zip
+
+    - name: Zip test result not windows
+      if: ${{ success() && runner.os != 'Windows'}}
       run: zip -r html-${{matrix.os}}-${{matrix.python-version}}.zip html-${{matrix.os}}-${{matrix.python-version}}/
 
     - name: Upload cobertura results
@@ -51,5 +56,17 @@ jobs:
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ success() }}
 
-    - name: Making Windows Exe
+    - name: Making Executables
       uses: ./.github/actions/pyinstaller
+
+    - name: Upload windows Exe
+      uses: actions/upload-artifact@v2
+      with:
+        name: WTFinances.exe
+        path: ./pyinstaller/dist/WTFinances.exe
+
+    - name: Upload not windows executable
+      uses: actions/upload-artifact@v2
+      with:
+        name: WTFinances-${{matrix.os}}
+        path: ./pyinstaller/dist/WTFinances

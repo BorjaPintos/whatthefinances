@@ -13,6 +13,7 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 @InitTable()
 class MovimientoCuentaEntity(BaseEntity):
     __tablename__ = 'finanzas_movimientos_cuentas'
+    __table_args__ = {'extend_existing': True}
     id_operacion = Column(Integer, nullable=False)
     id_cuenta = Column(Integer, nullable=False)
     cantidad = Column(Float(precision=2), nullable=False)

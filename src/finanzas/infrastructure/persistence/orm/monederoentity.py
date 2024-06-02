@@ -12,6 +12,7 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 @InitTable()
 class MonederoEntity(BaseEntity):
     __tablename__ = 'finanzas_monederos'
+    __table_args__ = {'extend_existing': True}
     nombre = Column(Text, nullable=False, unique=True)
     cantidad_inicial = Column(Float(precision=2), server_default="0.00", nullable=False)
     diferencia = Column(Float(precision=2), server_default="0.00", nullable=False)
