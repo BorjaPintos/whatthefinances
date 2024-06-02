@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+
+    whatthefinances:
+        build: whatthefinances
+        volumes:
+            - ./whatthefinances/config.json:/whatthefinances/config.json
+            - ./whatthefinances/entrypoint.sh:/whatthefinances/entrypoint.sh
+            - ./whatthefinances/database.sqlite3:/whatthefinances/database.sqlite3
+        container_name: whatthefinances
+        networks:
+            - whatthefinances-net
+
+networks:
+  whatthefinances-net:
+

@@ -1,0 +1,7 @@
+name: 'Build Executable'
+description: 'Build Executable'
+runs:
+  using: "composite"
+  steps:
+    - run: $GITHUB_ACTION_PATH/pyinstaller.sh
+      shell: bash

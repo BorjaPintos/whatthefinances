@@ -1,0 +1,38 @@
+{
+  "log_level": "DEBUG",
+  "desktop_app": false,
+  "packet": false,
+  "flask_config": {
+    "ENV": "dev",
+    "DEBUG": false,
+    "UVICORN" : false,
+    "PORT": 9090,
+    "HOST": "localhost",
+    "use_ssl": false,
+    "token_secret": "blablablaIC",
+    "token_login_hours_alive": 240
+  },
+  "database": {
+    "type": "postgres",
+    "postgres": {
+      "host": "localhost",
+      "port": 5432,
+      "database": "finanzas",
+      "user": "postgres",
+      "password": "postgresqlpassword",
+      "debug": true
+    },
+    "init": {
+      "delete_data_on_init": true,
+      "sql_path_files": {
+        "users": "./data/sql/user/users.sql",
+        "finanzas_cuentas": "./data/sql/finanzas/cuenta.sql",
+        "finanzas_monederos": "./data/sql/finanzas/monedero.sql",
+        "finanzas_categorias_gasto": "./data/sql/finanzas/categoriagasto.sql",
+        "finanzas_categorias_ingreso": "./data/sql/finanzas/categoriaingreso.sql",
+        "finanzas_brokers": "./data/sql/finanzas/broker.sql",
+        "finanzas_bolsas": "./data/sql/finanzas/bolsa.sql"
+      }
+    }
+  }
+}
