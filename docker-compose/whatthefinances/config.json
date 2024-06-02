@@ -1,0 +1,34 @@
+{
+  "log_level": "INFO",
+  "desktop_app": true,
+  "packet": false,
+  "flask_config": {
+    "ENV": "PRO",
+    "DEBUG": false,
+    "UVICORN" : false,
+    "PORT": 9090,
+    "HOST": "0.0.0.0",
+    "use_ssl": false,
+    "token_secret": "MI_SECRET_FINANCE_TOKEN",
+    "token_login_hours_alive": 240
+  },
+  "database": {
+    "type": "sqlite",
+    "sqlite": {
+      "file": "database.sqlite3",
+      "debug": false
+    },
+    "init": {
+      "delete_data_on_init": false,
+      "sql_path_files": {
+        "users": "./data/sql/user/users.sql",
+        "finanzas_cuentas": "./data/sql/finanzas/cuenta.sql",
+        "finanzas_monederos": "./data/sql/finanzas/monedero.sql",
+        "finanzas_categorias_gasto": "./data/sql/finanzas/categoriagasto.sql",
+        "finanzas_categorias_ingreso": "./data/sql/finanzas/categoriaingreso.sql",
+        "finanzas_brokers": "./data/sql/finanzas/broker.sql",
+        "finanzas_bolsas": "./data/sql/finanzas/bolsa.sql"
+      }
+    }
+  }
+}
