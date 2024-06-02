@@ -54,6 +54,12 @@ jobs:
     - name: Making Windows Exe
       uses: ./.github/actions/pyinstaller
 
+    - name: command ls
+      run: ls ./pyinstaller/dist/
+
+    - name: command ls 2
+      run: ls ./pyinstaller/dist/WTFinances
+
     - name: Upload exe
       uses: actions/upload-artifact@v2
       with:
