@@ -1,0 +1,55 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Master Workflow
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        python-version: ['3.12']
+        os: [ubuntu-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: install basic dependencies
+      uses: ./.github/actions/basic
+
+    - name: Test with pytest
+      run: |
+        pip install -r requirementstest.txt
+        python -m pytest --cov=src --cov-report html:html-${{matrix.os}}-${{matrix.python-version}} --doctest-modules --junitxml=junit/test-results-${{matrix.os}}-${{matrix.python-version}}.xml
+
+    - name: Upload pytest test results
+      uses: actions/upload-artifact@v2
+      with:
+        name: pytest-results-${{matrix.os}}-${{matrix.python-version}}
+        path: junit/test-results-${{matrix.os}}-${{ matrix.python-version }}.xml
+      # Use always() to always run this step to publish test results when there are test failures
+      if: ${{always()}}
+
+    - name: Zip test result
+      run: zip -r html-${{matrix.os}}-${{matrix.python-version}}.zip html-${{matrix.os}}-${{matrix.python-version}}/
+
+    - name: Upload cobertura results
+      uses: actions/upload-artifact@v2
+      with:
+        name: html-${{matrix.os}}-${{matrix.python-version}}.zip
+        path: html-${{matrix.os}}-${{matrix.python-version}}.zip
+      # Use always() to always run this step to publish test results when there are test failures
+      if: ${{ success() }}
+
+    - name: Making Windows Exe
+      uses: ./.github/actions/pyinstaller
