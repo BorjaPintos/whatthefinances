@@ -53,3 +53,9 @@ jobs:
 
     - name: Making Windows Exe
       uses: ./.github/actions/pyinstaller
+
+    - name: Upload exe
+      uses: actions/upload-artifact@v2
+      with:
+        name: WTFinances.exe
+        path: pyinstaller/dist/WTFinances.exe
