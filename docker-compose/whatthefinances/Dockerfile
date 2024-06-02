@@ -11,7 +11,9 @@ RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 
 #update system
+RUN apt update
 RUN apt -y upgrade
+RUN apt install -y locales locales-all
 
 EXPOSE 9090
 
