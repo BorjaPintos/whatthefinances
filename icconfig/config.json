@@ -4,7 +4,7 @@
   "packet": false,
   "flask_config": {
     "ENV": "dev",
-    "DEBUG": false,
+    "DEBUG": true,
     "UVICORN" : false,
     "PORT": 9090,
     "HOST": "localhost",
@@ -13,13 +13,9 @@
     "token_login_hours_alive": 240
   },
   "database": {
-    "type": "postgres",
-    "postgres": {
-      "host": "localhost",
-      "port": 5432,
-      "database": "finanzas",
-      "user": "postgres",
-      "password": "postgresqlpassword",
+    "type": "sqlite",
+    "sqlite": {
+      "file": "database.sqlite3",
       "debug": true
     },
     "init": {
