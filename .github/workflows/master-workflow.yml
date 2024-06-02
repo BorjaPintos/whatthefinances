@@ -40,7 +40,12 @@ jobs:
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{always()}}
 
-    - name: Zip test result
+    - name: Zip test result windows
+      if: ${{ success() && runner.os == 'Windows'}}
+      run: Compress-Archive html-${{matrix.os}}-${{matrix.python-version}}/ html-${{matrix.os}}-${{matrix.python-version}}.zip
+
+    - name: Zip test result not windows
+      if: ${{ success() && runner.os != 'Windows'}}
       run: zip -r html-${{matrix.os}}-${{matrix.python-version}}.zip html-${{matrix.os}}-${{matrix.python-version}}/
 
     - name: Upload cobertura results
@@ -60,14 +65,8 @@ jobs:
         name: WTFinances.exe
         path: ./pyinstaller/dist/WTFinances.exe
 
-    - name: Upload ubuntu Exe
+    - name: Upload not windows executable
       uses: actions/upload-artifact@v2
       with:
-        name: WTFinances.exe
+        name: WTFinances-${{matrix.os}}
         path: ./pyinstaller/dist/WTFinances
-
-    - name: Upload MOC-OS Exe
-      uses: actions/upload-artifact@v2
-      with:
-        name: WTFinances.exe
-        path: ./pyinstaller/dist/WTFinances.app
