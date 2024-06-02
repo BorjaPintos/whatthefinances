@@ -9,6 +9,8 @@ services:
             - ./whatthefinances/entrypoint.sh:/whatthefinances/entrypoint.sh
             - ./whatthefinances/database.sqlite3:/whatthefinances/database.sqlite3
         container_name: whatthefinances
+        ports:
+             - "9090:9090/tcp"
         networks:
             - whatthefinances-net
 

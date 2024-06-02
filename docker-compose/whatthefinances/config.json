@@ -1,6 +1,6 @@
 {
   "log_level": "INFO",
-  "desktop_app": true,
+  "desktop_app": false,
   "packet": false,
   "flask_config": {
     "ENV": "PRO",
@@ -8,7 +8,12 @@
     "UVICORN" : false,
     "PORT": 9090,
     "HOST": "0.0.0.0",
-    "use_ssl": false,
+    "use_ssl": true,
+    "ssl": {
+      "cert_path": "./ssl/server.crt",
+      "key_path": "./ssl/server.key",
+      "passphrase": "finanzas"
+    },
     "token_secret": "MI_SECRET_FINANCE_TOKEN",
     "token_login_hours_alive": 240
   },
