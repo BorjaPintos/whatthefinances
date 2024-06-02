@@ -56,7 +56,16 @@ jobs:
       # Use always() to always run this step to publish test results when there are test failures
       if: ${{ success() }}
 
-    - name: Integration tests with behave
+    - name: Windows Integration tests with behave
+      if: ${{ success() && runner.os == 'Windows'}}
+      run: |
+        nohup python main.py run -c icconfig/config.json > nohup.out 2> null &
+        sleep 10
+        sh behave.sh --format progress3
+        kill -9 $(lsof -i:9090 -t)
+
+    - name: Not Windows Integration tests with behave
+      if: ${{ success() && runner.os != 'Windows'}}
       run: |
         nohup python main.py run -c icconfig/config.json > nohup.out 2> nohup.err < /dev/null &
         sleep 10
