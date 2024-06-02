@@ -1,9 +1,15 @@
 import locale
+import traceback
 from datetime import datetime, date
 from typing import List
 
-locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
+from loguru import logger
 
+try:
+    locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
+except Exception:
+    traceback.print_exc()
+    logger.warning("No ha sido posible establecer el lenguaje local")
 
 def apply_locale_float(value) -> float:
     if isinstance(value, int):
