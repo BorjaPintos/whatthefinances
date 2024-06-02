@@ -11,6 +11,7 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 @InitTable()
 class ValorParticipacionEntity(BaseEntity):
     __tablename__ = 'finanzas_valor_participaciones'
+    __table_args__ = {'extend_existing': True}
     isin = Column(Text, nullable=False)
     fecha = Column(DateTime, nullable=False)
     valor = Column(Float(precision=4), server_default="0.00", nullable=False)

@@ -10,7 +10,7 @@ from src.persistence.infrastructure.orm.baseentity import BaseEntity
 @InitTable()
 class CategoriaGastoEntity(BaseEntity):
     __tablename__ = 'finanzas_categorias_gasto'
-
+    __table_args__ = {'extend_existing': True}
     descripcion = Column(Text, nullable=False, unique=True)
     id_cuenta_cargo_defecto = Column(Integer)
     id_monedero_defecto = Column(Integer)
