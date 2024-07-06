@@ -32,8 +32,8 @@ class ListBroker(TransactionalUseCase):
             nombre_filter = SimpleFilter(
                 "nombre", WhereOperator.ILIKE, "%{}%".format(params["nombre"]))
             filter = combine_filters(filter, CompositeOperator.AND, nombre_filter)
-        if "extrangero" in params and params["extrangero"] is not None:
-            extrangero_filter = SimpleFilter(
-                "extrangero", WhereOperator.IS, params["extrangero"])
-            filter = combine_filters(filter, CompositeOperator.AND, extrangero_filter)
+        if "extranjero" in params and params["extranjero"] is not None:
+            extranjero_filter = SimpleFilter(
+                "extranjero", WhereOperator.IS, params["extranjero"])
+            filter = combine_filters(filter, CompositeOperator.AND, extranjero_filter)
         return filter

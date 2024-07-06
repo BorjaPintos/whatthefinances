@@ -153,7 +153,7 @@ def import_routes(rootpath, app):
     @login_required
     def brokers():
         user = request.user
-        lista_headers = ["Nombre", "Extrangero"]
+        lista_headers = ["Nombre", "Extranjero"]
         return render_template('/broker.html', username=user.get_name(),
                                title="Brokers",
                                lista_headers=lista_headers)

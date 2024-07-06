@@ -1,11 +1,11 @@
 function add_broker() {
     var nombre = $.trim($("#addTypeNombreX").val());
-    var extrangero = $("#addTypeExtrangeroX")[0].checked;
+    var extranjero = $("#addTypeExtranjeroX")[0].checked;
 
 
     var data = {
         nombre: nombre,
-        extrangero:extrangero
+        extranjero:extranjero
     }
     var xhttp = new XMLHttpRequest();
 
@@ -53,11 +53,11 @@ function delete_broker(id) {
 function update_broker() {
     var id = $.trim($("#editTypeIdX").val())
     var nombre = $.trim($("#editTypeNombreX").val());
-    var extrangero = $("#editTypeExtrangeroX")[0].checked;
+    var extranjero = $("#editTypeExtranjeroX")[0].checked;
 
     var data = {
         nombre: nombre,
-        extrangero:extrangero
+        extranjero:extranjero
     }
 
     var xhttp = new XMLHttpRequest();
@@ -110,7 +110,7 @@ $( document).ready(function() {
                 type: "string"
             },
             {
-                data:'extrangero',
+                data:'extranjero',
                 type: "boolean",
                 render: render_boolean,
             },
@@ -141,10 +141,10 @@ $( document).ready(function() {
             var data = table.row($(this).parents('tr')).data()
             var id = data.id
             var nombre = data.nombre
-            var extrangero = data.extrangero
+            var extranjero = data.extranjero
 
             $("#editTypeNombreX").val(nombre);
-            $("#editTypeExtrangeroX").prop('checked', extrangero);
+            $("#editTypeExtranjeroX").prop('checked', extranjero);
             $("#editTypeIdX").val(id);
             $('#edit').modal('show')
         });
@@ -158,7 +158,7 @@ $( document).ready(function() {
 
     $('#add-button').on( "click", function() {
         $("#addTypeNombreX").val('')
-        $("#addTypeExtrangeroX").val(false)
+        $("#addTypeExtranjeroX").val(false)
         $("#addTypeMessageX").text('')
         $('#add').modal('show')
     } );

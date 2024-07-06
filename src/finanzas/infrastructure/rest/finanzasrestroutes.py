@@ -358,7 +358,7 @@ def import_routes(rootpath, app):
             "order_property": request.args.get('order_property', 'nombre'),
             "order_type": request.args.get('order_type', 'asc'),
             "nombre": request.args.get('nombre', None),
-            "extrangero": request.args.get('extrangero', None)
+            "extranjero": request.args.get('extranjero', None)
         }
         return finanzasposicioncontroller.list_brokers(params)
 
@@ -374,7 +374,7 @@ def import_routes(rootpath, app):
     def create_broker():
         params = {
             "nombre": request.json.get('nombre'),
-            "extrangero": request.json.get('extrangero')
+            "extranjero": request.json.get('extranjero')
         }
         return finanzasposicioncontroller.create_broker(params)
 
@@ -385,7 +385,7 @@ def import_routes(rootpath, app):
         params = {
             "id": id_broker,
             "nombre": request.json.get('nombre', None),
-            "extrangero": request.json.get('extrangero', None)
+            "extranjero": request.json.get('extranjero', None)
         }
         return finanzasposicioncontroller.update_broker(params)
 
