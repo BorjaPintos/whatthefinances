@@ -18,9 +18,9 @@ class UpdateBroker(TransactionalUseCase):
         self.__validate_params(params)
 
         broker = self._broker_repository.get(params["id"])
-        """El usuario solo puede cambiar nombre y si es extrangero"""
+        """El usuario solo puede cambiar nombre y si es extranjero"""
         broker.set_nombre(params.get("nombre"))
-        broker.set_extrangero(params.get("extrangero"))
+        broker.set_extranjero(params.get("extranjero"))
         updated = self._broker_repository.update(broker)
         if updated:
             try:
@@ -36,5 +36,5 @@ class UpdateBroker(TransactionalUseCase):
             raise InvalidParamError("campo id no puede estar vacío")
         if "nombre" not in params or params["nombre"] is None:
             raise InvalidParamError("campo nombre obligatorio")
-        if "extrangero" not in params or params["extrangero"] is None:
-            raise InvalidParamError("campo extrangero obligatorio")
+        if "extranjero" not in params or params["extranjero"] is None:
+            raise InvalidParamError("campo extranjero obligatorio")

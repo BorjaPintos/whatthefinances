@@ -35,7 +35,7 @@ function get_valor_actual(response_operaciones){
     return suma_total
 }
 
-async function  get_total_brokers_extrangeros(data, callback, suma_parcial){
+async function  get_total_brokers_extranjeros(data, callback, suma_parcial){
     var suma_total = (suma_parcial === undefined) ? 0 : suma_parcial;
     data.abierto = true
     data.end_fecha_compra = data.end_fecha
@@ -48,7 +48,7 @@ async function  get_total_brokers_extrangeros(data, callback, suma_parcial){
             suma_total += get_valor_actual(response)
             if (response.has_more_elements) {
                 data.offset = response.offset + response.pagination_size
-                get_total_brokers_extrangeros(data, callback, suma_total)
+                get_total_brokers_extranjeros(data, callback, suma_total)
             } else {
                 callback(suma_total);
             }
@@ -330,10 +330,10 @@ async function dividendos(begin_date, end_date){
     });
 }
 
-async function brokers_extrangeros(begin_date, end_date){
+async function brokers_extranjeros(begin_date, end_date){
 
     var data = {"begin_fecha":begin_date, "end_fecha":end_date}
-    data.extrangero = true
+    data.extranjero = true
     $.ajax({
         url: "/finanzas/broker",
         contentType: "application/json",
@@ -349,8 +349,8 @@ async function brokers_extrangeros(begin_date, end_date){
             }
             data.list_id_broker = list_id
 
-            get_total_brokers_extrangeros(data, function(suma_total){
-                $("#brokersextrangeros").text(suma_total.toFixed(2));
+            get_total_brokers_extranjeros(data, function(suma_total){
+                $("#brokersextranjeros").text(suma_total.toFixed(2));
             })
         },
         error: function(){
@@ -379,7 +379,7 @@ async function hacer_hacienda() {
         material_escolar(begin_date, end_date),
         guarderia(begin_date, end_date),
         rehabilitacion_vivienda(begin_date, end_date),
-        brokers_extrangeros(begin_date, end_date),
+        brokers_extranjeros(begin_date, end_date),
         compraventaparticipaciones(begin_date, end_date),
         dividendos(begin_date, end_date),
     ]);

@@ -12,14 +12,14 @@ class BrokerEntity(BaseEntity):
     __tablename__ = 'finanzas_brokers'
     __table_args__ = {'extend_existing': True}
     nombre = Column(Text, nullable=False, unique=True)
-    extrangero = Column(Boolean, nullable=False)
+    extranjero = Column(Boolean, nullable=False)
 
     @staticmethod
     def get_order_column(str_property) -> Column:
         switcher = {
             "id": BrokerEntity.id,
             "nombre": BrokerEntity.nombre,
-            "extrangero": BrokerEntity.extrangero
+            "extranjero": BrokerEntity.extranjero
         }
         return switcher.get(str_property, BrokerEntity.id)
 
@@ -28,7 +28,7 @@ class BrokerEntity(BaseEntity):
         switcher = {
             "id": BrokerEntity.id,
             "nombre": BrokerEntity.nombre,
-            "extrangero": BrokerEntity.extrangero
+            "extranjero": BrokerEntity.extranjero
         }
         return switcher.get(str_property, BrokerEntity.id)
 
@@ -38,7 +38,7 @@ class BrokerEntity(BaseEntity):
             caster = {
                 BrokerEntity.id: int,
                 BrokerEntity.nombre: str,
-                BrokerEntity.extrangero: bool
+                BrokerEntity.extranjero: bool
             }
             return caster.get(column)(value)
         else:
@@ -47,9 +47,9 @@ class BrokerEntity(BaseEntity):
     def convert_to_object_domain(self) -> Broker:
         return Broker({"id": self.id,
                        "nombre": self.nombre,
-                       "extrangero": self.extrangero,
+                       "extranjero": self.extranjero,
                        })
 
     def update(self, broker: Broker):
         self.nombre = broker.get_nombre()
-        self.extrangero = broker.is_extrangero()
+        self.extranjero = broker.is_extranjero()

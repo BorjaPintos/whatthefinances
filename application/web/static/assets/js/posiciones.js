@@ -114,6 +114,14 @@ get_local_integer = function(num){
     return $.fn.dataTable.render.number('').display(num);
 }
 
+render_number = function (data, type) {
+    var number = get_local_number(data);
+    if (type === 'display') {
+        return '<span class="badge custom-badge flex-grow-1 ms-2">'+number+'</span>'
+    }
+    return data
+}
+
 render_dinero = function (data, type) {
     var number = get_local_number(data);
     if (type === 'display') {
@@ -302,7 +310,7 @@ $(document).ready(function() {
             {
                 data:'numero_participaciones',
                 type: "num",
-                render: render_texto,
+                render: render_number,
                 width: "5%"
             },
             {

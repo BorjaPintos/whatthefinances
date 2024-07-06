@@ -475,8 +475,8 @@ def __cast_params(params: dict):
     if params.get("id_broker") is not None:
         params["id_broker"] = apply_locale_int(params["id_broker"])
 
-    if params.get("extrangero") is not None:
-        params["extrangero"] = apply_locale_bool(params["extrangero"])
+    if params.get("extranjero") is not None:
+        params["extranjero"] = apply_locale_bool(params["extranjero"])
 
     if params.get("id_bolsa") is not None:
         params["id_bolsa"] = apply_locale_int(params["id_bolsa"])

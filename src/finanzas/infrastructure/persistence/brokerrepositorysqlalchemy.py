@@ -34,7 +34,7 @@ class BrokerRepositorySQLAlchemy(ITransactionalRepository, BrokerRepository):
     def new(self, params: dict) -> Broker:
         try:
             entity = BrokerEntity(nombre=params.get("nombre"),
-                                  extrangero=params.get("extrangero"))
+                                  extranjero=params.get("extranjero"))
             self._session.add(entity)
             self._session.flush()
             return entity.convert_to_object_domain()
