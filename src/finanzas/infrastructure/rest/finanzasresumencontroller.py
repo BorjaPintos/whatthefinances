@@ -6,11 +6,8 @@ from src.finanzas.application.resumentotales import ResumenTotales
 from src.finanzas.application.resumenvaloresparticipacionesdias import ResumenValoresParticipacionesDias
 from src.finanzas.application.resumenvaloresparticipacionesmeses import ResumenValoresParticipacionesMeses
 from src.finanzas.infrastructure.persistence.resumenrepositorysqlalchemy import ResumenRepositorySQLAlchemy
-from src.finanzas.infrastructure.rest.localeutils import apply_locale_date, apply_locale_float, apply_locale_int
-from src.shared.infraestructure.rest.pagination import Pagination
+from src.shared.utils.localeutils import apply_locale_date, apply_locale_int
 from typing import Any, Tuple
-from loguru import logger
-from src.shared.domain.exceptions.messageerror import MessageError
 
 resumen_repository = ResumenRepositorySQLAlchemy()
 

@@ -5,8 +5,7 @@ from src.finanzas.application.listoperacionesfavoritas import ListOperacionesFav
 from src.finanzas.application.updateoperacionfavorita import UpdateOperacionFavorita
 from src.finanzas.infrastructure.persistence.operacionfavoritarepositorysqlalchemy import \
     OperacionFavoritaRepositorySQLAlchemy
-from src.finanzas.infrastructure.rest.localeutils import apply_locale_float, apply_locale_int, \
-    apply_locale_list_int
+from src.shared.utils.localeutils import apply_locale_float, apply_locale_int, apply_locale_list_int
 from typing import Any, Tuple
 from loguru import logger
 from src.shared.domain.exceptions.messageerror import MessageError

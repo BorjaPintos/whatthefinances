@@ -335,7 +335,9 @@ def import_routes(rootpath, app):
     def create_producto():
         params = {
             "nombre": request.json.get('nombre'),
-            "isin": request.json.get('isin')
+            "isin": request.json.get('isin'),
+            "id_plataforma": request.json.get('id_plataforma'),
+            "url": request.json.get('url')
         }
         return finanzasposicioncontroller.create_producto(params)
 
@@ -346,9 +348,17 @@ def import_routes(rootpath, app):
         params = {
             "id": id_producto,
             "nombre": request.json.get('nombre', None),
-            "isin": request.json.get('isin', None)
+            "isin": request.json.get('isin', None),
+            "id_plataforma": request.json.get('id_plataforma'),
+            "url": request.json.get('url')
         }
         return finanzasposicioncontroller.update_producto(params)
+
+    @app.route(rootpath + "/plataforma_producto", methods=['GET'])
+    @login_required
+    @serialize_response
+    def list_plataformas():
+        return finanzasposicioncontroller.list_plataformas()
 
     @app.route(rootpath + "/broker", methods=['GET'])
     @login_required
@@ -452,6 +462,12 @@ def import_routes(rootpath, app):
             "valor": request.json.get('valor', None)
         }
         return finanzasposicioncontroller.create_valor_participacion(params)
+
+    @app.route(rootpath + "/autovalorparticipacion", methods=['POST'])
+    @login_required
+    @serialize_response
+    def auto_create_valor_participacion():
+        return finanzasposicioncontroller.auto_create_valor_participacion()
 
     @app.route(rootpath + "/valorparticipacion/<id_valor_participacion>", methods=['DELETE'])
     @login_required

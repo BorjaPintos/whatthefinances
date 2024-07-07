@@ -1,7 +1,7 @@
 {% extends 'lista.html'%}
 
 {% block titulo_add %}
-Añadir Bolsa
+Añadir Producto
 {% endblock %}
 
 {% block contenido_add %}
@@ -13,6 +13,16 @@ Añadir Bolsa
     <div class="form-floating mb-3">
         <input type="text" id="addTypeIsinX" class="form-control" required/>
         <label for="addTypeIsinX">ISIN</label>
+    </div>
+    <select class="form-select mb-3" id="add-plataforma-select">
+        <option value="">Ninguna</option>
+        {% for plataforma in lista_plataformas %}
+            <option value="{{plataforma.id}}">{{plataforma.nombre}}</option>
+        {% endfor %}
+    </select>
+    <div class="form-floating mb-3">
+        <input type="text" id="addTypeURLX" class="form-control"/>
+        <label for="addTypeURLX">URL</label>
     </div>
 </div>
 {% endblock %}
@@ -30,6 +40,16 @@ Editar Bolsa
     <div class="form-floating mb-3">
         <input type="text" id="editTypeIsinX" class="form-control" required/>
         <label class="form-label" for="editTypeIsinX">ISIN</label>
+    </div>
+    <select class="form-select mb-3" id="edit-plataforma-select">
+        <option value="">Ninguna</option>
+        {% for plataforma in lista_plataformas %}
+            <option value="{{plataforma.id}}">{{plataforma.nombre}}</option>
+        {% endfor %}
+    </select>
+    <div class="form-floating mb-3">
+        <input type="text" id="editTypeURLX" class="form-control"/>
+        <label for="editTypeURLX">URL</label>
     </div>
 </div>
 <input type="hidden" id="editTypeIdX"/>

@@ -33,7 +33,8 @@ class ProductoRepositorySQLAlchemy(ITransactionalRepository, ProductoRepository)
 
     def new(self, params: dict) -> Producto:
         try:
-            entity = ProductoEntity(nombre=params.get("nombre"), isin=params.get("isin"))
+            entity = ProductoEntity(nombre=params.get("nombre"), isin=params.get("isin"),
+                                    plataforma=params.get("id_plataforma"), url=params.get("url"))
             self._session.add(entity)
             self._session.flush()
             return entity.convert_to_object_domain()

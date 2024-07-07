@@ -1,5 +1,6 @@
 from loguru import logger
 
+from src.finanzas.domain.plataformaproductoenum import PlataformaProductoEnum
 from src.finanzas.domain.producto import Producto
 from src.finanzas.domain.productorepository import ProductoRepository
 from src.persistence.application.transactionalusecase import transactional, TransactionalUseCase
@@ -21,6 +22,8 @@ class UpdateProducto(TransactionalUseCase):
         """El usuario puede cambiar todo"""
         producto.set_nombre(params.get("nombre"))
         producto.set_isin(params.get("isin"))
+        producto.set_plataforma(PlataformaProductoEnum.get_enum_from_value(params.get("id_plataforma")))
+        producto.set_url(params.get("url"))
         updated = self._producto_repository.update(producto)
         if updated:
             try:

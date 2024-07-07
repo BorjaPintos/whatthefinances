@@ -6,7 +6,7 @@ from src.finanzas.application.getcuenta import GetCuenta
 from src.finanzas.application.listcuentas import ListCuentas
 from src.finanzas.application.updatecuenta import UpdateCuenta
 from src.finanzas.infrastructure.persistence.cuentarepositorysqlalchemy import CuentaRepositorySQLAlchemy
-from src.finanzas.infrastructure.rest.localeutils import apply_locale_float, apply_locale_int
+from src.shared.utils.localeutils import apply_locale_float, apply_locale_int
 from src.shared.domain.exceptions.messageerror import MessageError
 
 

@@ -1,10 +1,14 @@
 function add_producto() {
     var nombre = $.trim($("#addTypeNombreX").val());
     var isin = $.trim($("#addTypeIsinX").val());
+    var id_plataforma = $("#add-plataforma-select").val();
+    var url = $.trim($("#addTypeURLX").val());
 
     var data = {
         nombre: nombre,
-        isin: isin
+        isin: isin,
+        id_plataforma: parseInt(id_plataforma) ? id_plataforma : null,
+        url: url
     }
     var xhttp = new XMLHttpRequest();
 
@@ -53,10 +57,14 @@ function update_producto() {
     var id = $.trim($("#editTypeIdX").val())
     var nombre = $.trim($("#editTypeNombreX").val());
     var isin = $.trim($("#editTypeIsinX").val());
+    var id_plataforma = $("#edit-plataforma-select").val();
+    var url = $.trim($("#editTypeURLX").val());
 
     var data = {
         nombre: nombre,
-        isin: isin
+        isin: isin,
+        id_plataforma: parseInt(id_plataforma) ? id_plataforma : null,
+        url: url
     }
 
     var xhttp = new XMLHttpRequest();
@@ -104,6 +112,14 @@ $( document).ready(function() {
                 type: "string"
             },
             {
+                data:'plataforma',
+                type: "string"
+            },
+            {
+                data:'url',
+                type: "string"
+            },
+            {
                 className: 'text-end',
                 data:'id',
                 render: render_actions,
@@ -131,10 +147,14 @@ $( document).ready(function() {
             var id = data.id
             var nombre = data.nombre
             var isin = data.isin
+            var id_plataforma = data.id_plataforma
+            var url = data.url
 
             $("#editTypeNombreX").val(nombre);
             $("#editTypeIsinX").val(isin);
             $("#editTypeIdX").val(id);
+            $("#editTypeURLX").val(url);
+            $("#edit-plataforma-select").val(id_plataforma).change()
             $('#edit').modal('show')
         });
 
@@ -144,10 +164,11 @@ $( document).ready(function() {
     } );
 
 
-
     $('#add-button').on( "click", function() {
         $("#addTypeNombreX").val('')
         $("#addTypeIsinX").val('')
+        $("#addTypeURLX").val('')
+        $("#add-plataforma-select").val('')
         $("#addTypeMessageX").text('')
         $('#add').modal('show')
     } );

@@ -1,4 +1,4 @@
-from src.finanzas.infrastructure.rest.localeutils import apply_locale_int, apply_locale_float
+from src.shared.utils.localeutils import apply_locale_int, apply_locale_float
 from typing import Any, Tuple
 from loguru import logger
 from src.finanzas.application.createmonedero import CreateMonedero
