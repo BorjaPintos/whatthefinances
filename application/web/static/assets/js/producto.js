@@ -53,6 +53,23 @@ function delete_producto(id) {
     xhttp.send();
 }
 
+function check_producto(isin) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "/finanzas/autovalorparticipacion/"+isin, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+
+
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4)
+            if (xhttp.status === 200) {
+                alert("Producto encontrado en la plataforma")
+            } else if (xhttp.status != 200){
+                alert("Error al obtener el producto en la plataforma")
+            }
+    };
+    xhttp.send();
+}
+
 function update_producto() {
     var id = $.trim($("#editTypeIdX").val())
     var nombre = $.trim($("#editTypeNombreX").val());
@@ -85,11 +102,18 @@ function update_producto() {
     xhttp.send(JSON.stringify(data));
 }
 
-render_actions = function (data, type) {
+render_actions = function (data, type, row) {
     if (type === 'display') {
         edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Editar" data-bs-original-title="Editar" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
         del = '<a class="delete-element font-18 text-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete" data-bs-original-title="Borrar" data-element="'+data+'"><i class="uil uil-trash"></i></a>'
-        return edit + del
+
+        check_enable = row.plataforma != undefined & row.url != undefined & row.url != ''
+        check = ''
+        if (check_enable) {
+            check = '<a class="check-element font-18 text-danger me-2 disabled" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Check" data-bs-original-title="Comprobar conexión con la plataforma" data-element="'+row.isin+'"><i class="uil uil-sync-exclamation"></i></a>'
+        }
+
+        return check + edit + del
     }
     return data
 }
@@ -158,8 +182,12 @@ $( document).ready(function() {
             $('#edit').modal('show')
         });
 
-        $('.delete-element').on( "click", function() {
-           delete_bolsa($(this).attr("data-element"))
+        $('.delete-element').on("click", function() {
+           delete_producto($(this).attr("data-element"))
+        });
+
+        $('.check-element').on("click", function() {
+           check_producto($(this).attr("data-element"))
         });
     } );
 

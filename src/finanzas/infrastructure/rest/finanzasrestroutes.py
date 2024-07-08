@@ -469,6 +469,15 @@ def import_routes(rootpath, app):
     def auto_create_valor_participacion():
         return finanzasposicioncontroller.auto_create_valor_participacion()
 
+    @app.route(rootpath + "/autovalorparticipacion/<isin>", methods=['POST'])
+    @login_required
+    @serialize_response
+    def auto_create_valor_participacion_with_isin(isin: str):
+        result, code = finanzasposicioncontroller.auto_create_valor_participacion([isin])
+        check = result and result[0].get("valor", None) is not None
+        code = 200 if check else 404
+        return {"check": check}, code
+
     @app.route(rootpath + "/valorparticipacion/<id_valor_participacion>", methods=['DELETE'])
     @login_required
     @serialize_response

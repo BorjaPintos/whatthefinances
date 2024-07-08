@@ -1,4 +1,4 @@
-from typing import Any, Tuple
+from typing import Any, Tuple, List
 from loguru import logger
 
 from src.finanzas.application.autocreatevalorparticipacion import AutoCreateValorParticipacion
@@ -286,9 +286,9 @@ def create_valor_participacion(params: dict) -> Tuple[Any, int]:
     return response, code
 
 
-def auto_create_valor_participacion() -> Tuple[Any, int]:
+def auto_create_valor_participacion(isin_list: List[str] = None) -> Tuple[Any, int]:
     code = 200
-    response = auto_create_valor_participacion_use_case.execute()
+    response = auto_create_valor_participacion_use_case.execute(isin_list)
     return response, code
 
 

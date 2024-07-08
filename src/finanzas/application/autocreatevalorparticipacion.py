@@ -1,4 +1,5 @@
 import traceback
+from typing import List
 
 from src.finanzas.application.createvalorparticipacion import CreateValorParticipacion
 from src.finanzas.application.getthirdapivalueproduct import GetThirdApiValueProduct
@@ -6,6 +7,8 @@ from src.finanzas.domain.productorepository import ProductoRepository
 from src.finanzas.domain.valorparticipacionrepository import ValorParticipacionRepository
 from src.persistence.application.transactionalusecase import transactional, TransactionalUseCase
 from src.persistence.domain.criteria import Criteria
+from src.persistence.domain.filtercomposite import CompositeOperator
+from src.persistence.domain.filterutils import combine_filters
 from src.persistence.domain.simplefilter import SimpleFilter, WhereOperator
 
 
@@ -19,9 +22,14 @@ class AutoCreateValorParticipacion(TransactionalUseCase):
         self._third_api_value_product_use_case = third_api_value_product_use_case
 
     @transactional(readonly=False)
-    def execute(self) -> [dict]:
-        plataforma_filter = SimpleFilter("plataforma", WhereOperator.NOTEQUAL, 0)
-        criteria = Criteria(filter=plataforma_filter)
+    def execute(self, isin_list: List[str] = None) -> [dict]:
+        filter = SimpleFilter("plataforma", WhereOperator.NOTEQUAL, 0)
+        if isin_list:
+            isin_filter = SimpleFilter("isin", WhereOperator.IN, isin_list)
+            filter = combine_filters(filter, CompositeOperator.AND, isin_filter)
+
+        criteria = Criteria(filter=filter)
+
         products = self._producto_repository.list(criteria)
         returned_list = []
         for product in products:
