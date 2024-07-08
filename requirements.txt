@@ -10,3 +10,4 @@ pyOpenSSL==23.3.0
 uvicorn==0.17.4
 pywebview==4.4.1
 beautifulsoup4==4.12.3
+lxml==5.2.2
