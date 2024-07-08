@@ -6,7 +6,7 @@ from src.finanzas.application.listcategoriasgasto import ListCategoriasGasto
 from src.finanzas.application.updatecategoriagasto import UpdateCategoriaGasto
 from src.finanzas.infrastructure.persistence.categoriagastorepositorysqlalchemy import \
     CategoriaGastoRepositorySQLAlchemy
-from src.finanzas.infrastructure.rest.localeutils import apply_locale_int
+from src.shared.utils.localeutils import apply_locale_int
 from src.shared.domain.exceptions.messageerror import MessageError
 
 categorias_gasto_repository = CategoriaGastoRepositorySQLAlchemy()

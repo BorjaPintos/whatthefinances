@@ -144,10 +144,12 @@ def import_routes(rootpath, app):
     @login_required
     def productos():
         user = request.user
-        lista_headers = ["Nombre", "ISIN"]
+        lista_headers = ["Nombre", "ISIN", "Plataforma", "URL"]
+        lista_plataformas, code = finanzasposicioncontroller.list_plataformas()
         return render_template('/producto.html', username=user.get_name(),
                                title="Productos",
-                               lista_headers=lista_headers)
+                               lista_headers=lista_headers,
+                               lista_plataformas=lista_plataformas)
 
     @app.route(rootpath + "broker.html", methods=['GET'])
     @login_required

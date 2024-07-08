@@ -268,7 +268,20 @@ $(document).ready(function() {
        add_valor_participacion();
     });
 
+    $('#auto-add-button').on( "click", function() {
+        var xhttp = new XMLHttpRequest();
 
+        xhttp.open("POST", "/finanzas/autovalorparticipacion", true);
+        xhttp.setRequestHeader("Content-Type", "application/json");
+
+        xhttp.onreadystatechange = function () {
+            if (xhttp.readyState === 4)
+                if (xhttp.status === 200) {
+                    reload_table();
+                }
+        };
+        xhttp.send();
+        } );
 });
 
 

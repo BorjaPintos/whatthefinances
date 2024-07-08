@@ -2,7 +2,7 @@ from src.finanzas.infrastructure.persistence.movimientocuentarepositorysqlalchem
     MovimientoCuentaRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.movimientomonederorepositorysqlalchemy import \
     MovimientoMonederoRepositorySQLAlchemy
-from src.finanzas.infrastructure.rest.localeutils import apply_locale_date, apply_locale_float, apply_locale_int, \
+from src.shared.utils.localeutils import apply_locale_date, apply_locale_float, apply_locale_int, \
     apply_locale_list_int
 from src.shared.infraestructure.rest.pagination import Pagination
 

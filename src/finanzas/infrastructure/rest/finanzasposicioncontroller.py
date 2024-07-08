@@ -1,6 +1,7 @@
-from typing import Any, Tuple
+from typing import Any, Tuple, List
 from loguru import logger
 
+from src.finanzas.application.autocreatevalorparticipacion import AutoCreateValorParticipacion
 from src.finanzas.application.cerrarposicion import CerrarPosicion
 from src.finanzas.application.createbolsa import CreateBolsa
 from src.finanzas.application.createbroker import CreateBroker
@@ -17,6 +18,7 @@ from src.finanzas.application.getbroker import GetBroker
 from src.finanzas.application.getdividendo import GetDividendo
 from src.finanzas.application.getposicion import GetPosicion
 from src.finanzas.application.getproducto import GetProducto
+from src.finanzas.application.getthirdapivalueproduct import GetThirdApiValueProduct
 from src.finanzas.application.listbolsa import ListBolsa
 from src.finanzas.application.listbroker import ListBroker
 from src.finanzas.application.listdividendorango import ListDividendoRango
@@ -29,14 +31,16 @@ from src.finanzas.application.updatebroker import UpdateBroker
 from src.finanzas.application.updatedividendo import UpdateDividendo
 from src.finanzas.application.updateposicion import UpdatePosicion
 from src.finanzas.application.updateproducto import UpdateProducto
+from src.finanzas.domain.plataformaproductoenum import PlataformaProductoEnum
 from src.finanzas.infrastructure.persistence.bolsarepositorysqlalchemy import BolsaRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.brokerrepositorysqlalchemy import BrokerRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.dividendorepositorysqlalchemy import DividendoRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.posicionrepositorysqlalchemy import \
     PosicionRepositorySQLAlchemy
 from src.finanzas.infrastructure.persistence.productorepositorysqlalchemy import ProductoRepositorySQLAlchemy
-from src.finanzas.infrastructure.persistence.valorparticipacionrepositorysqlalchemy import ValorParticipacionRepositorySQLAlchemy
-from src.finanzas.infrastructure.rest.localeutils import apply_locale_float, apply_locale_int, apply_locale_date, \
+from src.finanzas.infrastructure.persistence.valorparticipacionrepositorysqlalchemy import \
+    ValorParticipacionRepositorySQLAlchemy
+from src.shared.utils.localeutils import apply_locale_float, apply_locale_int, apply_locale_date, \
     apply_locale_bool, apply_locale_datetime, apply_locale_list_int, apply_locale_list
 from src.shared.domain.exceptions.messageerror import MessageError
 from src.shared.infraestructure.rest.pagination import Pagination
@@ -63,9 +67,17 @@ create_bolsa_use_case = CreateBolsa(bolsa_repository=bolsa_repository)
 update_bolsa_use_case = UpdateBolsa(bolsa_repository=bolsa_repository)
 
 valor_participacion_repository = ValorParticipacionRepositorySQLAlchemy()
-list_valor_participacion_use_case = ListValorParticipacion(valor_participacion_repository=valor_participacion_repository)
-create_valor_participacion_use_case = CreateValorParticipacion(valor_participacion_repository=valor_participacion_repository)
-delete_valor_participacion_use_case = DeleteValorParticipacion(valor_participacion_repository=valor_participacion_repository)
+list_valor_participacion_use_case = ListValorParticipacion(
+    valor_participacion_repository=valor_participacion_repository)
+create_valor_participacion_use_case = CreateValorParticipacion(
+    valor_participacion_repository=valor_participacion_repository)
+delete_valor_participacion_use_case = DeleteValorParticipacion(
+    valor_participacion_repository=valor_participacion_repository)
+
+third_api_value_product_use_case = GetThirdApiValueProduct({})
+auto_create_valor_participacion_use_case = AutoCreateValorParticipacion(producto_repository=producto_repository,
+                                                                        valor_participacion_repository=valor_participacion_repository,
+                                                                        third_api_value_product_use_case=third_api_value_product_use_case)
 
 dividendo_repository = DividendoRepositorySQLAlchemy()
 list_dividendos_use_case = ListDividendos(dividendo_repository=dividendo_repository)
@@ -137,6 +149,12 @@ def update_producto(params: dict) -> Tuple[Any, int]:
         logger.warning("Ya existe un producto con ese nombre o isin: {}".format(params.get("nombre")))
         raise MessageError("Parece que ya existe un producto con ese nombre o isin: {}".format(params.get("nombre")),
                            code)
+    return response, code
+
+
+def list_plataformas() -> Tuple[Any, int]:
+    code = 200
+    response = PlataformaProductoEnum.get_all_dto()
     return response, code
 
 
@@ -265,6 +283,12 @@ def create_valor_participacion(params: dict) -> Tuple[Any, int]:
     else:
         logger.warning("Error al crear el valor participacón {}")
         raise MessageError("Error al crear el valor participación {}", code)
+    return response, code
+
+
+def auto_create_valor_participacion(isin_list: List[str] = None) -> Tuple[Any, int]:
+    code = 200
+    response = auto_create_valor_participacion_use_case.execute(isin_list)
     return response, code
 
 
@@ -539,3 +563,6 @@ def __cast_params(params: dict):
         params["dividendo_por_participacion"] = apply_locale_float(params["dividendo_por_participacion"])
     if params.get("retencion_por_participacion") is not None:
         params["retencion_por_participacion"] = apply_locale_float(params["retencion_por_participacion"])
+
+    if params.get("id_plataforma") is not None:
+        params["id_plataforma"] = apply_locale_int(params["id_plataforma"])
