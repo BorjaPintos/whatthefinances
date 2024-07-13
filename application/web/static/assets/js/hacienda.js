@@ -103,7 +103,7 @@ async function get_total_participaciones(data, callback, suma_parcial_compra, su
 async function get_total_dividendos(data, callback){
 
     $.ajax({
-        url: "/finanzas/dividendorango",
+        url: "/finanzas/dividendo/rango",
         contentType: "application/json",
         data: data,
         type: "get",

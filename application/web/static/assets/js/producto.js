@@ -55,7 +55,7 @@ function delete_producto(id) {
 
 function check_producto(isin) {
     var xhttp = new XMLHttpRequest();
-    xhttp.open("POST", "/finanzas/autovalorparticipacion/"+isin, true);
+    xhttp.open("POST", "/finanzas/valorparticipacion/auto/"+isin, true);
     xhttp.setRequestHeader("Content-Type", "application/json");
 
 

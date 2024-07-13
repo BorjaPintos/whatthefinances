@@ -9,10 +9,27 @@ from flask_login import LoginManager
 from loguru import logger
 from werkzeug.security import safe_join
 
+from src.finanzas.categorias.infrastructure.rest import finanzascategoriasgastorestroutes, \
+    finanzascategoriasingresorestroutes, finanzascategoriasfrontroutes
+from src.finanzas.cuentas.infrastructure.rest import finanzascuentasrestroutes, finanzascuentasfrontroutes
+from src.finanzas.hacienda.infrastructure.rest import finanzashaciendafrontroutes
+from src.finanzas.inversion.bolsa.infrastructure.rest import finanzasbolsarestroutes, finanzasbolsafrontroutes
+from src.finanzas.inversion.broker.infrastructure.rest import finanzasbrokerrestroutes, finanzasbrokerfrontroutes
+from src.finanzas.inversion.posiciones.infrastructure.rest import finanzasposicionesfrontroutes, \
+    finanzasposicionesrestroutes
+from src.finanzas.inversion.valorparticipacion.infrastructure.rest import finanzasvaloresparticipacionesrestroutes, \
+    finanzasvaloresparticipacionesfrontroutes
+from src.finanzas.inversion.dividendos.infrastructure.rest import finanzasdividendosrestroutes, \
+    finanzasdividendosfrontroutes
+from src.finanzas.inversion.producto.infrastructure.rest import finanzasproductorestroutes, finanzasproductofrontroutes
+from src.finanzas.monederos.infrastructure.rest import finanzasmonederosrestroutes, finanzasmonederosfrontroutes
+from src.finanzas.operaciones.infrastructure.rest import finanzasoperacionesrestroutes, \
+    finanzasoperacionesfavoritasrestroutes, finanzasoperacionesfrontroutes
+from src.finanzas.resumenes.infrastructure.rest import finanzasresumenesrestroutes, finanzasresumenesfrontroutes
 from src.persistence.application.databasemanager import DatabaseManager
 from application.iapp import IApp
-from src.finanzas.infrastructure.rest import finanzasrestroutes, finanzasfrontroutes
 from src.login.infrastructure.rest import loginroutes, userroutes, loginfrontroutes, userfrontroutes
+from src.shared.infraestructure.rest import commonfrontroutes
 from src.shared.utils.resources import resource_path
 from src.version.infrastructure.rest import versionroutes
 
@@ -91,14 +108,44 @@ class Rest(IApp):
         return client
 
     def _init_routes(self):
+        commonfrontroutes.import_routes("/", self.app)
         versionroutes.import_routes("/version", self.app)
         loginroutes.import_routes("/login", self.app)
         loginfrontroutes.import_routes("/", self.app)
         userroutes.import_routes("/user", self.app)
-        finanzasrestroutes.import_routes("/finanzas", self.app)
         userfrontroutes.import_routes("/", self.app)
-        finanzasfrontroutes.import_routes("/", self.app)
+        self._init_finanzas_rest_routes("/finanzas")
+        self._init_finanzas_front_routes("/")
         self._add_static_route(self.app)
+
+    def _init_finanzas_rest_routes(self, finanzas_path: str):
+        finanzascuentasrestroutes.import_routes(finanzas_path + "/cuenta", self.app)
+        finanzasmonederosrestroutes.import_routes(finanzas_path + "/monedero", self.app)
+        finanzascategoriasgastorestroutes.import_routes(finanzas_path + "/categoria_gasto", self.app)
+        finanzascategoriasingresorestroutes.import_routes(finanzas_path + "/categoria_ingreso", self.app)
+        finanzasoperacionesrestroutes.import_routes(finanzas_path + "/operacion", self.app)
+        finanzasoperacionesfavoritasrestroutes.import_routes(finanzas_path + "/operacion_favorita", self.app)
+        finanzasresumenesrestroutes.import_routes(finanzas_path + "/resumen", self.app)
+        finanzasbolsarestroutes.import_routes(finanzas_path + "/bolsa", self.app)
+        finanzasbrokerrestroutes.import_routes(finanzas_path + "/broker", self.app)
+        finanzasproductorestroutes.import_routes(finanzas_path + "/producto", self.app)
+        finanzasposicionesrestroutes.import_routes(finanzas_path + "/posicion", self.app)
+        finanzasdividendosrestroutes.import_routes(finanzas_path + "/dividendo", self.app)
+        finanzasvaloresparticipacionesrestroutes.import_routes(finanzas_path + "/valorparticipacion", self.app)
+
+    def _init_finanzas_front_routes(self, front_path: str):
+        finanzascuentasfrontroutes.import_routes(front_path, self.app)
+        finanzasmonederosfrontroutes.import_routes(front_path, self.app)
+        finanzascategoriasfrontroutes.import_routes(front_path, self.app)
+        finanzasoperacionesfrontroutes.import_routes(front_path, self.app)
+        finanzasresumenesfrontroutes.import_routes(front_path, self.app)
+        finanzasbolsafrontroutes.import_routes(front_path, self.app)
+        finanzasbrokerfrontroutes.import_routes(front_path, self.app)
+        finanzasproductofrontroutes.import_routes(front_path, self.app)
+        finanzasposicionesfrontroutes.import_routes(front_path, self.app)
+        finanzasdividendosfrontroutes.import_routes(front_path, self.app)
+        finanzasvaloresparticipacionesfrontroutes.import_routes(front_path, self.app)
+        finanzashaciendafrontroutes.import_routes(front_path, self.app)
 
     def _add_static_route(self, app):
         root_dir = os.getcwd()

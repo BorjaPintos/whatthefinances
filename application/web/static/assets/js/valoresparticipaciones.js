@@ -271,7 +271,7 @@ $(document).ready(function() {
     $('#auto-add-button').on( "click", function() {
         var xhttp = new XMLHttpRequest();
 
-        xhttp.open("POST", "/finanzas/autovalorparticipacion", true);
+        xhttp.open("POST", "/finanzas/valorparticipacion/auto", true);
         xhttp.setRequestHeader("Content-Type", "application/json");
 
         xhttp.onreadystatechange = function () {
