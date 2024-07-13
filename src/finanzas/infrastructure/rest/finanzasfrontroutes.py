@@ -3,10 +3,10 @@ import traceback
 
 from loguru import logger
 
-from src.finanzas.infrastructure.rest import finanzascuentascontroller, finanzasmonederoscontroller, \
-    finanzascategoriasingresocontroller, finanzascategoriasgastocontroller, finanzasposicioncontroller, \
-    finanzasoperacionesfavoritascontroller
-from src.shared.infraestructure.rest.response import serialize_response
+from src.finanzas.categorias.infrastructure.rest import finanzascategoriasgastocontroller, \
+    finanzascategoriasingresocontroller
+from src.finanzas.monederos.infrastructure.rest import finanzasmonederoscontroller
+from src.finanzas.cuentas.infrastructure.rest import finanzascuentascontroller
 
 try:
     locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
