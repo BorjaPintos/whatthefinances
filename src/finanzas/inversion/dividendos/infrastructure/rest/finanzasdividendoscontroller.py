@@ -9,8 +9,6 @@ from src.finanzas.inversion.dividendos.application.listdividendos import ListDiv
 from src.finanzas.inversion.dividendos.application.updatedividendo import UpdateDividendo
 from src.finanzas.inversion.dividendos.infrastructure.persistence.dividendorepositorysqlalchemy import \
     DividendoRepositorySQLAlchemy
-from src.finanzas.inversion.posiciones.infrastructure.persistence.posicionrepositorysqlalchemy import \
-    PosicionRepositorySQLAlchemy
 from src.shared.infraestructure.rest.commoncastparams import common_cast_params
 from src.shared.utils.localeutils import apply_locale_float, apply_locale_int, apply_locale_date
 from src.shared.domain.exceptions.messageerror import MessageError
@@ -21,9 +19,7 @@ create_dividendo_use_case = CreateDividendo(dividendo_repository=dividendo_repos
 get_dividendo_use_case = GetDividendo(dividendo_repository=dividendo_repository)
 update_dividendo_use_case = UpdateDividendo(dividendo_repository=dividendo_repository)
 delete_dividendo_use_case = DeleteDividendo(dividendo_repository=dividendo_repository)
-
-posicion_repository = PosicionRepositorySQLAlchemy()
-list_dividendo_rango_use_case = ListDividendoRango(posicion_repository=posicion_repository)
+list_dividendo_rango_use_case = ListDividendoRango(dividendo_repository=dividendo_repository)
 
 
 def list_dividendos(params: dict) -> Tuple[Any, int]:

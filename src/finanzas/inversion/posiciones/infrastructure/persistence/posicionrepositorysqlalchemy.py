@@ -150,45 +150,6 @@ class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository)
 
         return elements, 0
 
-    @staticmethod
-    def __get_dividendo_rango_from_complete_join_row(row) -> DividendoRango:
-        params = {"isin": row[0],
-                  "dividendo": row[1],
-                  "retencion": row[2]
-                  }
-        return DividendoRango(params)
-
-    def __get_join_query_dividendo_rango(self, criteria: Criteria) -> Query:
-
-        columnas = (
-            PosicionEntity.isin,
-            func.sum(DividendoEntity.dividendo_por_participacion * PosicionEntity.numero_participaciones),
-            func.sum(DividendoEntity.retencion_por_participacion * PosicionEntity.numero_participaciones)
-        )
-        query_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
-        query = query_builder.build_query(criteria) \
-            .join(PosicionEntity, DividendoEntity.isin == PosicionEntity.isin) \
-            .where(DividendoEntity.fecha > PosicionEntity.fecha_compra) \
-            .where(or_(PosicionEntity.abierta == True, and_(PosicionEntity.abierta == False,
-                                                            DividendoEntity.fecha < PosicionEntity.fecha_venta))) \
-            .group_by(PosicionEntity.isin)
-
-        return query
-
-    def dividendo_rango(self, criteria: Criteria) -> List[DividendoRango]:
-        elements = []
-        try:
-            query_elements = self.__get_join_query_dividendo_rango(criteria)
-            result = query_elements.all()
-            n_elements = min(len(result), criteria.limit())
-            if result is not None:
-                for i in range(n_elements):
-                    elements.append(self.__get_dividendo_rango_from_complete_join_row(result[i]))
-            return elements
-        except Exception as e:
-            traceback.print_exc()
-
-        return elements
 
     def count(self, criteria: Criteria) -> int:
         try:
