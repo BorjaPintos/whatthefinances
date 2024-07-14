@@ -1,7 +1,7 @@
 from typing import List
 
 from src.finanzas.inversion.dividendos.domain.dividendo_rango import DividendoRango
-from src.finanzas.inversion.posiciones.domain.posicionrepository import PosicionRepository
+from src.finanzas.inversion.dividendos.domain.dividendorepository import DividendoRepository
 from src.persistence.application.transactionalusecase import transactional, TransactionalUseCase
 from src.persistence.domain.criteria import Criteria, OrderType, Order, OrderBy
 from src.persistence.domain.filter import Filter
@@ -12,9 +12,9 @@ from src.persistence.domain.simplefilter import SimpleFilter, WhereOperator
 
 class ListDividendoRango(TransactionalUseCase):
 
-    def __init__(self, posicion_repository: PosicionRepository):
-        super().__init__([posicion_repository])
-        self._posicion_repository = posicion_repository
+    def __init__(self, dividendo_repository: DividendoRepository):
+        super().__init__([dividendo_repository])
+        self._dividendo_repository = dividendo_repository
 
     @transactional(readonly=True)
     def execute(self, params: dict) -> List[DividendoRango]:
@@ -24,7 +24,7 @@ class ListDividendoRango(TransactionalUseCase):
                         OrderType(params.get("order_type", "asc"))),
             filter=self._create_filters(params)
         )
-        return self._posicion_repository.dividendo_rango(criteria)
+        return self._dividendo_repository.dividendo_rango(criteria)
 
     @staticmethod
     def _create_filters(params: dict) -> Filter:

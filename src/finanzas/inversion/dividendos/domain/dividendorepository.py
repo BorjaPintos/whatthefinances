@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from src.finanzas.inversion.dividendos.domain.dividendo import Dividendo
+from src.finanzas.inversion.dividendos.domain.dividendo_rango import DividendoRango
 from src.persistence.domain.criteria import Criteria
 
 
@@ -25,4 +26,8 @@ class DividendoRepository(ABC):
 
     @abstractmethod
     def delete(self, id_dividendo: int) -> bool:
+        pass
+
+    @abstractmethod
+    def dividendo_rango(self, criteria: Criteria) -> List[DividendoRango]:
         pass

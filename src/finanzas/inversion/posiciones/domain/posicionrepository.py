@@ -11,9 +11,6 @@ class PosicionRepository(ABC):
     @abstractmethod
     def list(self, criteria: Criteria) -> Tuple[List[Posicion], int]:
         pass
-    @abstractmethod
-    def dividendo_rango(self, criteria: Criteria) -> List[DividendoRango]:
-        pass
 
     @abstractmethod
     def count(self, criteria: Criteria) -> int:

@@ -6,7 +6,6 @@ from src.finanzas.inversion.posiciones.application.createposicion import CreateP
 from src.finanzas.inversion.posiciones.application.deleteposicion import DeletePosicion
 from src.finanzas.inversion.posiciones.application.deshacercerrarposicion import DeshacerCerrarPosicion
 from src.finanzas.inversion.posiciones.application.getposicion import GetPosicion
-from src.finanzas.inversion.dividendos.application.listdividendorango import ListDividendoRango
 from src.finanzas.inversion.posiciones.application.listposicion import ListPosicion
 from src.finanzas.inversion.posiciones.application.updateposicion import UpdatePosicion
 from src.finanzas.inversion.posiciones.infrastructure.persistence.posicionrepositorysqlalchemy import \
@@ -26,7 +25,6 @@ update_posicion_use_case = UpdatePosicion(posicion_repository=posicion_repositor
 delete_posicion_use_case = DeletePosicion(posicion_repository=posicion_repository)
 cerrar_posicion_use_case = CerrarPosicion(posicion_repository=posicion_repository)
 deshacer_cerrar_posicion_use_case = DeshacerCerrarPosicion(posicion_repository=posicion_repository)
-list_dividendo_rango_use_case = ListDividendoRango(posicion_repository=posicion_repository)
 
 
 def list_posiciones(params: dict) -> Tuple[Pagination, int]:
