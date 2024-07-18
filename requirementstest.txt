@@ -2,4 +2,4 @@ pytest-cov==4.1.0
 # https://github.com/microsoft/vscode-python/issues/6990
 pytest==7.4.3
 behave==1.2.6
-pyinstaller==6.7.0
+pyinstaller==6.9.0
