@@ -15,6 +15,22 @@ render_dinero = function (data, type) {
     return data
 }
 
+function get_span_custom_badge(texto){
+
+    spantext = $('<span></span>')
+    spantext.addClass("badge custom-badge")
+    spantext.attr("data-bs-toggle","tooltip")
+    spantext.attr("data-bs-placement","top")
+    spantext.attr("data-bs-original-title",texto)
+    if (texto.length>15){
+        spantext.text((texto.substring(0, 15) + "..."))
+    }else{
+        spantext.text(texto)
+    }
+    return spantext
+
+}
+
 function create_tabla_cosas_concreta(data_entidades_totales, end_point, resumen, entidad, id_entidad){
 
     var today = new Date()
@@ -35,7 +51,6 @@ function create_tabla_cosas_concreta(data_entidades_totales, end_point, resumen,
         var fecha_iterada = new Date(año_antes_today)
         for (var i=1;i<=13;i++){
             label = (fecha_iterada.getMonth()+1) + "/" + fecha_iterada.getFullYear()
-            console.log(label);
             labels.push(label)
             for (var j in data_entidades_totales){
                 cosas[data_entidades_totales[j].id][label] = 0
@@ -52,18 +67,20 @@ function create_tabla_cosas_concreta(data_entidades_totales, end_point, resumen,
 
         var tr = $("#resumen-"+entidad+"-"+resumen+" thead tr")
         tr.append($('<th></th>').text("tipo_row"))
-        tr.append($('<th></th>').text(resumen))
+        tr.append($('<th></th>').append(get_span_custom_badge(resumen)))
         for (var i in labels){
-            tr.append($('<th></th>').text(labels[i]))
+            tr.append($('<th></th>').append(get_span_custom_badge(labels[i])))
         }
-        tr.append($('<th></th>').text("Total"))
+        tr.append($('<th></th>').append(get_span_custom_badge("Total")))
 
         var tbody = $("#resumen-"+entidad+"-"+resumen+" tbody")
         for (var i in cosas){
             var row = $('<tr></tr>')
             row.addClass("resumen-"+resumen)
             row.append($('<td></td>').text("dato"))
-            row.append($('<td></td>').text(cosas[i].nombre))
+
+            row.append($('<td></td>').append(get_span_custom_badge(cosas[i].nombre)))
+
             for (var j in labels){
                 var value = parseFloat(cosas[i][labels[j]]).toFixed(2)
                 cosa_total_resumen[labels[j]]+=cosas[i][labels[j]];
@@ -75,7 +92,7 @@ function create_tabla_cosas_concreta(data_entidades_totales, end_point, resumen,
         var row = $('<tr></tr>')
         row.addClass("resumen-"+resumen)
         row.append($('<td></td>').text("Resumen"))
-        row.append($('<td></td>').text("Total"))
+        row.append($('<td></td>').append(get_span_custom_badge("Total")))
         var total_totales = 0
         for (var j in labels){
             var value = cosa_total_resumen[labels[j]]
@@ -111,7 +128,10 @@ function create_tabla_cosas_concreta(data_entidades_totales, end_point, resumen,
                 }
             )
 
-        var table = $("#resumen-"+entidad+"-"+resumen).DataTable({
+        var table = $("#resumen-"+entidad+"-"+resumen)
+            .on('init.dt', function () {
+                activar_elements();
+            }).DataTable({
             columns: columns,
             rowGroup: {
                 dataSrc: "tipo_row"

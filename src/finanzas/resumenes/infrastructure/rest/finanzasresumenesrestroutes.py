@@ -141,3 +141,24 @@ def import_routes(rootpath, app):
             "end_fecha": request.args.get('end_fecha', None),
         }
         return finanzasresumencontroller.resumen_valores_participaciones_dias(params)
+
+
+    @app.route(rootpath + "/posiciones_meses", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_posiciones_meses():
+        params = {
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzasresumencontroller.resumen_posiciones_meses(params)
+
+    @app.route(rootpath + "/posiciones_dias", methods=['GET'])
+    @login_required
+    @serialize_response
+    def resumen_posiciones_dias():
+        params = {
+            "begin_fecha": request.args.get('begin_fecha', None),
+            "end_fecha": request.args.get('end_fecha', None),
+        }
+        return finanzasresumencontroller.resumen_posiciones_dias(params)

@@ -5,6 +5,7 @@ from src.finanzas.resumenes.domain.resumencuenta import ResumenCuenta
 from src.finanzas.resumenes.domain.resumengasto import ResumenGasto
 from src.finanzas.resumenes.domain.resumeningreso import ResumenIngreso
 from src.finanzas.resumenes.domain.resumenmonedero import ResumenMonedero
+from src.finanzas.resumenes.domain.resumenposicion import ResumenPosicion
 from src.finanzas.resumenes.domain.resumentotal import ResumenTotal
 from src.finanzas.resumenes.domain.resumenvalorparticipacion import ResumenValorParticipacion
 from src.persistence.domain.criteria import Criteria
@@ -38,4 +39,12 @@ class ResumenRepository(ABC):
 
     @abstractmethod
     def resumen_valor_participacion_dias(self, criteria: Criteria) -> List[ResumenValorParticipacion]:
+        pass
+
+    @abstractmethod
+    def resumen_posiciones_meses(self, criteria: Criteria) -> List[ResumenPosicion]:
+        pass
+
+    @abstractmethod
+    def resumen_posiciones_dias(self, criteria: Criteria) -> List[ResumenPosicion]:
         pass
