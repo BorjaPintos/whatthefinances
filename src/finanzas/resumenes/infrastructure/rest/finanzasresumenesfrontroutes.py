@@ -26,3 +26,9 @@ def import_routes(rootpath, app):
     def resumen_categorias():
         user = request.user
         return render_template('/resumen-categorias.html', username=user.get_name())
+
+    @app.route(rootpath + "resumen-inversiones.html", methods=['GET'])
+    @login_required
+    def resumen_inversiones():
+        user = request.user
+        return render_template('/resumen-inversiones.html', username=user.get_name())

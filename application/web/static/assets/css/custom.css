@@ -58,6 +58,7 @@ ul.pagination{
     --ct-badge-color: #313a46;
     font-size: 0.80em;
 }
+
 .btn-radios{
     background-color:#ABB2B9;
     border-color:#ABB2B9;
@@ -83,6 +84,7 @@ font-weight: bold;
 
 .font-weight-bold{
     font-weight: bold;
+    font-size: 0.7rem;
 }
 
 .daterangepicker {
@@ -91,4 +93,8 @@ font-weight: bold;
 
 cell-border + tbody, td, tfoot, th, thead, tr {
     border-width: 1px;
+}
+
+:root {
+    --ct-leftbar-width: 170px !important
 }
