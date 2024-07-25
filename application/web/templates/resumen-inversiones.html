@@ -1,0 +1,64 @@
+{% extends 'layout.html'%}
+
+
+{% block cssstyle %}
+<link href="assets/datatables/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+{% endblock%}
+
+{% block contenido %}
+<div class="row">
+    <div class="col-xxl-12">
+        <div class="card">
+            <div class="card-body pt-2">
+                <table id="resumen-posiciones"
+                       class="table table-striped table-hover order-column cell-border compact">
+                    <thead>
+                    <tr>
+                    </tr>
+                    </thead>
+                    <tbody class="filas">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body pt-2">
+                <table id="resumen-posiciones-acumulada"
+                       class="table table-striped table-hover order-column cell-border compact">
+                    <thead>
+                    <tr>
+                    </tr>
+                    </thead>
+                    <tbody class="filas">
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body pt-2">
+                <table id="resumen-ganancias-acumulada"
+                       class="table table-striped table-hover order-column cell-border compact">
+                    <thead>
+                    <tr>
+                    </tr>
+                    </thead>
+                    <tbody class="filas">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div> <!-- end col -->
+</div>
+
+{% endblock%}
+
+{% block script %}
+<script type="text/javascript" src="assets/datatables/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="assets/moment/js/moment-with-locales.min.js"></script>
+<script type="text/javascript" src="assets/datatables/js/dataTables.bootstrap5.min.js"></script>
+<script type="text/javascript" src="assets/datatables/js/dataTables.rowGroup.min.js"></script>
+<script type="text/javascript" src="assets/daterangepicker/js/daterangepicker.min.js"></script>
+<script type="text/javascript" src="assets/chartjs/js/chart.js"></script>
+<script type="text/javascript" src="assets/js/resumeninversiones.js"></script>
+{% endblock %}

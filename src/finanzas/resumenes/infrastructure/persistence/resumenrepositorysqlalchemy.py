@@ -1,6 +1,6 @@
 import traceback
 from typing import List
-from sqlalchemy import func, and_
+from sqlalchemy import func, and_, asc
 
 from src.finanzas.inversion.posiciones.infrastructure.persistence.orm.posicionentity import PosicionEntity
 from src.finanzas.resumenes.domain.resumencuenta import ResumenCuenta
@@ -8,6 +8,7 @@ from src.finanzas.resumenes.domain.resumengasto import ResumenGasto
 from src.finanzas.resumenes.domain.resumeningreso import ResumenIngreso
 from src.finanzas.resumenes.domain.resumenmonedero import ResumenMonedero
 from src.finanzas.resumenes.domain.resumenposicion import ResumenPosicion
+from src.finanzas.resumenes.domain.resumenposicionacumulada import ResumenPosicionAcumulada
 from src.finanzas.resumenes.domain.resumenrepository import ResumenRepository
 from src.finanzas.resumenes.domain.resumentotal import ResumenTotal
 from src.finanzas.resumenes.domain.resumenvalorparticipacion import ResumenValorParticipacion
@@ -18,7 +19,8 @@ from src.finanzas.monederos.infrastructure.persistence.orm.monederoentity import
 from src.finanzas.cuentas.infrastructure.persistence.orm.movimientocuentaentity import MovimientoCuentaEntity
 from src.finanzas.monederos.infrastructure.persistence.orm.movimientomonederoentity import MovimientoMonederoEntity
 from src.finanzas.operaciones.infrastructure.persistence.orm.operacionentity import OperacionEntity
-from src.finanzas.inversion.valorparticipacion.infrastructure.persistence.orm.valorparticipacionentity import ValorParticipacionEntity
+from src.finanzas.inversion.valorparticipacion.infrastructure.persistence.orm.valorparticipacionentity import \
+    ValorParticipacionEntity
 from src.persistence.application.databasemanager import DatabaseManager
 from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.itransactionalrepository import ITransactionalRepository
@@ -232,8 +234,8 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
                 DatabaseManager.get_database().month(ValorParticipacionEntity.fecha),
             )
 
-
-            subquery_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas)
+            subquery_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session,
+                                                      selected_columns=columnas)
             subquery = subquery_builder.build_query(criteria)
             subquery = subquery.group_by(
                 DatabaseManager.get_database().year(ValorParticipacionEntity.fecha),
@@ -289,7 +291,8 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
                 DatabaseManager.get_database().day(ValorParticipacionEntity.fecha),
             )
 
-            subquery_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas)
+            subquery_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session,
+                                                      selected_columns=columnas)
             subquery = subquery_builder.build_query(Criteria())
             subquery = subquery.group_by(
                 DatabaseManager.get_database().year(ValorParticipacionEntity.fecha),
@@ -329,7 +332,6 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
 
         return elements
 
-
     def resumen_posiciones_meses(self, criteria: Criteria) -> List[ResumenPosicion]:
         elements = []
         try:
@@ -353,7 +355,8 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
                 DatabaseManager.get_database().month(ValorParticipacionEntity.fecha)
             )
 
-            subquery_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas_subquery)
+            subquery_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session,
+                                                      selected_columns=columnas_subquery)
             subquery = subquery_builder.build_query(criteria)
             subquery = subquery.group_by(
                 DatabaseManager.get_database().year(ValorParticipacionEntity.fecha),
@@ -394,7 +397,6 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
             traceback.print_exc()
 
         return elements
-
 
     def resumen_posiciones_dias(self, criteria: Criteria) -> List[ResumenPosicion]:
         elements = []
@@ -445,7 +447,7 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
                                           PosicionEntity.fecha_compra <= subquery.columns[2]), isouter=False))
             query = query.order_by(DatabaseManager.get_database().year(subquery.columns[2]).desc(),
                                    DatabaseManager.get_database().month(subquery.columns[2]).desc(),
-                                    DatabaseManager.get_database().day(subquery.columns[2]).desc(),
+                                   DatabaseManager.get_database().day(subquery.columns[2]).desc(),
                                    func.upper(PosicionEntity.isin).asc())
 
             result = query.all()
@@ -461,6 +463,118 @@ class ResumenRepositorySQLAlchemy(ITransactionalRepository, ResumenRepository):
                                }
 
                     elements.append(ResumenPosicion(element))
+        except Exception as e:
+            traceback.print_exc()
+
+        return elements
+
+    def resumen_posiciones_meses_acumulada(self, criteria: Criteria) -> List[ResumenPosicionAcumulada]:
+        elements = []
+        try:
+
+            """
+                select  
+                posiciones_mes.isin, 
+                posiciones_mes.suma_participaciones_de_ese_dia, 
+                posiciones_mes.precio_compra, 
+                posiciones_mes.año, 
+                posiciones_mes.mes, 
+                sum(posiciones_mes.suma_participaciones_de_ese_dia) over (PARTITION BY posiciones_mes.isin ORDER BY fecha asc) as participaciones_acumuladadas, 
+                sum(posiciones_mes.precio_compra) over (PARTITION BY posiciones_mes.isin ORDER BY fecha asc) as precio_compra_acumulado from 
+                (select 
+                posiciones_dia.isin as isin,  
+                sum(posiciones_dia.numero_partipaciones) as suma_participaciones_de_ese_dia,  
+                sum(posiciones_dia.precio_compra) as precio_compra,   
+                max(posiciones_dia.fecha) as fecha, 
+                STRFTIME("%Y", posiciones_dia.fecha) as año,  
+                STRFTIME("%m", posiciones_dia.fecha) as mes from 
+                (select fp2.isin as isin,  
+                fp2.numero_participaciones as numero_partipaciones, 
+                fp2.numero_participaciones*fp2.precio_compra_sin_comision as precio_compra, 
+                max(fp2.fecha_compra) as fecha, STRFTIME("%Y", fp2.fecha_compra) as año,  
+                STRFTIME("%m", fp2.fecha_compra) as mes 
+                from finanzas_posiciones fp2 
+                group by fp2.isin, STRFTIME("%Y", fp2.fecha_compra), STRFTIME("%m", fp2.fecha_compra), STRFTIME("%d", fp2.fecha_compra) 
+                order by fp2.fecha_compra desc, fp2.isin desc) posiciones_dia 
+                group by posiciones_dia.isin, posiciones_dia.año, posiciones_dia.mes 
+                order by posiciones_dia.fecha desc, posiciones_dia.isin desc) posiciones_mes 
+                group by posiciones_mes.isin, posiciones_mes.año, posiciones_mes.mes 
+                order by posiciones_mes.fecha desc, posiciones_mes.isin desc
+            """
+            columnas_subquery_precios_compra_dia = (
+                PosicionEntity.isin,
+                PosicionEntity.numero_participaciones,
+                PosicionEntity.numero_participaciones * PosicionEntity.precio_compra_sin_comision,
+                func.max(PosicionEntity.fecha_compra),
+                DatabaseManager.get_database().year(PosicionEntity.fecha_compra),
+                DatabaseManager.get_database().month(PosicionEntity.fecha_compra),
+                DatabaseManager.get_database().day(PosicionEntity.fecha_compra)
+            )
+
+            subquery_precios_compra_dia_builder = SQLAlchemyQueryBuilder(PosicionEntity, self._session,
+                                                                         selected_columns=columnas_subquery_precios_compra_dia)
+            subquery_precios_compra_dia_query = subquery_precios_compra_dia_builder.build_query(Criteria())
+            subquery_precios_compra_dia_query = subquery_precios_compra_dia_query.group_by(
+                PosicionEntity.isin,
+                DatabaseManager.get_database().year(PosicionEntity.fecha_compra),
+                DatabaseManager.get_database().month(PosicionEntity.fecha_compra),
+                DatabaseManager.get_database().day(PosicionEntity.fecha_compra)).subquery()
+
+            columns_subquery_precios_compra_mes_query = (
+                subquery_precios_compra_dia_query.columns[0],
+                func.sum(subquery_precios_compra_dia_query.columns[1]),
+                func.sum(subquery_precios_compra_dia_query.columns[2]),
+                func.max(subquery_precios_compra_dia_query.columns[3]),
+                subquery_precios_compra_dia_query.columns[4],
+                subquery_precios_compra_dia_query.columns[5]
+            )
+
+            subquery_precios_compra_mes_builder = SQLAlchemyQueryBuilder(subquery_precios_compra_dia_query,
+                                                                         self._session,
+                                                                         selected_columns=columns_subquery_precios_compra_mes_query)
+
+            subquery_precios_compra_mes_query = subquery_precios_compra_mes_builder.build_query(Criteria())
+
+            subquery_precios_compra_mes_query = subquery_precios_compra_mes_query.group_by(
+                subquery_precios_compra_dia_query.columns[0],
+                subquery_precios_compra_dia_query.columns[4],
+                subquery_precios_compra_dia_query.columns[5]).subquery()
+
+            columns_query_acumulados = (
+                subquery_precios_compra_mes_query.columns[0],
+                subquery_precios_compra_mes_query.columns[1],
+                subquery_precios_compra_mes_query.columns[2],
+                subquery_precios_compra_mes_query.columns[4],
+                subquery_precios_compra_mes_query.columns[5],
+                func.sum(subquery_precios_compra_mes_query.columns[1]).over(partition_by=subquery_precios_compra_mes_query.columns[0], order_by=asc(subquery_precios_compra_mes_query.columns[3])),
+                func.sum(subquery_precios_compra_mes_query.columns[2]).over(partition_by=subquery_precios_compra_mes_query.columns[0], order_by=asc(subquery_precios_compra_mes_query.columns[3])),
+            )
+
+
+            query_builder = SQLAlchemyQueryBuilder(subquery_precios_compra_mes_query,
+                                             self._session,
+                                             selected_columns=columns_query_acumulados)
+            query = query_builder.build_query(Criteria())
+            query = query.group_by(subquery_precios_compra_mes_query.columns[0],
+                                   subquery_precios_compra_mes_query.columns[4],
+                                   subquery_precios_compra_mes_query.columns[5])
+            query = query.order_by(subquery_precios_compra_mes_query.columns[4].desc(),
+                                   subquery_precios_compra_mes_query.columns[5].desc(),
+                                   func.upper(subquery_precios_compra_mes_query.columns[0]).asc())
+
+            result = query.all()
+            if result is not None:
+                for row in result:
+                    element = {"isin": row[0],
+                               "participaciones_mes": float(row[1]),
+                               "precio_compra_mes": float(row[2]),
+                               "año": int(row[3]),
+                               "mes": int(row[4]),
+                               "participaciones_acumuladas":float(row[5]),
+                               "precio_compra_acumulado":float(row[6])
+                               }
+
+                    elements.append(ResumenPosicionAcumulada(element))
         except Exception as e:
             traceback.print_exc()
 

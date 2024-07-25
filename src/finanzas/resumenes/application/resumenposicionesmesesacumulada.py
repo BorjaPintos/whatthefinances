@@ -11,7 +11,7 @@ from src.persistence.domain.filterutils import combine_filters
 from src.persistence.domain.simplefilter import SimpleFilter, WhereOperator
 
 
-class ResumenPosicionesMeses(TransactionalUseCase):
+class ResumenPosicionesMesesAcumulada(TransactionalUseCase):
 
     def __init__(self, resumen_repository: ResumenRepository):
         super().__init__([resumen_repository])
@@ -20,7 +20,7 @@ class ResumenPosicionesMeses(TransactionalUseCase):
     @transactional(readonly=True)
     def execute(self, params: dict) -> List[ResumenPosicion]:
         criteria = Criteria(filter=self._create_filters(params))
-        resumen_totales = (self._resumen_repository.resumen_posiciones_meses(criteria))
+        resumen_totales = (self._resumen_repository.resumen_posiciones_meses_acumulada(criteria))
         return resumen_totales
 
     @staticmethod
@@ -35,5 +35,4 @@ class ResumenPosicionesMeses(TransactionalUseCase):
                 "end_fecha", WhereOperator.LESSTHANOREQUAL,
                 datetime.combine(params["end_fecha"], datetime.max.time()))
             filter = combine_filters(filter, CompositeOperator.AND, fecha_filter)
-
         return filter

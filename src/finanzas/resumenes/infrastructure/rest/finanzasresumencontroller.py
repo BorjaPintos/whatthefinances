@@ -4,6 +4,7 @@ from src.finanzas.resumenes.application.resumeningresos import ResumenIngresos
 from src.finanzas.resumenes.application.resumenmonederos import ResumenMonederos
 from src.finanzas.resumenes.application.resumenposicionesdias import ResumenPosicionesDias
 from src.finanzas.resumenes.application.resumenposicionesmeses import ResumenPosicionesMeses
+from src.finanzas.resumenes.application.resumenposicionesmesesacumulada import ResumenPosicionesMesesAcumulada
 from src.finanzas.resumenes.application.resumentotales import ResumenTotales
 from src.finanzas.resumenes.application.resumenvaloresparticipacionesdias import ResumenValoresParticipacionesDias
 from src.finanzas.resumenes.application.resumenvaloresparticipacionesmeses import ResumenValoresParticipacionesMeses
@@ -24,6 +25,7 @@ resumen_valores_participaciones_dias_use_case = ResumenValoresParticipacionesDia
 resumen_posiciones_meses_use_case = ResumenPosicionesMeses(
     resumen_repository=resumen_repository)
 resumen_posiciones_dias_use_case = ResumenPosicionesDias(resumen_repository=resumen_repository)
+resumen_posiciones_meses_acumulada_use_case = ResumenPosicionesMesesAcumulada(resumen_repository=resumen_repository)
 
 def resumen_ingresos(params: dict) -> Tuple[Any, int]:
     code = 200
@@ -109,6 +111,15 @@ def resumen_posiciones_dias(params) -> Tuple[Any, int]:
     code = 200
     __cast_params(params)
     response = resumen_posiciones_dias_use_case.execute(params)
+    response_elements = []
+    for element in response:
+        response_elements.append(element.get_dto())
+    return response_elements, code
+
+def resumen_posiciones_meses_acumulada(params) -> Tuple[Any, int]:
+    code = 200
+    __cast_params(params)
+    response = resumen_posiciones_meses_acumulada_use_case.execute(params)
     response_elements = []
     for element in response:
         response_elements.append(element.get_dto())

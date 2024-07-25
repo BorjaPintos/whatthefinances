@@ -113,9 +113,13 @@ function create_tabla_valores_participaciones_meses(data_productos, callback){
             for (var j in data_productos){
                 valores_participaciones[data_productos[j].isin] = {}
                 valores_participaciones[data_productos[j].isin]["nombre"] = data_productos[j].nombre + ' - ' + data_productos[j].isin
-                valores_participaciones[data_productos[j].isin][label] = 0
             }
             fecha_iterada.setMonth(fecha_iterada.getMonth()+1)
+        }
+
+        for (var j in data_productos){
+            valores_participaciones[data_productos[j].isin] = {}
+            valores_participaciones[data_productos[j].isin]["nombre"] = data_productos[j].nombre + ' - ' + data_productos[j].isin
         }
 
         for (var i in resultado){
@@ -150,76 +154,6 @@ function create_tabla_valores_participaciones_meses(data_productos, callback){
         }
 
         table_valores_participaciones = callback(labels, "#resumen-valores-participaciones")
-    });
-
-}
-
-function create_tabla_posiciones_meses(data_productos, callback){
-
-    var today = new Date()
-    var año_antes_today = new Date(today)
-    año_antes_today.setFullYear(año_antes_today.getFullYear()-1)
-    var end_date = today.getDate()+"/"+ (today.getMonth()+1) + "/" + today.getFullYear()
-    var begin_date = "1/"+ (año_antes_today.getMonth()+1) + "/" + año_antes_today.getFullYear()
-
-    $.get("finanzas/resumen/posiciones_meses?begin_fecha="+begin_date+"&end_fecha="+end_date, function(resultado) {
-        var valores_posiciones={}
-        var labels = []
-        var fecha_iterada = new Date(año_antes_today)
-        var total_month = {}
-
-        for (var i=1;i<=13;i++){
-            label = (fecha_iterada.getMonth()+1) + "/" + fecha_iterada.getFullYear()
-            labels.push(label)
-            for (var j in data_productos){
-                valores_posiciones[data_productos[j].isin] = {}
-                valores_posiciones[data_productos[j].isin]["nombre"] = data_productos[j].nombre + ' - ' + data_productos[j].isin
-                valores_posiciones[data_productos[j].isin][label] = 0
-            }
-            fecha_iterada.setMonth(fecha_iterada.getMonth()+1)
-        }
-        for (var i in resultado){
-            label = resultado[i].mes+"/"+resultado[i].año
-            try {
-                valores_posiciones[resultado[i].isin][label] = resultado[i].valor * resultado[i].suma_participaciones
-            } catch (error) {
-                valores_posiciones[resultado[i].isin] = {}
-                valores_posiciones[resultado[i].isin][label] = resultado[i].valor * resultado[i].suma_participaciones
-            }
-        }
-
-        var tr = $("#resumen-posiciones thead tr")
-        tr.append($('<th></th>').text("Valores de tus posiciones"))
-        for (var i in labels){
-            tr.append($('<th></th>').text(labels[i]))
-            total_month[labels[i]] = 0
-        }
-
-
-        var tbody = $("#resumen-posiciones tbody")
-
-        for (var valores_posicion in valores_posiciones){
-            var row = $('<tr></tr>')
-            row.append($('<td></td>').text(valores_posiciones[valores_posicion].nombre))
-            for (var j in labels){
-                var value = "-"
-                if (valores_posiciones[valores_posicion][labels[j]] != undefined){
-                    value = parseFloat(valores_posiciones[valores_posicion][labels[j]]).toFixed(2)
-                    total_month[labels[j]] += valores_posiciones[valores_posicion][labels[j]]
-                }
-                row.append($('<td></td>').text(value))
-            }
-            tbody.append(row)
-        }
-
-        var row = $('<tr></tr>')
-        row.append($('<td></td>').text("Total"))
-        for (var j in labels){
-            var value = total_month[labels[j]]
-            row.append($('<td></td>').text(parseFloat(value).toFixed(2)))
-        }
-        tbody.append(row)
-        table_posiciones = callback(labels, "#resumen-posiciones")
     });
 
 }
@@ -299,16 +233,11 @@ create_table = function(labels, id_table){
 reload_table = function() {
 
     table_valores_participaciones.destroy()
-    table_posiciones.destroy()
     var thead= $("#resumen-valores-participaciones thead")
     thead.empty()
     thead.append($('<tr></tr>'))
     tbody= $("#resumen-valores-participaciones tbody").empty()
 
-    var thead= $("#resumen-posiciones thead")
-    thead.empty()
-    thead.append($('<tr></tr>'))
-    tbody= $("#resumen-posiciones tbody").empty()
 
     $.get("finanzas/producto", function( data_isin ) {
         create_tabla_valores_participaciones_meses(data_isin, create_table);
@@ -320,7 +249,6 @@ $(document).ready(function() {
 
     $.get("finanzas/producto", function( data_productos ) {
         create_tabla_valores_participaciones_meses(data_productos, create_table);
-        create_tabla_posiciones_meses(data_productos, create_table);
     });
 
     $('#addFechaDataPicker').daterangepicker(get_daterangepicker_config());
