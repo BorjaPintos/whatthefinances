@@ -69,7 +69,7 @@ class ValorParticipacionRepositorySQLAlchemy(ITransactionalRepository, ValorPart
     def new(self, params: dict) -> ValorParticipacion:
         try:
             self.check_isin(params.get("isin"))
-            entity = ValorParticipacionEntity(fecha=params.get("fecha"),
+            entity = ValorParticipacionEntity(fecha=params.get("fecha_hora"),
                                               isin=params.get("isin"),
                                               valor=params.get("valor"))
             self._session.add(entity)

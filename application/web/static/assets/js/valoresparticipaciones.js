@@ -4,7 +4,7 @@ function add_valor_participacion() {
     var valor_participacion = $("#addTypeValorParticipacionX").val();
 
     var data = {
-        fecha: fecha,
+        fecha_hora: fecha,
         isin: isin,
         valor: parseFloat(valor_participacion).toFixed(4) ? valor_participacion : null,
     }

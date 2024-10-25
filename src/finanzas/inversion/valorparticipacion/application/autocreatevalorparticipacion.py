@@ -36,12 +36,12 @@ class AutoCreateValorParticipacion(TransactionalUseCase):
             try:
                 value, time = self._third_api_value_product_use_case.execute(product)
                 params = {
-                    "fecha": time,
+                    "fecha_hora": time,
                     "isin": product.get_isin(),
                     "valor": value
                 }
                 self._create_use_case.execute(params)
-                params["fecha"] = params["fecha"].strftime("%d/%m/%Y %H:%M:%S") if params["fecha"] is not None else ""
+                params["fecha_hora"] = params["fecha_hora"].strftime("%d/%m/%Y %H:%M:%S") if params["fecha_hora"] is not None else ""
                 returned_list.append(params)
             except:
                 traceback.print_exc()
