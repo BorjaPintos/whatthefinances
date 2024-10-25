@@ -12,8 +12,8 @@ class CreateValorParticipacion(TransactionalUseCase):
 
     @transactional(readonly=False)
     def execute(self, params: dict) -> ValorParticipacion:
-        if "fecha" not in params or params["fecha"] is None:
-            raise InvalidParamError("campo fecha obligatorio")
+        if "fecha_hora" not in params or params["fecha_hora"] is None:
+            raise InvalidParamError("campo fecha_hora obligatorio")
         if "isin" not in params or params["isin"] is None:
             raise InvalidParamError("campo isin obligatorio")
         if "valor" not in params or params["valor"] is None:

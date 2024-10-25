@@ -4,7 +4,7 @@
   "packet": false,
   "flask_config": {
     "ENV": "dev",
-    "DEBUG": true,
+    "DEBUG": false,
     "UVICORN" : false,
     "PORT": 9090,
     "HOST": "localhost",

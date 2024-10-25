@@ -11,7 +11,7 @@ from src.finanzas.inversion.producto.infrastructure.persistence.productoreposito
 from src.finanzas.inversion.valorparticipacion.infrastructure.persistence.valorparticipacionrepositorysqlalchemy import \
     ValorParticipacionRepositorySQLAlchemy
 from src.shared.infraestructure.rest.commoncastparams import common_cast_params
-from src.shared.utils.localeutils import apply_locale_float, apply_locale_int, apply_locale_date
+from src.shared.utils.localeutils import apply_locale_float, apply_locale_int, apply_locale_date, apply_locale_datetime
 from src.shared.domain.exceptions.messageerror import MessageError
 from src.shared.infraestructure.rest.pagination import Pagination
 
@@ -76,6 +76,8 @@ def __cast_params(params: dict):
 
     if params.get("fecha") is not None:
         params["fecha"] = apply_locale_date(params["fecha"])
+    if params.get("fecha_hora") is not None:
+        params["fecha_hora"] = apply_locale_datetime(params["fecha_hora"])
     if params.get("begin_fecha") is not None:
         params["begin_fecha"] = apply_locale_date(params["begin_fecha"])
     if params.get("end_fecha") is not None:

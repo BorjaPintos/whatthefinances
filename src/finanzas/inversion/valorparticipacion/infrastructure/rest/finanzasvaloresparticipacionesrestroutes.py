@@ -44,7 +44,7 @@ def import_routes(rootpath, app):
     def create_valor_participacion():
         params = {
             "isin": request.json.get('isin', None),
-            "fecha": request.json.get('fecha', None),
+            "fecha_hora": request.json.get('fecha_hora', None),
             "valor": request.json.get('valor', None)
         }
         return finanzasvaloresparticipacionescontroller.create_valor_participacion(params)
