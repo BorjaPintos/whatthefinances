@@ -59,17 +59,31 @@ jobs:
     - name: Windows Integration tests with behave
       if: ${{ success() && runner.os == 'Windows'}}
       run: |
-        nohup python main.py run -c icconfig/config.json > nohup.out 2> null &
+        nohup python3 main.py run -c icconfig/config.json > nohup.out 2> null &
         sleep 10
         sh behave.sh --format progress3
 
     - name: Not Windows Integration tests with behave
       if: ${{ success() && runner.os != 'Windows'}}
       run: |
-        nohup python main.py run -c icconfig/config.json > nohup.out 2> nohup.err < /dev/null &
+        nohup python3 main.py run -c icconfig/config.json > nohup.out 2> nohup.err < /dev/null &
         sleep 10
         sh behave.sh --format progress3
         kill -9 $(lsof -i:9090 -t)
+
+    - name: upload output
+      uses: actions/upload-artifact@v4
+      with:
+        name: nohup.out
+        path: nohup.out
+      if: ${{ failure() }}
+
+    - name: upload errors
+      uses: actions/upload-artifact@v4
+      with:
+        name: nohup.err
+        path: nohup.err
+      if: ${{ failure() }}
 
     - name: Making Executables
       uses: ./.github/actions/pyinstaller
