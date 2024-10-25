@@ -74,14 +74,14 @@ jobs:
     - name: upload output
       uses: actions/upload-artifact@v4
       with:
-        name: nohup.out
+        name: ${{matrix.os}}-${{matrix.python-version}}-nohup.out
         path: nohup.out
       if: ${{ failure() }}
 
     - name: upload errors
       uses: actions/upload-artifact@v4
       with:
-        name: nohup.err
+        name: ${{matrix.os}}-${{matrix.python-version}}-nohup.err
         path: nohup.err
       if: ${{ failure() }}
 
