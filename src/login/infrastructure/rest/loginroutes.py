@@ -28,7 +28,9 @@ def import_routes(rootpath, app):
                 logger.info("El usuario " + username + " se ha logueado correctamente")
                 msg = {'token': token}
                 response = Response(json.dumps(msg), 200, mimetype='application/json')
-                response.set_cookie("token", token)
+                response.set_cookie("token", token,
+                                    max_age=app.config['token_login_hours_alive']*60*60,
+                                    httponly = True)
                 return response, code
             else:
                 raise UnauthorizedError()
