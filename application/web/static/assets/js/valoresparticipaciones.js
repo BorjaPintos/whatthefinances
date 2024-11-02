@@ -162,8 +162,8 @@ create_table = function(labels, id_table){
     render_nombre = function(data, type, row){
 
         if (type == 'display'){
-            if (data.length>15)
-                return '<span class="badge custom-badge" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+data+'">'+  (data.substring(0, 15) + "...") +'</span>'
+            if (data.length>30)
+                return '<span class="badge custom-badge" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+data+'">'+  (data.substring(0, 30) + "...") +'</span>'
             else
                 return '<span class="badge custom-badge" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-original-title="'+data+'">'+  data +'</span>'
         }
