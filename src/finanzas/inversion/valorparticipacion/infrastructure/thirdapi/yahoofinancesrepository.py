@@ -2,9 +2,6 @@ import re
 import traceback
 from datetime import datetime
 
-import requests
-import json
-
 from src.finanzas.inversion.producto.domain.thirdapivalueproducts import ThirdApiValueProducts
 from src.shared.infraestructure.webscraping.myrequestsselenium import MyRequestsSelenium
 
