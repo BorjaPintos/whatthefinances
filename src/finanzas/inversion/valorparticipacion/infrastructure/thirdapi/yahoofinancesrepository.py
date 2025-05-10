@@ -2,10 +2,8 @@ import re
 import traceback
 from datetime import datetime
 
-import requests
-import json
-
 from src.finanzas.inversion.producto.domain.thirdapivalueproducts import ThirdApiValueProducts
+from src.shared.infraestructure.webscraping.myrequestsselenium import MyRequestsSelenium
 
 
 class YahooFinancesRepository(ThirdApiValueProducts):
@@ -15,15 +13,14 @@ class YahooFinancesRepository(ThirdApiValueProducts):
 
     @staticmethod
     def get_last_price(url: str) -> (float, datetime):
+        myrequests = MyRequestsSelenium()
         value = None
         time = None
         try:
             simbol_list = YahooFinancesRepository.simbol_re.findall(url)
             if simbol_list:
                 simbol = simbol_list[0]
-                response = requests.get(YahooFinancesRepository.query_last_price_url.format(simbol),
-                                        headers={"User-Agent": YahooFinancesRepository.user_agent})
-                chart = json.loads(response.text)
+                chart = myrequests.get_json(YahooFinancesRepository.query_last_price_url.format(simbol))
                 value = chart["chart"]["result"][0]["meta"]["regularMarketPrice"]
                 time = datetime.fromtimestamp(chart["chart"]["result"][0]["meta"]["regularMarketTime"])
         except:
