@@ -22,9 +22,8 @@ def decode_auth_token(token: str, token_secret: str) -> dict:
 
 def create_token(user: User, token_secret: str, hours_alive: float) -> str:
     payload = {
-        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=hours_alive),
-        'iat': datetime.datetime.utcnow(),
-        'sub': user.get_id(),
+        'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=hours_alive),
+        'iat': datetime.datetime.now(datetime.UTC),
         'user': user.get_dto()
     }
     token = jwt.encode(payload, token_secret, algorithm='HS256')
