@@ -61,7 +61,7 @@ jobs:
       run: |
         nohup python3 main.py run -c icconfig/config.json > nohup.out 2> null &
         sleep 10
-        sh behave.sh --format progress3
+        sh behave.sh --format progress3 --no-capture --no-capture-stderr
 
     - name: Not Windows Integration tests with behave
       if: ${{ success() && runner.os != 'Windows'}}
