@@ -1,6 +1,5 @@
 import argparse
 import sys
-import threading
 import traceback
 from multiprocessing import Process
 from time import sleep
