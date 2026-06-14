@@ -9,7 +9,7 @@ def load_config(context):
     return context
 
 def before_scenario(context, scenario):
-    context.token = None
+    context.app_token = None
     database = context.database
     tables = database.list_tables()
     for table in tables:
