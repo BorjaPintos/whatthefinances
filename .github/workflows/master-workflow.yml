@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: ['3.12']
+        python-version: ['3.14']
         os: [ubuntu-latest, macOS-latest, windows-latest]
 
     steps:
@@ -61,12 +61,12 @@ jobs:
       run: |
         nohup python3 main.py run -c icconfig/config.json > nohup.out 2> null &
         sleep 10
-        sh behave.sh --format progress3
+        sh behave.sh --format progress3 --no-capture --no-capture-stderr
 
     - name: Not Windows Integration tests with behave
       if: ${{ success() && runner.os != 'Windows'}}
       run: |
-        nohup python3 main.py run -c icconfig/config.json > nohup.out 2> nohup.err < /dev/null &
+        nohup python3 main.py run -c icconfig/config.json > nohup2.out 2> nohup.err < /dev/null &
         sleep 10
         sh behave.sh --format progress3
         kill -9 $(lsof -i:9090 -t)

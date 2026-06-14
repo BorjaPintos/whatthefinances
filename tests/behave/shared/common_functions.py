@@ -3,16 +3,16 @@ import json
 
 
 def get_endpoint_server(context):
-    config = context.config
+    config = context.app_config
     endpoint = config["endpoint"]
     return endpoint
 
 
 def get_headers(context):
-    headers = {'content-type': 'application/json'}
-    if "token" in context:
-        if context.token is not None:
-            headers["Authorization"] = "Bearer " + context.token
+    headers = {'content-type': 'application/json','Connection': 'close'}
+    if "app_token" in context:
+        if context.app_token is not None:
+            headers["Authorization"] = "Bearer " + context.app_token
     return headers
 
 

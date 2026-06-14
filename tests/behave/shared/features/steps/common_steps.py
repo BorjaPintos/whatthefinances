@@ -84,7 +84,7 @@ def create_users(context):
     url = common_functions.get_endpoint_server(context) + '/login'
     data = {"name": "admin",
             "password": "test"}
-    context.token = common_functions.make_post_request(context, url, data).json().get("token")
+    context.app_token = common_functions.make_post_request(context, url, data).json().get("token")
 
 
 @then('Obtengo el token')
