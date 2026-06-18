@@ -44,13 +44,17 @@ Añadir operación favorita
         <select class="form-select mt-2" id="add-gasto-cuenta-cargo-select">
             <option value="None">Ninguna</option>
             {% for cuenta in lista_cuentas %}
+            {% if not cuenta.eliminado %}
             <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
         <select class="form-select mt-2" id="add-gasto-monedero-cargo-select">
             <option value="">Ninguno</option>
             {% for monedero in lista_monederos %}
+            {% if not monedero.eliminado %}
             <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
     </div>
@@ -69,13 +73,17 @@ Añadir operación favorita
         <select class="form-select mt-2" id="add-ingreso-cuenta-abono-select">
             <option value="None">Todas</option>
             {% for cuenta in lista_cuentas %}
+            {% if not cuenta.eliminado %}
             <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
         <select class="form-select mt-2" id="add-ingreso-monedero-abono-select">
             <option value="">Ninguno</option>
             {% for monedero in lista_monederos %}
+            {% if not monedero.eliminado %}
             <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
     </div>
@@ -102,25 +110,33 @@ Añadir operación favorita
         <select class="form-select mt-2" id="add-transferencia-cuenta-cargo-select">
             <option value="">Ninguna</option>
             {% for cuenta in lista_cuentas %}
+            {% if not cuenta.eliminado %}
             <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
         <select class="form-select mt-2" id="add-transferencia-cuenta-abono-select">
             <option value="">Ninguna</option>
             {% for cuenta in lista_cuentas %}
+            {% if not cuenta.eliminado %}
             <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
         <select class="form-select mt-2" id="add-transferencia-monedero-cargo-select">
             <option value="">Ninguno</option>
             {% for monedero in lista_monederos %}
+            {% if not monedero.eliminado %}
             <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
         <select class="form-select mt-2" id="add-transferencia-monedero-abono-select">
             <option value="">Ninguno</option>
             {% for monedero in lista_monederos %}
+            {% if not monedero.eliminado %}
             <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
     </div>
@@ -169,13 +185,17 @@ Editar Operacion Favorita
         <select class="form-select mt-2" id="edit-gasto-cuenta-cargo-select">
             <option value="None">Todas</option>
             {% for cuenta in lista_cuentas %}
+            {% if not cuenta.eliminado %}
             <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
         <select class="form-select mt-2" id="edit-gasto-monedero-cargo-select">
             <option value="">Ninguno</option>
             {% for monedero in lista_monederos %}
+            {% if not monedero.eliminado %}
             <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
     </div>
@@ -194,13 +214,17 @@ Editar Operacion Favorita
         <select class="form-select mt-2" id="edit-ingreso-cuenta-abono-select">
             <option value="">Ninguna</option>
             {% for cuenta in lista_cuentas %}
+            {% if not cuenta.eliminado %}
             <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
         <select class="form-select mt-2" id="edit-ingreso-monedero-abono-select">
             <option value="">Ninguno</option>
             {% for monedero in lista_monederos %}
+            {% if not monedero.eliminado %}
             <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
     </div>
@@ -228,25 +252,33 @@ Editar Operacion Favorita
         <select class="form-select mt-2" id="edit-transferencia-cuenta-cargo-select">
             <option value="">Ninguna</option>
             {% for cuenta in lista_cuentas %}
+            {% if not cuenta.eliminado %}
             <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
         <select class="form-select mt-2" id="edit-transferencia-cuenta-abono-select">
             <option value="">Ninguna</option>
             {% for cuenta in lista_cuentas %}
+            {% if not cuenta.eliminado %}
             <option value="{{cuenta.id}}">{{cuenta.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
         <select class="form-select mt-2" id="edit-transferencia-monedero-cargo-select">
             <option value="">Ninguno</option>
             {% for monedero in lista_monederos %}
+            {% if not monedero.eliminado %}
             <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
         <select class="form-select mt-2" id="edit-transferencia-monedero-abono-select">
             <option value="">Ninguno</option>
             {% for monedero in lista_monederos %}
+            {% if not monedero.eliminado %}
             <option value="{{monedero.id}}">{{monedero.nombre}}</option>
+            {% endif %}
             {% endfor %}
         </select>
     </div>

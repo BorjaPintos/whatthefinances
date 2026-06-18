@@ -186,6 +186,8 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
             cuenta_entity = query_builder.filter_by(id=id_cuenta).one_or_none()
             if cuenta_entity is None:
                 raise NotFoundError("No se encuentra la cuenta con id:  {}".format(id_cuenta))
+            if cuenta_entity.eliminado:
+                raise MessageError("No se puede usar una cuenta eliminada. Restaure la cuenta o seleccione otra.", 400)
 
     def check_monedero(self, id_monedero: int):
         if id_monedero is not None:

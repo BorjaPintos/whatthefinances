@@ -10,6 +10,7 @@ from src.finanzas.cuentas.infrastructure.persistence.orm.cuentaentity import Cue
 from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.itransactionalrepository import ITransactionalRepository
 from src.persistence.infrastructure.sqlalchmeyquerybuilder import SQLAlchemyQueryBuilder
+from src.shared.domain.exceptions.messageerror import MessageError
 from src.shared.domain.exceptions.notfounderror import NotFoundError
 
 
@@ -76,3 +77,44 @@ class CuentaRepositorySQLAlchemy(ITransactionalRepository, CuentaRepository):
         except Exception as e:
             traceback.print_exc()
         return None
+
+    def delete(self, id_cuenta: int) -> bool:
+        try:
+            query_builder = SQLAlchemyQueryBuilder(CuentaEntity, self._session).build_base_query()
+            entity = query_builder.filter_by(id=id_cuenta).one_or_none()
+            if entity is None:
+                raise NotFoundError("No se encuentra la cuenta con id:  {}".format(id_cuenta))
+            total = entity.cantidad_inicial + entity.diferencia
+            if abs(total) > 0.01:
+                raise MessageError("No se puede eliminar la cuenta porque no está vacía. Saldo actual: {}".format(round(total, 2)), 400)
+            if entity.ponderacion is not None and entity.ponderacion != 0:
+                raise MessageError("No se puede eliminar la cuenta porque tiene ponderación asignada: {}".format(entity.ponderacion), 400)
+            entity.eliminado = True
+            return True
+        except NotFoundError as e:
+            logger.info(e)
+            raise e
+        except MessageError as e:
+            raise e
+        except Exception as e:
+            traceback.print_exc()
+        return False
+
+    def restore(self, id_cuenta: int) -> bool:
+        try:
+            query_builder = SQLAlchemyQueryBuilder(CuentaEntity, self._session).build_base_query()
+            entity = query_builder.filter_by(id=id_cuenta).one_or_none()
+            if entity is None:
+                raise NotFoundError("No se encuentra la cuenta con id:  {}".format(id_cuenta))
+            if not entity.eliminado:
+                raise MessageError("La cuenta no está eliminada", 400)
+            entity.eliminado = False
+            return True
+        except NotFoundError as e:
+            logger.info(e)
+            raise e
+        except MessageError as e:
+            raise e
+        except Exception as e:
+            traceback.print_exc()
+        return False

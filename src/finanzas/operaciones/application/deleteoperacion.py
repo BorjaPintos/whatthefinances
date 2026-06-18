@@ -33,6 +33,7 @@ class DeleteOperacion(TransactionalUseCase):
 
         operacion = self._operacion_repository.get(id_operacion)
         self.__check_monederos_not_deleted(operacion)
+        self.__check_cuentas_not_deleted(operacion)
         "reverts necesarios de la operacion"
         revert_cantidad_cuentas(self._cuenta_repository, self._movimiento_cuenta_repository, operacion)
         revert_cantidad_monederos(self._monedero_repository, self._movimiento_monedero_repository, operacion)
@@ -61,3 +62,19 @@ class DeleteOperacion(TransactionalUseCase):
                 raise MessageError(
                     "No se puede eliminar la operación porque el monedero de abono '{}' está eliminado. Restaure el monedero primero.".format(
                         monedero.get_nombre()), 400)
+
+    def __check_cuentas_not_deleted(self, operacion: Operacion):
+        id_cargo = operacion.get_id_cuenta_cargo()
+        id_abono = operacion.get_id_cuenta_abono()
+        if id_cargo is not None:
+            cuenta = self._cuenta_repository.get(id_cargo)
+            if cuenta and cuenta.get_eliminado():
+                raise MessageError(
+                    "No se puede eliminar la operación porque la cuenta de cargo '{}' está eliminada. Restaure la cuenta primero.".format(
+                        cuenta.get_nombre()), 400)
+        if id_abono is not None:
+            cuenta = self._cuenta_repository.get(id_abono)
+            if cuenta and cuenta.get_eliminado():
+                raise MessageError(
+                    "No se puede eliminar la operación porque la cuenta de abono '{}' está eliminada. Restaure la cuenta primero.".format(
+                        cuenta.get_nombre()), 400)

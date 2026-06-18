@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Text, Float, Integer
+from sqlalchemy import Column, Text, Float, Integer, Boolean
 from typing_extensions import Any
 
 from src.finanzas.cuentas.domain.cuenta import Cuenta
@@ -14,6 +14,7 @@ class CuentaEntity(BaseEntity):
     cantidad_inicial = Column(Float(precision=2), server_default="0.00", nullable=False)
     diferencia = Column(Float(precision=2), server_default="0.00", nullable=False)
     ponderacion = Column(Integer)
+    eliminado = Column(Boolean, nullable=False, server_default="0")
 
     @staticmethod
     def get_order_column(str_property) -> Column:
@@ -31,7 +32,8 @@ class CuentaEntity(BaseEntity):
     def get_filter_column(str_property: str) -> Column:
         switcher = {
             "id": CuentaEntity.id,
-            "nombre": CuentaEntity.nombre
+            "nombre": CuentaEntity.nombre,
+            "eliminado": CuentaEntity.eliminado
         }
         return switcher.get(str_property, CuentaEntity.id)
 
@@ -43,8 +45,8 @@ class CuentaEntity(BaseEntity):
                 CuentaEntity.nombre: str,
                 CuentaEntity.cantidad_inicial: float,
                 CuentaEntity.diferencia: float,
-                CuentaEntity.ponderacion: int
-
+                CuentaEntity.ponderacion: int,
+                CuentaEntity.eliminado: lambda x: x.lower() in ('true', '1', 'yes')
             }
             return caster.get(column)(value)
         else:
@@ -55,7 +57,8 @@ class CuentaEntity(BaseEntity):
                        "nombre": self.nombre,
                        "cantidad_inicial": self.cantidad_inicial,
                        "diferencia": self.diferencia,
-                       "ponderacion": self.ponderacion
+                       "ponderacion": self.ponderacion,
+                       "eliminado": self.eliminado
                        })
 
     def update(self, cuenta: Cuenta):

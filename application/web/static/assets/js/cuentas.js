@@ -52,6 +52,29 @@ function delete_cuenta(id) {
     xhttp.send();
 }
 
+function restore_cuenta(id) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "/finanzas/cuenta/"+id+"/restore", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+
+
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4)
+            if (xhttp.status === 200) {
+                table.ajax.reload( null, false );
+            } else if (xhttp.status != 200){
+                try {
+                    var respuesta = JSON.parse(xhttp.responseText).message;
+                } catch (error){
+                    respuesta = "Error inesperado";
+                }
+                $("#errorTypeMessageX").text(respuesta)
+                $("#error-modal").modal("show");
+            }
+    };
+    xhttp.send();
+}
+
 function update_cuenta() {
     var id = $.trim($("#editTypeIdX").val())
     var nombre = $.trim($("#editTypeNombreX").val());
@@ -99,8 +122,17 @@ render_dinero = function (data, type) {
     return data
 }
 
-render_actions = function (data, type) {
+function getAjaxData() {
+    var eliminado = $('#show-eliminados').is(':checked');
+    return { eliminado: eliminado };
+}
+
+render_actions = function (data, type, row) {
     if (type === 'display') {
+        if (row.eliminado) {
+            restore = '<a class="restore-element font-18 text-warning me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Restore" data-bs-original-title="Restaurar" data-element="'+data+'"><i class="uil uil-history"></i></a>'
+            return restore
+        }
         if (data != 0) {
             edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
             del = '<a class="delete-element font-18 text-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete" data-bs-original-title="Borrar" data-element="'+data+'"><i class="uil uil-trash"></i></a>'
@@ -145,6 +177,9 @@ $( document ).ready(function() {
         ajax: {
             url:'/finanzas/cuenta',
             dataSrc: '',
+            data: function() {
+                return getAjaxData();
+            }
         },
         columns: [
             {
@@ -220,6 +255,9 @@ $( document ).ready(function() {
         $('.delete-element').on( "click", function() {
            delete_cuenta($(this).attr("data-element"))
         });
+        $('.restore-element').on( "click", function() {
+           restore_cuenta($(this).attr("data-element"))
+        });
     });
 
 
@@ -246,6 +284,10 @@ $( document ).ready(function() {
 
     $('#edit-submit-button').on( "click", function() {
        update_cuenta()
+    });
+
+    $('#show-eliminados').on( "change", function() {
+        table.ajax.reload( null, false );
     });
 
 });

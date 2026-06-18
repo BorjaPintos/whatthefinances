@@ -10,10 +10,15 @@ def import_routes(rootpath, app):
     @login_required
     @serialize_response
     def list_cuentas():
+        eliminado_param = request.args.get('eliminado', None)
+        eliminado = None
+        if eliminado_param is not None:
+            eliminado = eliminado_param.lower() in ('true', '1', 'yes')
         params = {
             "order_property": request.args.get('order_property', 'nombre'),
             "order_type": request.args.get('order_type', 'asc'),
-            "nombre": request.args.get('nombre', None)
+            "nombre": request.args.get('nombre', None),
+            "eliminado": eliminado
         }
         return finanzascuentascontroller.list_cuentas(params)
 
@@ -45,3 +50,15 @@ def import_routes(rootpath, app):
             "ponderacion": request.json.get('ponderacion', None),
         }
         return finanzascuentascontroller.update_cuenta(params)
+
+    @app.route(rootpath + "/<id_cuenta>", methods=['DELETE'])
+    @login_required
+    @serialize_response
+    def delete_cuenta(id_cuenta: int):
+        return finanzascuentascontroller.delete_cuenta(id_cuenta)
+
+    @app.route(rootpath + "/<id_cuenta>/restore", methods=['POST'])
+    @login_required
+    @serialize_response
+    def restore_cuenta(id_cuenta: int):
+        return finanzascuentascontroller.restore_cuenta(id_cuenta)

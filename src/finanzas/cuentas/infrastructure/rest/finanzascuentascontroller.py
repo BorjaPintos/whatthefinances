@@ -2,8 +2,10 @@
 from typing import Any, Tuple
 from loguru import logger
 from src.finanzas.cuentas.application.createcuenta import CreateCuenta
+from src.finanzas.cuentas.application.deletecuenta import DeleteCuenta
 from src.finanzas.cuentas.application.getcuenta import GetCuenta
 from src.finanzas.cuentas.application.listcuentas import ListCuentas
+from src.finanzas.cuentas.application.restorecuenta import RestoreCuenta
 from src.finanzas.cuentas.application.updatecuenta import UpdateCuenta
 from src.finanzas.cuentas.infrastructure.persistence.cuentarepositorysqlalchemy import CuentaRepositorySQLAlchemy
 from src.shared.utils.localeutils import apply_locale_float, apply_locale_int
@@ -16,6 +18,8 @@ list_cuentas_use_case = ListCuentas(cuenta_repository=cuenta_repository)
 get_cuenta_use_case = GetCuenta(cuenta_repository=cuenta_repository)
 create_cuenta_use_case = CreateCuenta(cuenta_repository=cuenta_repository)
 update_cuenta_use_case = UpdateCuenta(cuenta_repository=cuenta_repository)
+delete_cuenta_use_case = DeleteCuenta(cuenta_repository=cuenta_repository)
+restore_cuenta_use_case = RestoreCuenta(cuenta_repository=cuenta_repository)
 
 
 def list_cuentas(params: dict) -> Tuple[Any, int]:
@@ -67,6 +71,26 @@ def update_cuenta(params: dict) -> Tuple[Any, int]:
         code = 409
         logger.warning("Ya existe una cuenta con ese nombre: {}".format(params.get("nombre")))
         raise MessageError("Parece que ya existe una cuenta con ese nombre: {}".format(params.get("nombre")), code)
+    return response, code
+
+
+def delete_cuenta(id_cuenta: int) -> Tuple[Any, int]:
+    code = 200
+    deleted = delete_cuenta_use_case.execute(apply_locale_int(id_cuenta))
+    if deleted:
+        response = {}
+    else:
+        raise MessageError("Error al eliminar la cuenta", 400)
+    return response, code
+
+
+def restore_cuenta(id_cuenta: int) -> Tuple[Any, int]:
+    code = 200
+    restored = restore_cuenta_use_case.execute(apply_locale_int(id_cuenta))
+    if restored:
+        response = {}
+    else:
+        raise MessageError("Error al restaurar la cuenta", 400)
     return response, code
 
 
