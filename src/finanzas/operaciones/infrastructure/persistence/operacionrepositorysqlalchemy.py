@@ -17,6 +17,7 @@ from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.itransactionalrepository import ITransactionalRepository
 from src.persistence.domain.simplefilter import SimpleFilter, WhereOperator
 from src.persistence.infrastructure.sqlalchmeyquerybuilder import SQLAlchemyQueryBuilder
+from src.shared.domain.exceptions.messageerror import MessageError
 from src.shared.domain.exceptions.notfounderror import NotFoundError
 
 
@@ -46,6 +47,7 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
                   isouter=True) \
             .join(CuentaAbono, OperacionEntity.id_cuenta_abono == CuentaAbono.id, isouter=True) \
             .join(MonederoAbono, OperacionEntity.id_monedero_abono == MonederoAbono.id, isouter=True)
+
         return query
 
     def __get_complete_pagination_join_query(self, criteria: Criteria) -> Query:
@@ -191,6 +193,8 @@ class OperacionRepositorySQLAlchemy(ITransactionalRepository, OperacionRepositor
             monedero_entity = query_builder.filter_by(id=id_monedero).one_or_none()
             if monedero_entity is None:
                 raise NotFoundError("No se encuentra el monedero con id:  {}".format(id_monedero))
+            if monedero_entity.eliminado:
+                raise MessageError("No se puede usar un monedero eliminado. Restaure el monedero o seleccione otro.", 400)
 
     def check_categoria_ingreso(self, id_categoria_ingreso: int):
         if id_categoria_ingreso is not None:

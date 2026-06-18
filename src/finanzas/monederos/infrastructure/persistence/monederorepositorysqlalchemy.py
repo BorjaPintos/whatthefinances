@@ -10,6 +10,7 @@ from src.finanzas.monederos.infrastructure.persistence.orm.monederoentity import
 from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.itransactionalrepository import ITransactionalRepository
 from src.persistence.infrastructure.sqlalchmeyquerybuilder import SQLAlchemyQueryBuilder
+from src.shared.domain.exceptions.messageerror import MessageError
 from src.shared.domain.exceptions.notfounderror import NotFoundError
 
 
@@ -75,3 +76,42 @@ class MonederoRepositorySQLAlchemy(ITransactionalRepository, MonederoRepository)
         except Exception as e:
             traceback.print_exc()
         return None
+
+    def delete(self, id_monedero: int) -> bool:
+        try:
+            query_builder = SQLAlchemyQueryBuilder(MonederoEntity, self._session).build_base_query()
+            entity = query_builder.filter_by(id=id_monedero).one_or_none()
+            if entity is None:
+                raise NotFoundError("No se encuentra el monedero con id:  {}".format(id_monedero))
+            total = entity.cantidad_inicial + entity.diferencia
+            if abs(total) > 0.01:
+                raise MessageError("No se puede eliminar el monedero porque no está vacío. Saldo actual: {}".format(round(total, 2)), 400)
+            entity.eliminado = True
+            return True
+        except NotFoundError as e:
+            logger.info(e)
+            raise e
+        except MessageError as e:
+            raise e
+        except Exception as e:
+            traceback.print_exc()
+        return False
+
+    def restore(self, id_monedero: int) -> bool:
+        try:
+            query_builder = SQLAlchemyQueryBuilder(MonederoEntity, self._session).build_base_query()
+            entity = query_builder.filter_by(id=id_monedero).one_or_none()
+            if entity is None:
+                raise NotFoundError("No se encuentra el monedero con id:  {}".format(id_monedero))
+            if not entity.eliminado:
+                raise MessageError("El monedero no está eliminado", 400)
+            entity.eliminado = False
+            return True
+        except NotFoundError as e:
+            logger.info(e)
+            raise e
+        except MessageError as e:
+            raise e
+        except Exception as e:
+            traceback.print_exc()
+        return False

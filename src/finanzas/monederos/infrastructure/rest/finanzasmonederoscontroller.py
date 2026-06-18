@@ -2,8 +2,10 @@ from src.shared.utils.localeutils import apply_locale_int, apply_locale_float
 from typing import Any, Tuple
 from loguru import logger
 from src.finanzas.monederos.application.createmonedero import CreateMonedero
+from src.finanzas.monederos.application.deletemonedero import DeleteMonedero
 from src.finanzas.monederos.application.getmonedero import GetMonedero
 from src.finanzas.monederos.application.listmonederos import ListMonederos
+from src.finanzas.monederos.application.restoremonedero import RestoreMonedero
 from src.finanzas.monederos.application.updatemonedero import UpdateMonedero
 from src.finanzas.monederos.infrastructure.persistence.monederorepositorysqlalchemy import MonederoRepositorySQLAlchemy
 from src.shared.domain.exceptions.messageerror import MessageError
@@ -14,6 +16,8 @@ list_monederos_use_case = ListMonederos(monedero_repository=monedero_repository)
 get_monedero_use_case = GetMonedero(monedero_repository=monedero_repository)
 create_monedero_use_case = CreateMonedero(monedero_repository=monedero_repository)
 update_monedero_use_case = UpdateMonedero(monedero_repository=monedero_repository)
+delete_monedero_use_case = DeleteMonedero(monedero_repository=monedero_repository)
+restore_monedero_use_case = RestoreMonedero(monedero_repository=monedero_repository)
 
 
 def list_monederos(params: dict) -> Tuple[Any, int]:
@@ -64,6 +68,26 @@ def update_monedero(params: dict) -> Tuple[Any, int]:
         code = 409
         logger.warning("Ya existe un monedero con ese nombre: {}".format(params.get("nombre")))
         raise MessageError("Parece que ya existe un monedero con ese nombre: {}".format(params.get("nombre")), code)
+    return response, code
+
+
+def delete_monedero(id_monedero: int) -> Tuple[Any, int]:
+    code = 200
+    deleted = delete_monedero_use_case.execute(apply_locale_int(id_monedero))
+    if deleted:
+        response = {}
+    else:
+        raise MessageError("Error al eliminar el monedero", 400)
+    return response, code
+
+
+def restore_monedero(id_monedero: int) -> Tuple[Any, int]:
+    code = 200
+    restored = restore_monedero_use_case.execute(apply_locale_int(id_monedero))
+    if restored:
+        response = {}
+    else:
+        raise MessageError("Error al restaurar el monedero", 400)
     return response, code
 
 

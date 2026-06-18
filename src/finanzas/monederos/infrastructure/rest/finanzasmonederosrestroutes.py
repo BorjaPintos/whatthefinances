@@ -11,10 +11,15 @@ def import_routes(rootpath, app):
     @login_required
     @serialize_response
     def list_monederos():
+        eliminado_param = request.args.get('eliminado', None)
+        eliminado = None
+        if eliminado_param is not None:
+            eliminado = eliminado_param.lower() in ('true', '1', 'yes')
         params = {
             "order_property": request.args.get('order_property', 'nombre'),
             "order_type": request.args.get('order_type', 'asc'),
-            "nombre": request.args.get('nombre', None)
+            "nombre": request.args.get('nombre', None),
+            "eliminado": eliminado
         }
         return finanzasmonederoscontroller.list_monederos(params)
 
@@ -44,3 +49,15 @@ def import_routes(rootpath, app):
             "cantidad_inicial": request.json.get('cantidad_inicial', None)
         }
         return finanzasmonederoscontroller.update_monedero(params)
+
+    @app.route(rootpath + "/<id_monedero>", methods=['DELETE'])
+    @login_required
+    @serialize_response
+    def delete_monedero(id_monedero: int):
+        return finanzasmonederoscontroller.delete_monedero(id_monedero)
+
+    @app.route(rootpath + "/<id_monedero>/restore", methods=['POST'])
+    @login_required
+    @serialize_response
+    def restore_monedero(id_monedero: int):
+        return finanzasmonederoscontroller.restore_monedero(id_monedero)

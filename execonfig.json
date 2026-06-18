@@ -9,7 +9,7 @@
     "PORT": 9090,
     "HOST": "localhost",
     "use_ssl": false,
-    "token_secret": "Token-cifrado01939938203894",
+    "token_secret": "sdfsdfgrthetsfbwrthrtsfbthetynrthrtjnryum",
     "token_login_hours_alive": 240
   },
   "database": {

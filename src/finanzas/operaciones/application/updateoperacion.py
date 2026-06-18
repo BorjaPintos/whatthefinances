@@ -34,6 +34,7 @@ class UpdateOperacion(TransactionalUseCase):
         validate_params(params)
 
         operacion = self._operacion_repository.get(params["id"])
+        self.__check_monederos_not_deleted(operacion)
         params["id_operacion"] = operacion.get_id()
         "reverts necesarios por si cambia la cantidad,monederos o cuentas"
         revert_cantidad_cuentas(self._cuenta_repository, self._movimiento_cuenta_repository, operacion)
@@ -63,3 +64,19 @@ class UpdateOperacion(TransactionalUseCase):
                 logger.info(e)
         else:
             raise MessageError("Ocurrió un error durante la actualización", 500)
+
+    def __check_monederos_not_deleted(self, operacion: Operacion):
+        id_cargo = operacion.get_id_monedero_cargo()
+        id_abono = operacion.get_id_monedero_abono()
+        if id_cargo is not None:
+            monedero = self._monedero_repository.get(id_cargo)
+            if monedero and monedero.get_eliminado():
+                raise MessageError(
+                    "No se puede modificar la operación porque el monedero de cargo '{}' está eliminado. Restaure el monedero primero.".format(
+                        monedero.get_nombre()), 400)
+        if id_abono is not None:
+            monedero = self._monedero_repository.get(id_abono)
+            if monedero and monedero.get_eliminado():
+                raise MessageError(
+                    "No se puede modificar la operación porque el monedero de abono '{}' está eliminado. Restaure el monedero primero.".format(
+                        monedero.get_nombre()), 400)

@@ -5,6 +5,7 @@ class Monedero:
         self._nombre = params.get("nombre")
         self._cantidad_inicial = params.get("cantidad_inicial")
         self._diferencia = params.get("diferencia")
+        self._eliminado = params.get("eliminado", False)
 
     def get_id(self) -> int:
         return self._id
@@ -30,10 +31,17 @@ class Monedero:
     def get_total(self) -> float:
         return self._cantidad_inicial + self._diferencia
 
+    def get_eliminado(self) -> bool:
+        return self._eliminado
+
+    def set_eliminado(self, eliminado: bool):
+        self._eliminado = eliminado
+
     def get_dto(self) -> dict:
         return {"id": self._id,
                 "nombre": self._nombre,
                 "cantidad_inicial": self._cantidad_inicial,
                 "diferencia": self._diferencia,
-                "total": self.get_total()
+                "total": self.get_total(),
+                "eliminado": self._eliminado
                 }

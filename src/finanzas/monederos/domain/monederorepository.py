@@ -22,3 +22,11 @@ class MonederoRepository(ABC):
     @abstractmethod
     def get(self, id_cuenta: int) -> Monedero:
         pass
+
+    @abstractmethod
+    def delete(self, id_monedero: int) -> bool:
+        pass
+
+    @abstractmethod
+    def restore(self, id_monedero: int) -> bool:
+        pass
