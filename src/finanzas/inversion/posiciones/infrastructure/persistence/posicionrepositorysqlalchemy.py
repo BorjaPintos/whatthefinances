@@ -156,7 +156,7 @@ class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository)
             oldest_open_ids = self._get_oldest_open_ids_by_isin_and_broker(open_isins_brokers)
             for p in elements:
                 if p.is_abierta():
-                    if p.get_id_broker() is None:
+                    if p.get_id_broker() == 1:
                         p.set_es_cerrable(True)
                     else:
                         p.set_es_cerrable(oldest_open_ids.get((p.get_isin(), p.get_id_broker())) == p.get_id())
@@ -189,7 +189,7 @@ class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository)
             else:
                 posicion = self.__get_posicion_participacion_from_complete_join_row(result)
                 if posicion.is_abierta():
-                    if posicion.get_id_broker() is None:
+                    if posicion.get_id_broker() == 1:
                         posicion.set_es_cerrable(True)
                     else:
                         oldest_open_ids = self._get_oldest_open_ids_by_isin_and_broker(

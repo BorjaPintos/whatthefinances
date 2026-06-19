@@ -21,7 +21,7 @@ class CerrarPosicion(TransactionalUseCase):
         if not posicion.is_abierta():
             raise InvalidParamError("La posición ya está cerrada")
 
-        if posicion.get_id_broker() is not None:
+        if posicion.get_id_broker() != 1:
             oldest_open = self._posicion_repository_repository.get_oldest_open_by_isin_and_broker(
                 posicion.get_isin(), posicion.get_id_broker())
             if oldest_open is not None and oldest_open.get_id() != posicion.get_id():
