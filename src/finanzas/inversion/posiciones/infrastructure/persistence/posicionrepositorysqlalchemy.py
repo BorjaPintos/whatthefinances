@@ -5,8 +5,6 @@ from loguru import logger
 from sqlalchemy import func, Subquery, and_, Label, or_, over
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Query
-
-from src.finanzas.inversion.dividendos.domain.dividendo_rango import DividendoRango
 from src.finanzas.inversion.posiciones.domain.posicion import Posicion
 from src.finanzas.inversion.posiciones.domain.posicionrepository import PosicionRepository
 from src.finanzas.inversion.bolsa.infrastructure.persistence.orm.bolsaentity import BolsaEntity
@@ -53,39 +51,56 @@ class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository)
 
         return result.subquery()
 
+
+
     def __get_subquery_dividendo(self, alias: Type[PosicionEntity]) -> Label:
         columnas = (
             func.sum(DividendoEntity.dividendo_por_participacion),
         )
         subquery_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
-        subquery = ((subquery_builder.build_query(Criteria())).
-                    where(or_(and_(DividendoEntity.fecha > alias.fecha_compra,
-                                   DividendoEntity.isin == alias.isin,
-                                   alias.abierta == True),
-                              and_(DividendoEntity.fecha > alias.fecha_compra,
-                                   DividendoEntity.fecha < alias.fecha_venta,
-                                   DividendoEntity.isin == alias.isin,
-                                   alias.abierta == False)
-                              )
-                          ))
-        return subquery.label('dividendo')
+
+        subquery = (
+            subquery_builder.build_query(Criteria())
+            .where(
+                # Factores comunes (Correlación con la query externa)
+                DividendoEntity.isin == alias.isin,
+                DividendoEntity.fecha > alias.fecha_compra,
+                # Condición variable encapsulada en el OR
+                or_(
+                    alias.abierta == True,
+                    and_(
+                        alias.abierta == False,
+                        DividendoEntity.fecha < alias.fecha_venta
+                    )
+                )
+            )
+        )
+        # Es altamente recomendable asegurar que actúe como una subquery escalar antes del label
+        return subquery.scalar_subquery().label('dividendo')
 
     def __get_subquery_retencion(self, alias: Type[PosicionEntity]) -> Label:
         columnas = (
             func.sum(DividendoEntity.retencion_por_participacion),
         )
         subquery_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
-        subquery = ((subquery_builder.build_query(Criteria())).
-                    where(or_(and_(DividendoEntity.fecha > alias.fecha_compra,
-                                   DividendoEntity.isin == alias.isin,
-                                   alias.abierta == True),
-                              and_(DividendoEntity.fecha > alias.fecha_compra,
-                                   DividendoEntity.fecha < alias.fecha_venta,
-                                   DividendoEntity.isin == alias.isin,
-                                   alias.abierta == False)
-                              )
-                          ))
-        return subquery.label('retencion')
+
+        subquery = (
+            subquery_builder.build_query(Criteria())
+            .where(
+                # Factores comunes (Correlación con la query externa)
+                DividendoEntity.isin == alias.isin,
+                DividendoEntity.fecha > alias.fecha_compra,
+                # Condición variable encapsulada en el OR
+                or_(
+                    alias.abierta == True,
+                    and_(
+                        alias.abierta == False,
+                        DividendoEntity.fecha < alias.fecha_venta
+                    )
+                )
+            )
+        )
+        return subquery.scalar_subquery().label('retencion')
 
     def __get_complete_join_query(self, criteria: Criteria) -> Query:
 
