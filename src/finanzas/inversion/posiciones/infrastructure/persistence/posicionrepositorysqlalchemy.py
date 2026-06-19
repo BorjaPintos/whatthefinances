@@ -2,7 +2,7 @@ import traceback
 from typing import List, Tuple, Type
 
 from loguru import logger
-from sqlalchemy import func, Subquery, and_, Label, or_
+from sqlalchemy import func, Subquery, and_, Label, or_, over
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Query
 
@@ -26,25 +26,32 @@ class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository)
 
     def __get_subquery_valor_participacion(self) -> Subquery:
 
-        """
-        select fvc.isin, fvc.fecha, fvc.valor
-        FROM finanzas_valor_participaciones fvc
-        join (SELECT fac.isin AS isin, max(fac.fecha) AS max_1 FROM finanzas_valor_participaciones fac GROUP BY fac.isin) fvc2
-        on fvc.isin = fvc2.isin and fvc.fecha = fvc2.max_1
-        """
+        subquery = (
+            self._session.query(
+                ValorParticipacionEntity.isin,
+                ValorParticipacionEntity.fecha,
+                ValorParticipacionEntity.valor,
+                func.row_number().over(
+                    partition_by=ValorParticipacionEntity.isin,
+                    order_by=[
+                        ValorParticipacionEntity.fecha.desc(),
+                        ValorParticipacionEntity.id.desc()
+                    ]
+                ).label('rn')
+            )
+            .subquery()
+        )
 
-        columnas = (ValorParticipacionEntity.isin, func.max(ValorParticipacionEntity.fecha))
-        subquery_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas)
-        subquery = subquery_builder.build_query(Criteria())
-        subquery = subquery.group_by(ValorParticipacionEntity.isin).subquery()
+        result = (
+            self._session.query(
+                subquery.c.isin,
+                subquery.c.fecha,
+                subquery.c.valor
+            )
+            .filter(subquery.c.rn == 1)
+        )
 
-        columnas2 = (ValorParticipacionEntity.isin, ValorParticipacionEntity.fecha, ValorParticipacionEntity.valor)
-        subquery_builder2 = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas2)
-        subquery2 = (subquery_builder2.build_query(Criteria())
-                     .join(subquery, and_(ValorParticipacionEntity.isin == subquery.columns[0],
-                                          ValorParticipacionEntity.fecha == subquery.columns[1]), isouter=False))
-
-        return subquery2.subquery()
+        return result.subquery()
 
     def __get_subquery_dividendo(self, alias: Type[PosicionEntity]) -> Label:
         columnas = (
