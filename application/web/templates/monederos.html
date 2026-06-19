@@ -39,6 +39,13 @@ Editar monederos
 <input type="hidden" id="editTypeIdX"/>
 {% endblock %}
 
+{% block tabletopmenu %}
+<div class="form-check mt-2">
+    <input class="form-check-input" type="checkbox" id="show-eliminados">
+    <label class="form-check-label" for="show-eliminados">Mostrar eliminados</label>
+</div>
+{% endblock %}
+
 
 {% block listaextendsscript %}
 <script type="text/javascript" src="assets/datatables/js/dataTables.rowGroup.min.js"></script>

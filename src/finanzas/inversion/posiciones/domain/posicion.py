@@ -23,6 +23,7 @@ class Posicion:
         self._valor_participacion = params.get("valor_participacion")
         self._dividendos_por_participacion = params.get("dividendos_por_participacion")
         self._retencion_por_participacion = params.get("retencion_por_participacion")
+        self._es_cerrable = params.get("es_cerrable", True)
 
     def get_id(self) -> int:
         return self._id
@@ -111,6 +112,12 @@ class Posicion:
     def get_nombre_broker(self) -> str:
         return self._nombre_broker
 
+    def is_es_cerrable(self) -> bool:
+        return self._es_cerrable
+
+    def set_es_cerrable(self, es_cerrable: bool):
+        self._es_cerrable = es_cerrable
+
     def get_valor_participacion(self) -> float:
         if self._valor_participacion is None:
             return self._precio_compra_sin_comision
@@ -174,6 +181,7 @@ class Posicion:
                 "ganacia_con_comosiones_y_dividendos": self.get_valor_actual() + self.get_dividendos_total()
                                                        - self.get_precio_compra_sin_comisiones() - self.get_todas_comisiones(),
                 "valor_adquisicion": self.get_precio_compra_sin_comisiones() + self.get_comision_compra(),
-                "valor_transmision": self.get_precio_venta_sin_comisiones() - self.get_comision_venta()
+                "valor_transmision": self.get_precio_venta_sin_comisiones() - self.get_comision_venta(),
+                "es_cerrable": self._es_cerrable
 
                 }

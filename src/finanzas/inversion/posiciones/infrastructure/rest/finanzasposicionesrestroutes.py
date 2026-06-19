@@ -20,7 +20,7 @@ def import_routes(rootpath, app):
             "id_bolsa": request.args.get('id_bolsa', None),
             "list_id_broker": request.args.get('list_id_broker', None),
             "id_broker": request.args.get('id_broker', None),
-            "abierta": request.args.get('abierta', None),
+            "abierta": request.args.get('abierta', True),
             "begin_fecha_compra": request.args.get('begin_fecha_compra', None),
             "end_fecha_compra": request.args.get('end_fecha_compra', None),
             "begin_fecha_venta": request.args.get('begin_fecha_venta', None),
@@ -86,7 +86,8 @@ def import_routes(rootpath, app):
         params = {
             "id": id_posicion,
             "fecha_venta": request.json.get('fecha_venta', None),
-            "precio_venta_sin_comision": request.json.get('precio_venta_sin_comision', None)
+            "precio_venta_sin_comision": request.json.get('precio_venta_sin_comision', None),
+            "comision_venta": request.json.get('comision_venta', None)
         }
         return finanzasposicionescontroller.cerrar_posicion(params)
 

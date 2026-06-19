@@ -31,6 +31,12 @@ def list_monederos(context):
     context.result = common_functions.make_get_request(context, url)
 
 
+@when('Listo los monederos con filtro eliminado {valor}')
+def list_monederos_with_filter(context, valor):
+    url = _get_monedero_base_url(context) + "?eliminado={}".format(valor)
+    context.result = common_functions.make_get_request(context, url)
+
+
 @when('Creo el siguiente monedero')
 def create_monedero(context):
     for row in context.table:
@@ -51,3 +57,9 @@ def update_monedero(context, id):
         }
         url = _get_monedero_base_url(context) + "/{}".format(id)
         context.result = common_functions.make_post_request(context, url, data)
+
+
+@when('Elimino el monedero con id {id}')
+def delete_monedero(context, id):
+    url = _get_monedero_base_url(context) + "/{}".format(id)
+    context.result = common_functions.make_delete_request(context, url)

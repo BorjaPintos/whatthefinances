@@ -167,3 +167,65 @@ Feature: Cuenta
       | nombre | cantidad_inicial | ponderacion |
       | A      | 2.0              | 50          |
     Then Obtengo el codigo de estado 409
+
+  Scenario: DeleteCuenta sin loguearse
+    Given Las siguientes cuentas creadas
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | A      | 0.0              | 0.0        | 0           |
+    When Elimino la cuenta con id 1
+    Then Obtengo el codigo de estado 401
+
+  Scenario: DeleteCuenta correcto con saldo 0
+    Given Una sesion correcta
+    And Las siguientes cuentas creadas
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | A      | 0.0              | 0.0        | 0           |
+    When Elimino la cuenta con id 1
+    Then Obtengo el codigo de estado 200
+    When Listo las cuentas
+    Then Obtengo el codigo de estado 200
+    And Obtengo una lista vacía
+
+  Scenario: DeleteCuenta con saldo distinto de 0
+    Given Una sesion correcta
+    And Las siguientes cuentas creadas
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | A      | 10.0             | 0.0        | 0           |
+    When Elimino la cuenta con id 1
+    Then Obtengo el codigo de estado 400
+
+  Scenario: DeleteCuenta con ponderación distinta de 0
+    Given Una sesion correcta
+    And Las siguientes cuentas creadas
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | A      | 0.0              | 0.0        | 50          |
+    When Elimino la cuenta con id 1
+    Then Obtengo el codigo de estado 400
+
+  Scenario: ListCuenta no muestra eliminados por defecto
+    Given Una sesion correcta
+    And Las siguientes cuentas creadas
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | A      | 0.0              | 0.0        | 0           |
+      | B      | 0.0              | 0.0        | 0           |
+    When Elimino la cuenta con id 1
+    Then Obtengo el codigo de estado 200
+    When Listo las cuentas
+    Then Obtengo el codigo de estado 200
+    And  Obtengo la siguiente lista
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | B      | 0.0              | 0.0        | 0           |
+
+  Scenario: ListCuentas muestra solo eliminadas con filtro
+    Given Una sesion correcta
+    And Las siguientes cuentas creadas
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | A      | 0.0              | 0.0        | 0           |
+      | B      | 0.0              | 0.0        | 0           |
+    When Elimino la cuenta con id 1
+    Then Obtengo el codigo de estado 200
+    When Listo las cuentas con filtro eliminado true
+    Then Obtengo el codigo de estado 200
+    And  Obtengo la siguiente lista
+      | nombre | cantidad_inicial | diferencia | ponderacion |
+      | A      | 0.0              | 0.0        | 0           |

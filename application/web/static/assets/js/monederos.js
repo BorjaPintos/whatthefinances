@@ -50,6 +50,29 @@ function delete_monedero(id) {
     xhttp.send();
 }
 
+function restore_monedero(id) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "/finanzas/monedero/"+id+"/restore", true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+
+
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4)
+            if (xhttp.status === 200) {
+                table.ajax.reload( null, false );
+            } else if (xhttp.status != 200){
+                try {
+                    var respuesta = JSON.parse(xhttp.responseText).message;
+                } catch (error){
+                    respuesta = "Error inesperado";
+                }
+                $("#errorTypeMessageX").text(respuesta)
+                $("#error-modal").modal("show");
+            }
+    };
+    xhttp.send();
+}
+
 function update_monedero() {
     var id = $.trim($("#editTypeIdX").val())
     var nombre = $.trim($("#editTypeNombreX").val());
@@ -94,8 +117,12 @@ render_dinero = function (data, type) {
     return data
 }
 
-render_actions = function (data, type) {
+render_actions = function (data, type, row) {
     if (type === 'display') {
+        if (row.eliminado) {
+            restore = '<a class="restore-element font-18 text-warning me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Restore" data-bs-original-title="Restaurar" data-element="'+data+'"><i class="uil uil-history"></i></a>'
+            return restore
+        }
         if (data != 0) {
             edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
             del = '<a class="delete-element font-18 text-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete" data-bs-original-title="Borrar" data-element="'+data+'"><i class="uil uil-trash"></i></a>'
@@ -104,6 +131,11 @@ render_actions = function (data, type) {
         return ""
     }
     return data
+}
+
+function getAjaxData() {
+    var eliminado = $('#show-eliminados').is(':checked');
+    return { eliminado: eliminado };
 }
 
 $( document).ready(function() {
@@ -133,6 +165,9 @@ $( document).ready(function() {
         ajax: {
             url:'/finanzas/monedero',
             dataSrc: '',
+            data: function() {
+                return getAjaxData();
+            }
         },
         columns: [
             {
@@ -202,6 +237,9 @@ $( document).ready(function() {
         $('.delete-element').on( "click", function() {
            delete_monedero($(this).attr("data-element"))
         });
+        $('.restore-element').on( "click", function() {
+           restore_monedero($(this).attr("data-element"))
+        });
     });
 
 
@@ -243,6 +281,10 @@ $( document).ready(function() {
 
     $('.delete-element').on( "click", function() {
        delete_monedero($(this).attr("data-element"))
+    });
+
+    $('#show-eliminados').on( "change", function() {
+        table.ajax.reload( null, false );
     });
 
 });

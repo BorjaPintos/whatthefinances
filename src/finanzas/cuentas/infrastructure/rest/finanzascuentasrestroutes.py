@@ -13,7 +13,8 @@ def import_routes(rootpath, app):
         params = {
             "order_property": request.args.get('order_property', 'nombre'),
             "order_type": request.args.get('order_type', 'asc'),
-            "nombre": request.args.get('nombre', None)
+            "nombre": request.args.get('nombre', None),
+            "eliminado": request.args.get('eliminado', False)
         }
         return finanzascuentascontroller.list_cuentas(params)
 
@@ -45,3 +46,15 @@ def import_routes(rootpath, app):
             "ponderacion": request.json.get('ponderacion', None),
         }
         return finanzascuentascontroller.update_cuenta(params)
+
+    @app.route(rootpath + "/<id_cuenta>", methods=['DELETE'])
+    @login_required
+    @serialize_response
+    def delete_cuenta(id_cuenta: int):
+        return finanzascuentascontroller.delete_cuenta(id_cuenta)
+
+    @app.route(rootpath + "/<id_cuenta>/restore", methods=['POST'])
+    @login_required
+    @serialize_response
+    def restore_cuenta(id_cuenta: int):
+        return finanzascuentascontroller.restore_cuenta(id_cuenta)

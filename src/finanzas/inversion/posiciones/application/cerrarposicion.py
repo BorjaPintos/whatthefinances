@@ -18,9 +18,22 @@ class CerrarPosicion(TransactionalUseCase):
         self._validate_params(params)
         posicion = self._posicion_repository_repository.get(params["id"])
 
+        if not posicion.is_abierta():
+            raise InvalidParamError("La posición ya está cerrada")
+
+        if posicion.get_id_broker() != 1:
+            oldest_open = self._posicion_repository_repository.get_oldest_open_by_isin_and_broker(
+                posicion.get_isin(), posicion.get_id_broker())
+            if oldest_open is not None and oldest_open.get_id() != posicion.get_id():
+                raise InvalidParamError(
+                    "Solo se puede cerrar la posición abierta más antigua de cada elemento en el mismo broker. "
+                    "La posición más antigua abierta para el ISIN {} en el mismo broker tiene fecha de compra {}".format(
+                        posicion.get_isin(), oldest_open.get_fecha_compra().strftime("%d/%m/%Y")))
+
         posicion.set_fecha_venta(params.get("fecha_venta"))
         posicion.set_abierta(False)
         posicion.set_comision_venta(params.get("comision_venta"))
+        posicion.set_precio_venta_sin_comision(params.get("precio_venta_sin_comision"))
 
         updated = self._posicion_repository_repository.update(posicion)
 
@@ -38,3 +51,5 @@ class CerrarPosicion(TransactionalUseCase):
             raise InvalidParamError("campo fecha_venta obligatorio")
         if "comision_venta" not in params or params["comision_venta"] is None:
             raise InvalidParamError("campo comision_venta obligatorio")
+        if "precio_venta_sin_comision" not in params or params["precio_venta_sin_comision"] is None:
+            raise InvalidParamError("campo precio_venta_sin_comision obligatorio")

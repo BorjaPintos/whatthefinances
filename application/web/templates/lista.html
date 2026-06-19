@@ -95,6 +95,32 @@
         </div>
     </div>
 </div>
+<div class="modal" id="cerrar" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog row d-flex justify-content-center align-items-center h-100" role="document">
+        <div class="modal-content modal-body card bg-dark text-white">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    {% block titulo_cerrar %}
+                    {% endblock %}</h5>
+                <button type="button" class="close" id="cerrar-close-button" data-dismiss="modal" aria-label="Close">
+                    <i class="uil-times"></i>
+                </button>
+            </div>
+            <div class="">
+                <div class="card-body text-center">
+                    <div class="mb-md-5 mt-md-4">
+                        {% block contenido_cerrar %}
+                        {% endblock %}
+                        <p class="mb-5 text-danger" id="cerrarTypeMessageX"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="cerrar-submit-button">Cerrar Posición</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% block extend_lista %}
 {% endblock %}

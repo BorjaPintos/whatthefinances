@@ -1,6 +1,6 @@
 {
   "log_level": "DEBUG",
-  "desktop_app": true,
+  "desktop_app": false,
   "packet": false,
   "flask_config": {
     "ENV": "dev",
@@ -14,7 +14,7 @@
       "key_path": "./ssl/server.key",
       "passphrase": "finanzas"
     },
-    "token_secret": "Token-cifrado01939938203894",
+    "token_secret": "Token-cifrado0193993820389443rvdfvsdfvdfv",
     "token_login_hours_alive": 240
   },
   "database": {

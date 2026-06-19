@@ -1,6 +1,6 @@
 from typing import Any
 
-from sqlalchemy import Column, Text, Float
+from sqlalchemy import Column, Text, Float, Boolean
 
 from src.finanzas.monederos.domain.monedero import Monedero
 from src.persistence.domain.init_table import InitTable
@@ -14,6 +14,7 @@ class MonederoEntity(BaseEntity):
     nombre = Column(Text, nullable=False, unique=True)
     cantidad_inicial = Column(Float(precision=2), server_default="0.00", nullable=False)
     diferencia = Column(Float(precision=2), server_default="0.00", nullable=False)
+    eliminado = Column(Boolean, nullable=False, server_default="0")
 
     @staticmethod
     def get_order_column(str_property) -> Column:
@@ -30,7 +31,8 @@ class MonederoEntity(BaseEntity):
     def get_filter_column(str_property: str) -> Column:
         switcher = {
             "id": MonederoEntity.id,
-            "nombre": MonederoEntity.nombre
+            "nombre": MonederoEntity.nombre,
+            "eliminado": MonederoEntity.eliminado
         }
         return switcher.get(str_property, MonederoEntity.id)
 
@@ -41,8 +43,8 @@ class MonederoEntity(BaseEntity):
                 MonederoEntity.id: int,
                 MonederoEntity.nombre: str,
                 MonederoEntity.cantidad_inicial: float,
-                MonederoEntity.diferencia: float
-
+                MonederoEntity.diferencia: float,
+                MonederoEntity.eliminado: lambda x: x.lower() in ('true', '1', 'yes')
             }
             return caster.get(column)(value)
         else:
@@ -52,7 +54,8 @@ class MonederoEntity(BaseEntity):
         return Monedero({"id": self.id,
                          "nombre": self.nombre,
                          "cantidad_inicial": self.cantidad_inicial,
-                         "diferencia": self.diferencia
+                         "diferencia": self.diferencia,
+                         "eliminado": self.eliminado
                          })
 
     def update(self, monedero: Monedero):

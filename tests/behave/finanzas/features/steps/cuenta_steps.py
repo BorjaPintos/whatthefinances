@@ -31,6 +31,10 @@ def list_cuentas(context):
     url = _get_cuenta_base_url(context)
     context.result = common_functions.make_get_request(context, url)
 
+@when('Listo las cuentas con filtro eliminado {valor}')
+def list_monederos_with_filter(context, valor):
+    url = _get_cuenta_base_url(context) + "?eliminado={}".format(valor)
+    context.result = common_functions.make_get_request(context, url)
 
 @when('Creo la siguiente cuenta')
 def create_cuenta(context):
@@ -54,3 +58,8 @@ def update_cuenta(context, id):
         }
         url = _get_cuenta_base_url(context) + "/{}".format(id)
         context.result = common_functions.make_post_request(context, url, data)
+
+@when('Elimino la cuenta con id {id}')
+def delete_monedero(context, id):
+    url = _get_cuenta_base_url(context) + "/{}".format(id)
+    context.result = common_functions.make_delete_request(context, url)

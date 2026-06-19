@@ -33,4 +33,9 @@ class ListCuentas(TransactionalUseCase):
                 "nombre", WhereOperator.LIKE, "%{}%".format(params["nombre"]))
             filter = combine_filters(filter, CompositeOperator.AND, nombre_filter)
 
+        if "eliminado" in params and params["eliminado"] is not None:
+            eliminado_filter = SimpleFilter(
+                "eliminado", WhereOperator.EQUAL, params["eliminado"])
+            filter = combine_filters(filter, CompositeOperator.AND, eliminado_filter)
+
         return filter

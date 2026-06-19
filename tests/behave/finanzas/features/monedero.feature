@@ -156,3 +156,57 @@ Feature: Monedero
       | nombre | cantidad_inicial |
       | A      | 2.0              |
     Then Obtengo el codigo de estado 409
+
+  Scenario: DeleteMonedero sin loguearse
+    Given Los siguientes monederos creados
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 0.0              | 0.0        |
+    When Elimino el monedero con id 1
+    Then Obtengo el codigo de estado 401
+
+  Scenario: DeleteMonedero correcto con saldo 0
+    Given Una sesion correcta
+    And Los siguientes monederos creados
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 0.0              | 0.0        |
+    When Elimino el monedero con id 1
+    Then Obtengo el codigo de estado 200
+    When Listo los monederos
+    Then Obtengo el codigo de estado 200
+    And Obtengo una lista vacía
+
+  Scenario: DeleteMonedero con saldo distinto de 0
+    Given Una sesion correcta
+    And Los siguientes monederos creados
+      | nombre | cantidad_inicial | diferencia |
+      | Test   | 10.0             | 5.0        |
+    When Elimino el monedero con id 1
+    Then Obtengo el codigo de estado 400
+
+  Scenario: ListMonedero no muestra eliminados por defecto
+    Given Una sesion correcta
+    And Los siguientes monederos creados
+      | nombre | cantidad_inicial | diferencia |
+      | Test1  | 0.0              | 0.0        |
+      | Test2  | 0.0              | 0.0        |
+    When Elimino el monedero con id 1
+    Then Obtengo el codigo de estado 200
+    When Listo los monederos
+    Then Obtengo el codigo de estado 200
+    And  Obtengo la siguiente lista
+      | nombre | cantidad_inicial | diferencia | total |
+      | Test2  | 0.0              | 0.0        | 0.0   |
+
+  Scenario: ListMonedero muestra solo eliminados con filtro
+    Given Una sesion correcta
+    And Los siguientes monederos creados
+      | nombre | cantidad_inicial | diferencia |
+      | Test1  | 0.0              | 0.0        |
+      | Test2  | 0.0              | 0.0        |
+    When Elimino el monedero con id 1
+    Then Obtengo el codigo de estado 200
+    When Listo los monederos con filtro eliminado true
+    Then Obtengo el codigo de estado 200
+    And  Obtengo la siguiente lista
+      | nombre | cantidad_inicial | diferencia | total |
+      | Test1  | 0.0              | 0.0        | 0.0   |

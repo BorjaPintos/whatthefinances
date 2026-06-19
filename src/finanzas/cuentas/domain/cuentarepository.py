@@ -21,3 +21,11 @@ class CuentaRepository(ABC):
     @abstractmethod
     def get(self, id_cuenta: int) -> Cuenta:
         pass
+
+    @abstractmethod
+    def delete(self, id_cuenta: int) -> bool:
+        pass
+
+    @abstractmethod
+    def restore(self, id_cuenta: int) -> bool:
+        pass

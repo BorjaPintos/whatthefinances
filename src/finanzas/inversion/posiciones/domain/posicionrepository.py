@@ -31,3 +31,7 @@ class PosicionRepository(ABC):
     @abstractmethod
     def delete(self, id_posicion: int) -> bool:
         pass
+
+    @abstractmethod
+    def get_oldest_open_by_isin_and_broker(self, isin: str, id_broker: int) -> Posicion:
+        pass

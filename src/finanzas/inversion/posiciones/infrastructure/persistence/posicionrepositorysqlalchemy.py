@@ -2,11 +2,9 @@ import traceback
 from typing import List, Tuple, Type
 
 from loguru import logger
-from sqlalchemy import func, Subquery, and_, Label, or_
+from sqlalchemy import func, Subquery, and_, Label, or_, over
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Query
-
-from src.finanzas.inversion.dividendos.domain.dividendo_rango import DividendoRango
 from src.finanzas.inversion.posiciones.domain.posicion import Posicion
 from src.finanzas.inversion.posiciones.domain.posicionrepository import PosicionRepository
 from src.finanzas.inversion.bolsa.infrastructure.persistence.orm.bolsaentity import BolsaEntity
@@ -26,59 +24,83 @@ class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository)
 
     def __get_subquery_valor_participacion(self) -> Subquery:
 
-        """
-        select fvc.isin, fvc.fecha, fvc.valor
-        FROM finanzas_valor_participaciones fvc
-        join (SELECT fac.isin AS isin, max(fac.fecha) AS max_1 FROM finanzas_valor_participaciones fac GROUP BY fac.isin) fvc2
-        on fvc.isin = fvc2.isin and fvc.fecha = fvc2.max_1
-        """
+        subquery = (
+            self._session.query(
+                ValorParticipacionEntity.isin,
+                ValorParticipacionEntity.fecha,
+                ValorParticipacionEntity.valor,
+                func.row_number().over(
+                    partition_by=ValorParticipacionEntity.isin,
+                    order_by=[
+                        ValorParticipacionEntity.fecha.desc(),
+                        ValorParticipacionEntity.id.desc()
+                    ]
+                ).label('rn')
+            )
+            .subquery()
+        )
 
-        columnas = (ValorParticipacionEntity.isin, func.max(ValorParticipacionEntity.fecha))
-        subquery_builder = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas)
-        subquery = subquery_builder.build_query(Criteria())
-        subquery = subquery.group_by(ValorParticipacionEntity.isin).subquery()
+        result = (
+            self._session.query(
+                subquery.c.isin,
+                subquery.c.fecha,
+                subquery.c.valor
+            )
+            .filter(subquery.c.rn == 1)
+        )
 
-        columnas2 = (ValorParticipacionEntity.isin, ValorParticipacionEntity.fecha, ValorParticipacionEntity.valor)
-        subquery_builder2 = SQLAlchemyQueryBuilder(ValorParticipacionEntity, self._session, selected_columns=columnas2)
-        subquery2 = (subquery_builder2.build_query(Criteria())
-                     .join(subquery, and_(ValorParticipacionEntity.isin == subquery.columns[0],
-                                          ValorParticipacionEntity.fecha == subquery.columns[1]), isouter=False))
+        return result.subquery()
 
-        return subquery2.subquery()
+
 
     def __get_subquery_dividendo(self, alias: Type[PosicionEntity]) -> Label:
         columnas = (
             func.sum(DividendoEntity.dividendo_por_participacion),
         )
         subquery_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
-        subquery = ((subquery_builder.build_query(Criteria())).
-                    where(or_(and_(DividendoEntity.fecha > alias.fecha_compra,
-                                   DividendoEntity.isin == alias.isin,
-                                   alias.abierta == True),
-                              and_(DividendoEntity.fecha > alias.fecha_compra,
-                                   DividendoEntity.fecha < alias.fecha_venta,
-                                   DividendoEntity.isin == alias.isin,
-                                   alias.abierta == False)
-                              )
-                          ))
-        return subquery.label('dividendo')
+
+        subquery = (
+            subquery_builder.build_query(Criteria())
+            .where(
+                # Factores comunes (Correlación con la query externa)
+                DividendoEntity.isin == alias.isin,
+                DividendoEntity.fecha > alias.fecha_compra,
+                # Condición variable encapsulada en el OR
+                or_(
+                    alias.abierta == True,
+                    and_(
+                        alias.abierta == False,
+                        DividendoEntity.fecha < alias.fecha_venta
+                    )
+                )
+            )
+        )
+        # Es altamente recomendable asegurar que actúe como una subquery escalar antes del label
+        return subquery.scalar_subquery().label('dividendo')
 
     def __get_subquery_retencion(self, alias: Type[PosicionEntity]) -> Label:
         columnas = (
             func.sum(DividendoEntity.retencion_por_participacion),
         )
         subquery_builder = SQLAlchemyQueryBuilder(DividendoEntity, self._session, selected_columns=columnas)
-        subquery = ((subquery_builder.build_query(Criteria())).
-                    where(or_(and_(DividendoEntity.fecha > alias.fecha_compra,
-                                   DividendoEntity.isin == alias.isin,
-                                   alias.abierta == True),
-                              and_(DividendoEntity.fecha > alias.fecha_compra,
-                                   DividendoEntity.fecha < alias.fecha_venta,
-                                   DividendoEntity.isin == alias.isin,
-                                   alias.abierta == False)
-                              )
-                          ))
-        return subquery.label('retencion')
+
+        subquery = (
+            subquery_builder.build_query(Criteria())
+            .where(
+                # Factores comunes (Correlación con la query externa)
+                DividendoEntity.isin == alias.isin,
+                DividendoEntity.fecha > alias.fecha_compra,
+                # Condición variable encapsulada en el OR
+                or_(
+                    alias.abierta == True,
+                    and_(
+                        alias.abierta == False,
+                        DividendoEntity.fecha < alias.fecha_venta
+                    )
+                )
+            )
+        )
+        return subquery.scalar_subquery().label('retencion')
 
     def __get_complete_join_query(self, criteria: Criteria) -> Query:
 
@@ -144,6 +166,18 @@ class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository)
             if result is not None:
                 for i in range(n_elements):
                     elements.append(self.__get_posicion_participacion_from_complete_join_row(result[i]))
+
+            open_isins_brokers = list(set((p.get_isin(), p.get_id_broker()) for p in elements if p.is_abierta()))
+            oldest_open_ids = self._get_oldest_open_ids_by_isin_and_broker(open_isins_brokers)
+            for p in elements:
+                if p.is_abierta():
+                    if p.get_id_broker() == 1:
+                        p.set_es_cerrable(True)
+                    else:
+                        p.set_es_cerrable(oldest_open_ids.get((p.get_isin(), p.get_id_broker())) == p.get_id())
+                else:
+                    p.set_es_cerrable(False)
+
             return elements, self.count(criteria)
         except Exception as e:
             traceback.print_exc()
@@ -168,7 +202,18 @@ class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository)
             if result is None:
                 raise NotFoundError("No se encuentra la Posicion con id:  {}".format(id_posicion))
             else:
-                return self.__get_posicion_participacion_from_complete_join_row(result)
+                posicion = self.__get_posicion_participacion_from_complete_join_row(result)
+                if posicion.is_abierta():
+                    if posicion.get_id_broker() == 1:
+                        posicion.set_es_cerrable(True)
+                    else:
+                        oldest_open_ids = self._get_oldest_open_ids_by_isin_and_broker(
+                            [(posicion.get_isin(), posicion.get_id_broker())])
+                        posicion.set_es_cerrable(
+                            oldest_open_ids.get((posicion.get_isin(), posicion.get_id_broker())) == posicion.get_id())
+                else:
+                    posicion.set_es_cerrable(False)
+                return posicion
         except NotFoundError as e:
             logger.info(e)
             raise e
@@ -251,6 +296,41 @@ class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository)
             bolsa_entity = query_builder.filter_by(id=id_bolsa).one_or_none()
             if bolsa_entity is None:
                 raise NotFoundError("No se encuentra la bolsa con id:  {}".format(id_bolsa))
+
+    def get_oldest_open_by_isin_and_broker(self, isin: str, id_broker: int) -> Posicion:
+        try:
+            query_builder = SQLAlchemyQueryBuilder(PosicionEntity, self._session).build_base_query()
+            query = query_builder.filter(
+                PosicionEntity.isin == isin,
+                PosicionEntity.abierta == True
+            )
+            if id_broker is not None:
+                query = query.filter(PosicionEntity.id_broker == id_broker)
+            entity = query.order_by(PosicionEntity.fecha_compra.asc()).first()
+            if entity is None:
+                return None
+            return entity.convert_to_object_domain()
+        except Exception as e:
+            traceback.print_exc()
+        return None
+
+    def _get_oldest_open_ids_by_isin_and_broker(self, isins_brokers: list) -> dict:
+        if not isins_brokers:
+            return {}
+        try:
+            query = (self._session.query(
+                PosicionEntity.isin,
+                PosicionEntity.id_broker,
+                func.min(PosicionEntity.id).label('oldest_id')
+            ).filter(
+                PosicionEntity.isin.in_([ib[0] for ib in isins_brokers]),
+                PosicionEntity.abierta == True
+            ).group_by(PosicionEntity.isin, PosicionEntity.id_broker).subquery())
+            result = self._session.query(query).all()
+            return {(row[0], row[1]): row[2] for row in result}
+        except Exception as e:
+            traceback.print_exc()
+        return {}
 
     def check_isin(self, isin: str):
         if isin is not None:

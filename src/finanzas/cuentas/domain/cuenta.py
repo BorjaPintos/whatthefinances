@@ -6,6 +6,7 @@ class Cuenta:
         self._cantidad_inicial = params.get("cantidad_inicial")
         self._diferencia = params.get("diferencia")
         self._ponderacion = params.get("ponderacion")
+        self._eliminado = params.get("eliminado", False)
 
     def get_id(self) -> int:
         return self._id
@@ -37,11 +38,18 @@ class Cuenta:
     def set_ponderacion(self, ponderacion: float):
         self._ponderacion = ponderacion
 
+    def get_eliminado(self) -> bool:
+        return self._eliminado
+
+    def set_eliminado(self, eliminado: bool):
+        self._eliminado = eliminado
+
     def get_dto(self) -> dict:
         return {"id": self._id,
                 "nombre": self._nombre,
                 "cantidad_inicial": self._cantidad_inicial,
                 "diferencia": self._diferencia,
                 "total": self.get_total(),
-                "ponderacion": self._ponderacion
+                "ponderacion": self._ponderacion,
+                "eliminado": self._eliminado
                 }
