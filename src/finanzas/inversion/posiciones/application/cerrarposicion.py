@@ -18,6 +18,18 @@ class CerrarPosicion(TransactionalUseCase):
         self._validate_params(params)
         posicion = self._posicion_repository_repository.get(params["id"])
 
+        if not posicion.is_abierta():
+            raise InvalidParamError("La posición ya está cerrada")
+
+        if posicion.get_id_broker() is not None:
+            oldest_open = self._posicion_repository_repository.get_oldest_open_by_isin_and_broker(
+                posicion.get_isin(), posicion.get_id_broker())
+            if oldest_open is not None and oldest_open.get_id() != posicion.get_id():
+                raise InvalidParamError(
+                    "Solo se puede cerrar la posición abierta más antigua de cada elemento en el mismo broker. "
+                    "La posición más antigua abierta para el ISIN {} en el mismo broker tiene fecha de compra {}".format(
+                        posicion.get_isin(), oldest_open.get_fecha_compra().strftime("%d/%m/%Y")))
+
         posicion.set_fecha_venta(params.get("fecha_venta"))
         posicion.set_abierta(False)
         posicion.set_comision_venta(params.get("comision_venta"))

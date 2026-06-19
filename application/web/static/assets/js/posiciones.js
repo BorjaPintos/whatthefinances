@@ -64,6 +64,39 @@ function delete_posicion(id) {
     xhttp.send();
 }
 
+function cerrar_posicion() {
+    var id = $.trim($("#cerrarTypeIdX").val())
+    var fecha_venta = $("#cerrarFechaVentaDataPicker").val()
+    var precio_venta = $("#cerrarTypePrecioVentaX").val();
+    var comision_venta = $("#cerrarTypeComisionVentaX").val();
+
+    var data = {
+        fecha_venta: fecha_venta,
+        precio_venta_sin_comision: parseFloat(precio_venta).toFixed(4) ? precio_venta : 0.0,
+        comision_venta: parseFloat(comision_venta).toFixed(4) ? comision_venta : 0.0
+    }
+
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "/finanzas/posicion/cerrar/"+id, true);
+    xhttp.setRequestHeader("Content-Type", "application/json");
+
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4)
+            if (xhttp.status === 200) {
+                $('#cerrar').modal('hide')
+                table.ajax.reload( null, false );
+            } else if (xhttp.status != 200){
+                try {
+                    var respuesta = JSON.parse(xhttp.responseText).message;
+                } catch (error){
+                    respuesta = "Error inesperado";
+                }
+                $("#cerrarTypeMessageX").text(respuesta)
+            }
+    };
+    xhttp.send(JSON.stringify(data));
+}
+
 function update_posicion() {
     var id = $.trim($("#editTypeIdX").val())
 
@@ -147,12 +180,19 @@ render_total_dinero = function (data, type, row) {
     return data
 }
 
-render_actions = function (data, type) {
+render_actions = function (data, type, row) {
     if (type === 'display') {
-        cerrar_posicion =  '<a class="cerrar-posicion-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Cerrar Posición" data-bs-original-title="Cerrar Posición" data-element="'+data+'"><i class="uil uil-sign-out-alt"></i></a>'
+        if (!row['abierta']) {
+            return ''
+        }
+        if (row['es_cerrable']) {
+            cerrar_icon = '<a class="cerrar-posicion-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Cerrar Posición" data-bs-original-title="Cerrar Posición" data-element="'+data+'"><i class="uil uil-sign-out-alt"></i></a>'
+        } else {
+            cerrar_icon = '<a class="font-18 text-secondary me-2 disabled" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Cerrar Posición" data-bs-original-title="Cerrar Posición" data-element="'+data+'"><i class="uil uil-sign-out-alt"></i></a>'
+        }
         edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Editar" data-bs-original-title="Editar" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
         del = '<a class="delete-element font-18 text-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Borrar" data-bs-original-title="Borrar" data-element="'+data+'"><i class="uil uil-trash"></i></a>'
-        return cerrar_posicion + edit + del
+        return cerrar_icon + edit + del
     }
     return data
 }
@@ -230,6 +270,8 @@ $(document).ready(function() {
 
     $('#editFechaCompraDataPicker').daterangepicker(get_datapicker_conf());
 
+    $('#cerrarFechaVentaDataPicker').daterangepicker(get_datapicker_conf());
+
     $('#search-fecha-compra-begin-datapicker').daterangepicker(get_datapicker_conf());
     $('#search-fecha-compra-begin-datapicker').val('')
     $('#search-fecha-compra-end-datapicker').daterangepicker(get_datapicker_conf());
@@ -251,7 +293,9 @@ $(document).ready(function() {
          })
          .on('xhr.dt', function ( e, settings, json, xhr ) {
             for (var i=0; i<json.elements.length; i++) {
-                if ( json.elements[i].ganacia_con_comosiones_y_dividendos > 0)
+                if (!json.elements[i].abierta)
+                    json.elements[i].DT_RowClass = "cerrada"
+                else if ( json.elements[i].ganacia_con_comosiones_y_dividendos > 0)
                     json.elements[i].DT_RowClass = "ingreso"
                 else if (json.elements[i].ganacia_con_comosiones_y_dividendos < 0)
                     json.elements[i].DT_RowClass = "gasto"
@@ -274,6 +318,8 @@ $(document).ready(function() {
                     d.begin_fecha_compra = begin_fecha_compra
                 if (end_fecha_compra != '')
                     d.end_fecha_compra = end_fecha_compra
+                if (!$('#search-mostrar-cerradas').is(':checked'))
+                    d.abierta = true
             },
             dataSrc: 'elements',
         },
@@ -415,6 +461,14 @@ $(document).ready(function() {
         $('.delete-element').on( "click", function() {
            delete_posicion($(this).attr("data-element"))
         });
+        $('.cerrar-posicion-element').on( "click", function() {
+            var posicion = table.row($(this).parents('tr')).data()
+            $("#cerrarTypeIdX").val(posicion.id)
+            $("#cerrarFechaVentaDataPicker").val(moment().format("DD/MM/YYYY"));
+            $("#cerrarTypePrecioVentaX").val('');
+            $("#cerrarTypeComisionVentaX").val('');
+            $('#cerrar').modal('show')
+        });
 
 
     });
@@ -451,6 +505,14 @@ $(document).ready(function() {
 
     $('#edit-submit-button').on( "click", function() {
        update_posicion()
+    });
+
+    $('#cerrar-close-button').on( "click", function() {
+        $('#cerrar').modal('hide')
+    });
+
+    $('#cerrar-submit-button').on( "click", function() {
+       cerrar_posicion()
     });
 
 });

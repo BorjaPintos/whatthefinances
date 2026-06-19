@@ -24,6 +24,11 @@ tr.gasto.odd, tr.gasto.even, .gasto{
     --ct-table-hover-bg: #CCD1D1;
 }
 
+tr.cerrada.odd, tr.cerrada.even, .cerrada{
+    background-color:#D5D8DC;
+    --ct-table-hover-bg: #CCD1D1;
+}
+
 tr.resumen-total.odd, tr.resumen-total.even, .resumen-total{
     background-color:#AED6F1;
 }

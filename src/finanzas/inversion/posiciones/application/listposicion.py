@@ -33,7 +33,7 @@ class ListPosicion(TransactionalUseCase):
         filter = None
         if "abierta" in params and params["abierta"]:
             abierta_filter = SimpleFilter(
-                "abierta", WhereOperator.IS, params["abierta_filter"])
+                "abierta", WhereOperator.IS, params["abierta"])
             filter = combine_filters(filter, CompositeOperator.AND, abierta_filter)
         if "nombre" in params and params["nombre"]:
             nombre_filter = SimpleFilter(

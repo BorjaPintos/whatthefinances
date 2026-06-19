@@ -144,6 +144,18 @@ class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository)
             if result is not None:
                 for i in range(n_elements):
                     elements.append(self.__get_posicion_participacion_from_complete_join_row(result[i]))
+
+            open_isins_brokers = list(set((p.get_isin(), p.get_id_broker()) for p in elements if p.is_abierta()))
+            oldest_open_ids = self._get_oldest_open_ids_by_isin_and_broker(open_isins_brokers)
+            for p in elements:
+                if p.is_abierta():
+                    if p.get_id_broker() is None:
+                        p.set_es_cerrable(True)
+                    else:
+                        p.set_es_cerrable(oldest_open_ids.get((p.get_isin(), p.get_id_broker())) == p.get_id())
+                else:
+                    p.set_es_cerrable(False)
+
             return elements, self.count(criteria)
         except Exception as e:
             traceback.print_exc()
@@ -168,7 +180,18 @@ class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository)
             if result is None:
                 raise NotFoundError("No se encuentra la Posicion con id:  {}".format(id_posicion))
             else:
-                return self.__get_posicion_participacion_from_complete_join_row(result)
+                posicion = self.__get_posicion_participacion_from_complete_join_row(result)
+                if posicion.is_abierta():
+                    if posicion.get_id_broker() is None:
+                        posicion.set_es_cerrable(True)
+                    else:
+                        oldest_open_ids = self._get_oldest_open_ids_by_isin_and_broker(
+                            [(posicion.get_isin(), posicion.get_id_broker())])
+                        posicion.set_es_cerrable(
+                            oldest_open_ids.get((posicion.get_isin(), posicion.get_id_broker())) == posicion.get_id())
+                else:
+                    posicion.set_es_cerrable(False)
+                return posicion
         except NotFoundError as e:
             logger.info(e)
             raise e
@@ -251,6 +274,41 @@ class PosicionRepositorySQLAlchemy(ITransactionalRepository, PosicionRepository)
             bolsa_entity = query_builder.filter_by(id=id_bolsa).one_or_none()
             if bolsa_entity is None:
                 raise NotFoundError("No se encuentra la bolsa con id:  {}".format(id_bolsa))
+
+    def get_oldest_open_by_isin_and_broker(self, isin: str, id_broker: int) -> Posicion:
+        try:
+            query_builder = SQLAlchemyQueryBuilder(PosicionEntity, self._session).build_base_query()
+            query = query_builder.filter(
+                PosicionEntity.isin == isin,
+                PosicionEntity.abierta == True
+            )
+            if id_broker is not None:
+                query = query.filter(PosicionEntity.id_broker == id_broker)
+            entity = query.order_by(PosicionEntity.fecha_compra.asc()).first()
+            if entity is None:
+                return None
+            return entity.convert_to_object_domain()
+        except Exception as e:
+            traceback.print_exc()
+        return None
+
+    def _get_oldest_open_ids_by_isin_and_broker(self, isins_brokers: list) -> dict:
+        if not isins_brokers:
+            return {}
+        try:
+            query = (self._session.query(
+                PosicionEntity.isin,
+                PosicionEntity.id_broker,
+                func.min(PosicionEntity.id).label('oldest_id')
+            ).filter(
+                PosicionEntity.isin.in_([ib[0] for ib in isins_brokers]),
+                PosicionEntity.abierta == True
+            ).group_by(PosicionEntity.isin, PosicionEntity.id_broker).subquery())
+            result = self._session.query(query).all()
+            return {(row[0], row[1]): row[2] for row in result}
+        except Exception as e:
+            traceback.print_exc()
+        return {}
 
     def check_isin(self, isin: str):
         if isin is not None:

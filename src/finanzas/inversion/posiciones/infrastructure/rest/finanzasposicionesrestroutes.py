@@ -86,7 +86,8 @@ def import_routes(rootpath, app):
         params = {
             "id": id_posicion,
             "fecha_venta": request.json.get('fecha_venta', None),
-            "precio_venta_sin_comision": request.json.get('precio_venta_sin_comision', None)
+            "precio_venta_sin_comision": request.json.get('precio_venta_sin_comision', None),
+            "comision_venta": request.json.get('comision_venta', None)
         }
         return finanzasposicionescontroller.cerrar_posicion(params)
 

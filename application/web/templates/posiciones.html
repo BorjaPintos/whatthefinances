@@ -27,7 +27,13 @@ Añadir Compra de Participaciones
         <div class="input-group-text bg-primary border-primary text-white">
             <span class="uil uil-calendar-alt"></span>
         </div>
-        <button type="button" class="btn btn-info px-2" id="search-button"><i
+
+        <div class="form-check ms-3 mt-2">
+            <input class="form-check-input" type="checkbox" id="search-mostrar-cerradas">
+            <label class="form-check-label search-label" for="search-mostrar-cerradas">Mostrar cerradas</label>
+        </div>
+
+        <button type="button" class="btn btn-info px-2 ms-2" id="search-button"><i
                 class="uil-search"></i> Buscar
         </button>
     </div>
@@ -161,6 +167,34 @@ Editar Compra de participaciones
     </div>
 </div>
 <input type="hidden" id="editTypeIdX"/>
+{% endblock %}
+
+{% block titulo_cerrar %}
+Cerrar Posición
+{% endblock %}
+
+{% block contenido_cerrar %}
+<div class="form-outline form-white mb-4">
+    <div class="input-group date form-floating">
+        <input type="text" class="form-control" id="cerrarFechaVentaDataPicker"
+               data-toggle="date-picker" data-time-picker="true">
+        <div class="input-group-text bg-primary border-primary text-white">
+            <span class="uil uil-calendar-alt"></span>
+        </div>
+        <label for="cerrarFechaVentaDataPicker">Fecha Venta</label>
+    </div>
+
+    <div class="form-floating mt-2">
+        <input type="text" id="cerrarTypePrecioVentaX" class="form-control"/>
+        <label for="cerrarTypePrecioVentaX">Precio Venta sin Comisión</label>
+    </div>
+
+    <div class="form-floating mt-2">
+        <input type="text" id="cerrarTypeComisionVentaX" class="form-control"/>
+        <label for="cerrarTypeComisionVentaX">Comisión Venta</label>
+    </div>
+</div>
+<input type="hidden" id="cerrarTypeIdX"/>
 {% endblock %}
 
 
