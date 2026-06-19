@@ -54,3 +54,8 @@ def update_cuenta(context, id):
         }
         url = _get_cuenta_base_url(context) + "/{}".format(id)
         context.result = common_functions.make_post_request(context, url, data)
+
+@when('Elimino la cuenta con id {id}')
+def delete_monedero(context, id):
+    url = _get_cuenta_base_url(context) + "/{}".format(id)
+    context.result = common_functions.make_delete_request(context, url)

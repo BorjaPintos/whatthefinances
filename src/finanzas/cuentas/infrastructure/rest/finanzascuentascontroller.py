@@ -8,7 +8,7 @@ from src.finanzas.cuentas.application.listcuentas import ListCuentas
 from src.finanzas.cuentas.application.restorecuenta import RestoreCuenta
 from src.finanzas.cuentas.application.updatecuenta import UpdateCuenta
 from src.finanzas.cuentas.infrastructure.persistence.cuentarepositorysqlalchemy import CuentaRepositorySQLAlchemy
-from src.shared.utils.localeutils import apply_locale_float, apply_locale_int
+from src.shared.utils.localeutils import apply_locale_float, apply_locale_int, apply_locale_bool
 from src.shared.domain.exceptions.messageerror import MessageError
 
 
@@ -109,6 +109,8 @@ def __cast_params(params: dict):
         params["end_cantidad"] = apply_locale_float(params["end_cantidad"])
     if params.get("ponderacion") is not None:
         params["ponderacion"] = apply_locale_float(params["ponderacion"])
+    if params.get("eliminado") is not None:
+        params["eliminado"] = apply_locale_bool(params["eliminado"])
 
 
 

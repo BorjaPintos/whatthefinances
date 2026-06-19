@@ -1,4 +1,4 @@
-from src.shared.utils.localeutils import apply_locale_int, apply_locale_float
+from src.shared.utils.localeutils import apply_locale_int, apply_locale_float, apply_locale_bool
 from typing import Any, Tuple
 from loguru import logger
 from src.finanzas.monederos.application.createmonedero import CreateMonedero
@@ -104,3 +104,5 @@ def __cast_params(params: dict):
         params["begin_cantidad"] = apply_locale_float(params["begin_cantidad"])
     if params.get("end_cantidad") is not None:
         params["end_cantidad"] = apply_locale_float(params["end_cantidad"])
+    if params.get("eliminado") is not None:
+        params["eliminado"] = apply_locale_bool(params["eliminado"])

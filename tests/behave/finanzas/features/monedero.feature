@@ -173,7 +173,7 @@ Feature: Monedero
     Then Obtengo el codigo de estado 200
     When Listo los monederos
     Then Obtengo el codigo de estado 200
-    And Obtengo una lista vacia
+    And Obtengo una lista vacía
 
   Scenario: DeleteMonedero con saldo distinto de 0
     Given Una sesion correcta

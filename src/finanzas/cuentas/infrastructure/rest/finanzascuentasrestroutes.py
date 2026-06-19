@@ -10,15 +10,11 @@ def import_routes(rootpath, app):
     @login_required
     @serialize_response
     def list_cuentas():
-        eliminado_param = request.args.get('eliminado', None)
-        eliminado = None
-        if eliminado_param is not None:
-            eliminado = eliminado_param.lower() in ('true', '1', 'yes')
         params = {
             "order_property": request.args.get('order_property', 'nombre'),
             "order_type": request.args.get('order_type', 'asc'),
             "nombre": request.args.get('nombre', None),
-            "eliminado": eliminado
+            "eliminado": request.args.get('eliminado', False)
         }
         return finanzascuentascontroller.list_cuentas(params)
 
