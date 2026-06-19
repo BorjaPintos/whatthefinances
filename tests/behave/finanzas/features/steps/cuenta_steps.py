@@ -31,6 +31,10 @@ def list_cuentas(context):
     url = _get_cuenta_base_url(context)
     context.result = common_functions.make_get_request(context, url)
 
+@when('Listo las cuentas con filtro eliminado {valor}')
+def list_monederos_with_filter(context, valor):
+    url = _get_cuenta_base_url(context) + "?eliminado={}".format(valor)
+    context.result = common_functions.make_get_request(context, url)
 
 @when('Creo la siguiente cuenta')
 def create_cuenta(context):
