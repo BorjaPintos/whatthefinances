@@ -70,6 +70,8 @@ def cerrar_posicion(context, id):
             data["fecha_venta"] = row["fecha_venta"]
         if "comision_venta" in row:
             data["comision_venta"] = float(row["comision_venta"])
+        if "precio_venta_sin_comision" in row:
+            data["precio_venta_sin_comision"] = float(row["precio_venta_sin_comision"])
         url = _get_posicion_base_url(context) + "/cerrar/{}".format(id)
         context.result = common_functions.make_post_request(context, url, data)
 

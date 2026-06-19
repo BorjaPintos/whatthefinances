@@ -33,6 +33,7 @@ class CerrarPosicion(TransactionalUseCase):
         posicion.set_fecha_venta(params.get("fecha_venta"))
         posicion.set_abierta(False)
         posicion.set_comision_venta(params.get("comision_venta"))
+        posicion.set_precio_venta_sin_comision(params.get("precio_venta_sin_comision"))
 
         updated = self._posicion_repository_repository.update(posicion)
 
@@ -50,3 +51,5 @@ class CerrarPosicion(TransactionalUseCase):
             raise InvalidParamError("campo fecha_venta obligatorio")
         if "comision_venta" not in params or params["comision_venta"] is None:
             raise InvalidParamError("campo comision_venta obligatorio")
+        if "precio_venta_sin_comision" not in params or params["precio_venta_sin_comision"] is None:
+            raise InvalidParamError("campo precio_venta_sin_comision obligatorio")
