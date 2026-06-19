@@ -38,6 +38,7 @@ class CerrarPosicionTest(unittest.TestCase):
             "id": 1,
             "fecha_venta": date(2024, 6, 1),
             "comision_venta": 2.0,
+            "precio_venta_sin_comision" : 10.0
         })
 
         self.assertIsNotNone(result)
@@ -59,6 +60,7 @@ class CerrarPosicionTest(unittest.TestCase):
             "id": 2,
             "fecha_venta": date(2024, 6, 1),
             "comision_venta": 2.0,
+            "precio_venta_sin_comision": 10.0
         })
 
         self.assertIsNotNone(result)
@@ -77,6 +79,7 @@ class CerrarPosicionTest(unittest.TestCase):
                 "id": 3,
                 "fecha_venta": date(2024, 6, 1),
                 "comision_venta": 2.0,
+                "precio_venta_sin_comision": 10.0
             })
         self.assertIn("más antigua", str(ctx.exception))
 
@@ -91,6 +94,7 @@ class CerrarPosicionTest(unittest.TestCase):
                 "id": 1,
                 "fecha_venta": date(2024, 6, 1),
                 "comision_venta": 2.0,
+                "precio_venta_sin_comision": 10.0
             })
         self.assertIn("ya está cerrada", str(ctx.exception))
 
@@ -102,6 +106,7 @@ class CerrarPosicionTest(unittest.TestCase):
             use_case.execute({
                 "id": 1,
                 "comision_venta": 2.0,
+                "precio_venta_sin_comision": 10.0
             })
         self.assertIn("fecha_venta", str(ctx.exception))
 
@@ -113,5 +118,18 @@ class CerrarPosicionTest(unittest.TestCase):
             use_case.execute({
                 "id": 1,
                 "fecha_venta": date(2024, 6, 1),
+                "precio_venta_sin_comision": 10.0
             })
         self.assertIn("comision_venta", str(ctx.exception))
+
+    def test_cerrar_posicion_sin_precio_venta_sin_comision(self):
+        repo = Mock()
+        use_case = CerrarPosicion(posicion_repository=repo)
+
+        with self.assertRaises(InvalidParamError) as ctx:
+            use_case.execute({
+                "id": 1,
+                "fecha_venta": date(2024, 6, 1),
+                "comision_venta": 2.0,
+            })
+        self.assertIn("precio_venta_sin_comision", str(ctx.exception))
