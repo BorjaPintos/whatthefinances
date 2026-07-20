@@ -7,6 +7,7 @@ function create_tabla_posiciones_meses(data_productos, callback){
     var today = new Date()
     var año_antes_today = new Date(today)
     año_antes_today.setFullYear(año_antes_today.getFullYear()-1)
+    año_antes_today.setDate(1)
     var end_date = today.getDate()+"/"+ (today.getMonth()+1) + "/" + today.getFullYear()
     var begin_date = "1/"+ (año_antes_today.getMonth()+1) + "/" + año_antes_today.getFullYear()
 
@@ -36,6 +37,7 @@ function create_tabla_posiciones_meses(data_productos, callback){
         }
 
         var tr = $("#resumen-posiciones thead tr")
+        tr.append($('<th></th>').text("tipo_row"))
         tr.append($('<th></th>').text("Valores de tus posiciones"))
         for (var i in labels){
             tr.append($('<th></th>').text(labels[i]))
@@ -46,6 +48,7 @@ function create_tabla_posiciones_meses(data_productos, callback){
 
         for (var valores_posicion in valores_posiciones){
             var row = $('<tr></tr>')
+            row.append($('<td></td>').text("dato"))
             row.append($('<td></td>').text(valores_posiciones[valores_posicion].nombre))
             for (var j in labels){
                 var value = "-"
@@ -59,6 +62,7 @@ function create_tabla_posiciones_meses(data_productos, callback){
         }
 
         var row = $('<tr></tr>')
+        row.append($('<td></td>').text("Resumen"))
         row.append($('<td></td>').text("Total"))
         for (var j in labels){
             var value = total_month[labels[j]]
@@ -74,6 +78,7 @@ function create_tabla_posiciones_meses_acumuladas(data_productos, callback){
     var today = new Date()
     var año_antes_today = new Date(today)
     año_antes_today.setFullYear(año_antes_today.getFullYear()-1)
+    año_antes_today.setDate(1)
 
     $.get("finanzas/resumen/posiciones_meses_acumuladas", function(resultado) {
         var valores_posiciones={}
@@ -108,6 +113,7 @@ function create_tabla_posiciones_meses_acumuladas(data_productos, callback){
 
 
         var tr = $("#resumen-posiciones-acumulada thead tr")
+        tr.append($('<th></th>').text("tipo_row"))
         tr.append($('<th></th>').text("Inversiones mensuales acumuladas"))
         for (var i in labels){
             tr.append($('<th></th>').text(labels[i]))
@@ -119,6 +125,7 @@ function create_tabla_posiciones_meses_acumuladas(data_productos, callback){
 
         for (var valores_posicion in valores_posiciones){
             var row = $('<tr></tr>')
+            row.append($('<td></td>').text("dato"))
             row.append($('<td></td>').text(valores_posiciones[valores_posicion].nombre))
             for (var j in labels){
                 var value = "-"
@@ -138,6 +145,7 @@ function create_tabla_posiciones_meses_acumuladas(data_productos, callback){
         }
 
         var row = $('<tr></tr>')
+        row.append($('<td></td>').text("Resumen"))
         row.append($('<td></td>').text("Total"))
         for (var j in labels){
             var value = total_month[labels[j]]
@@ -161,6 +169,11 @@ create_table = function(labels, id_table){
     }
 
     var columns = [
+            {
+                data:'tipo_row',
+                type: "string",
+                visible: false
+            },
             {
                 data:'nombre',
                 type: "string",
@@ -201,7 +214,11 @@ create_table = function(labels, id_table){
             activar_elements();
         }).DataTable({
         columns: columns,
-        order: [[0, 'asc']],
+        rowGroup: {
+            dataSrc: "tipo_row"
+        },
+        orderFixed: [0, 'asc'],
+        order: [[1, 'asc']],
         info: false,
         lengthChange: false,
         paging: false,
@@ -214,6 +231,12 @@ create_table = function(labels, id_table){
             loadingRecords: "Cargando...",
             decimal:",",
         },
+        initComplete: function(settings, json) {
+            $('.dtrg-group').remove();
+        }
+    });
+    table.on('draw', function () {
+        $('.dtrg-group').remove();
     });
     return table
 }
@@ -238,6 +261,7 @@ create_table_ganancias = function(labels, table_pocisiones_meses, table_posicion
     }
 
     var tr = $("#resumen-ganancias-acumulada thead tr")
+        tr.append($('<th></th>').text("tipo_row"))
         tr.append($('<th></th>').text("Ganancias mensuales acumuladas"))
         for (var i in labels){
             tr.append($('<th></th>').text(labels[i]))
@@ -248,6 +272,7 @@ create_table_ganancias = function(labels, table_pocisiones_meses, table_posicion
 
         for (var i in dataset){
             var row = $('<tr></tr>')
+            row.append($('<td></td>').text("dato"))
             row.append($('<td></td>').text(dataset[i].nombre))
             for (var j in labels){
                 var value = "-"
@@ -261,6 +286,7 @@ create_table_ganancias = function(labels, table_pocisiones_meses, table_posicion
         }
 
         var row = $('<tr></tr>')
+        row.append($('<td></td>').text("Resumen"))
         row.append($('<td></td>').text("Total"))
         for (var j in labels){
             var value = total_month[labels[j]]
