@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import List
+from datetime import date
+from typing import List, Optional
 
 from src.finanzas.resumenes.domain.resumencuenta import ResumenCuenta
 from src.finanzas.resumenes.domain.resumengasto import ResumenGasto
@@ -51,5 +52,6 @@ class ResumenRepository(ABC):
         pass
 
     @abstractmethod
-    def resumen_posiciones_meses_acumulada(self, criteria: Criteria) -> List[ResumenPosicionAcumulada]:
+    def resumen_posiciones_meses_acumulada(self, begin_fecha: Optional[date] = None,
+                                           end_fecha: Optional[date] = None) -> List[ResumenPosicionAcumulada]:
         pass

@@ -36,6 +36,7 @@ function create_tabla_cosas_concreta(data_entidades_totales, end_point, resumen,
     var today = new Date()
     var año_antes_today = new Date(today)
     año_antes_today.setFullYear(año_antes_today.getFullYear()-1)
+    año_antes_today.setDate(1)
     var end_date = today.getDate()+"/"+ (today.getMonth()+1) + "/" + today.getFullYear()
     var begin_date = "1/"+ (año_antes_today.getMonth()+1) + "/" + año_antes_today.getFullYear()
 
