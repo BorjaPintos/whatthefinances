@@ -3,8 +3,7 @@ import traceback
 
 from loguru import logger
 
-from finanzas.cuentas.domain.cuenta import Cuenta
-from finanzas.cuentas.infrastructure.rest import finanzascuentascontroller
+from src.finanzas.cuentas.infrastructure.rest import finanzascuentascontroller
 from shared.utils.localeutils import apply_locale_int
 
 try:

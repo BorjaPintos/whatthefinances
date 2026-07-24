@@ -66,7 +66,7 @@ jobs:
     - name: Not Windows Integration tests with behave
       if: ${{ success() && runner.os != 'Windows'}}
       run: |
-        nohup python3 main.py run -c icconfig/config.json &
+        nohup python3 main.py run -c icconfig/config.json > nohup2.out 2> nohup.err < /dev/null &
         sleep 10
         sh behave.sh --format progress3
         kill -9 $(lsof -i:9090 -t)

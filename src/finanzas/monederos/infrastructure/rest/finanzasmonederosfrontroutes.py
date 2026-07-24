@@ -1,7 +1,7 @@
 from flask import request, render_template
 from flask_login import login_required
 
-from finanzas.monederos.infrastructure.rest import finanzasmonederoscontroller
+from src.finanzas.monederos.infrastructure.rest import finanzasmonederoscontroller
 from shared.utils.localeutils import apply_locale_int
 
 
