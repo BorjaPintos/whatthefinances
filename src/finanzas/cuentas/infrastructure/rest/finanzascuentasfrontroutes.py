@@ -4,7 +4,7 @@ import traceback
 from loguru import logger
 
 from src.finanzas.cuentas.infrastructure.rest import finanzascuentascontroller
-from shared.utils.localeutils import apply_locale_int
+from src.shared.utils.localeutils import apply_locale_int
 
 try:
     locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')

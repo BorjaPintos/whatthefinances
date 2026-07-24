@@ -2,7 +2,7 @@ from flask import request, render_template
 from flask_login import login_required
 
 from src.finanzas.monederos.infrastructure.rest import finanzasmonederoscontroller
-from shared.utils.localeutils import apply_locale_int
+from src.shared.utils.localeutils import apply_locale_int
 
 
 def import_routes(rootpath, app):
