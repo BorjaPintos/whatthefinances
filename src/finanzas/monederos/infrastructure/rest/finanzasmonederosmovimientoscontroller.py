@@ -7,7 +7,6 @@ from src.finanzas.monederos.application.listmovimientosmonedero import ListMovim
 from src.finanzas.monederos.infrastructure.persistence.movimientomonederorepositorysqlalchemy import \
     MovimientoMonederoRepositorySQLAlchemy
 from src.finanzas.monederos.infrastructure.persistence.monederorepositorysqlalchemy import MonederoRepositorySQLAlchemy
-from src.finanzas.monederos.application.getmonedero import GetMonedero
 
 movimiento_monedero_repository = MovimientoMonederoRepositorySQLAlchemy()
 monedero_repository = MonederoRepositorySQLAlchemy()

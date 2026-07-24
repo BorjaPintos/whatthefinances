@@ -1,7 +1,7 @@
 from flask import request
 from flask_login import login_required
 
-from finanzas.cuentas.infrastructure.rest import finanzascuentascontroller
+from src.finanzas.cuentas.infrastructure.rest import finanzascuentascontroller
 from src.finanzas.cuentas.infrastructure.rest import finanzascuentasmovimientoscontroller
 from src.shared.infraestructure.rest.response import serialize_response
 

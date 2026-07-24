@@ -1,7 +1,7 @@
 from flask import request
 from flask_login import login_required
 
-from finanzas.monederos.infrastructure.rest import finanzasmonederoscontroller
+from src.finanzas.monederos.infrastructure.rest import finanzasmonederoscontroller
 from src.finanzas.monederos.infrastructure.rest import finanzasmonederosmovimientoscontroller
 from src.shared.infraestructure.rest.response import serialize_response
 
