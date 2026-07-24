@@ -3,6 +3,9 @@ import traceback
 
 from loguru import logger
 
+from src.finanzas.cuentas.infrastructure.rest import finanzascuentascontroller
+from src.shared.utils.localeutils import apply_locale_int
+
 try:
     locale.setlocale(locale.LC_ALL, 'es_ES.UTF-8')
 except Exception:
@@ -22,4 +25,19 @@ def import_routes(rootpath, app):
         return render_template('/cuentas.html', username=user.get_name(),
                                title="Cuentas",
                                lista_headers=lista_headers)
+
+    @app.route(rootpath + "movimientos-cuenta.html", methods=['GET'])
+    @login_required
+    def movimientos_cuenta():
+        user = request.user
+        id_cuenta = request.args.get('id_cuenta', None)
+        lista_headers = ["Fecha",  "Descripcion", "Cantidad","Saldo"]
+        try:
+            cuenta, error = finanzascuentascontroller.get_cuenta(apply_locale_int(id_cuenta))
+        except:
+            cuenta = {}
+        return render_template('/movimientoscuenta.html', username=user.get_name(),
+                               title=f"Movimientos Cuenta: {cuenta.get("nombre", "Desconocido")}",
+                               lista_headers=lista_headers,
+                               id_cuenta=id_cuenta)
 

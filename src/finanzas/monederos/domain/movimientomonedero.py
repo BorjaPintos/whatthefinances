@@ -9,6 +9,9 @@ class MovimientoMonedero:
         self._cantidad = params.get("cantidad")
         self._id_operacion = params.get("id_operacion")
         self._id_monedero = params.get("id_monedero")
+        self._descripcion = params.get("descripcion")
+        self._id_categoria_gasto = params.get("id_categoria_gasto")
+        self._id_categoria_ingreso = params.get("id_categoria_ingreso")
 
     def get_id(self) -> int:
         return self._id
@@ -25,10 +28,22 @@ class MovimientoMonedero:
     def get_id_monedero(self) -> int:
         return self._id_monedero
 
+    def get_descripcion(self) -> str:
+        return self._descripcion
+
+    def get_id_categoria_gasto(self) -> int:
+        return self._id_categoria_gasto
+
+    def get_id_categoria_ingreso(self) -> int:
+        return self._id_categoria_ingreso
+
     def get_dto(self) -> dict:
         return {"id": self._id,
                 "fecha": self._fecha.strftime("%d/%m/%Y"),
                 "cantidad": self._cantidad,
                 "id_operacion": self._id_operacion,
                 "id_monedero": self._id_monedero,
+                "descripcion": self._descripcion,
+                "id_categoria_gasto": self._id_categoria_gasto,
+                "id_categoria_ingreso": self._id_categoria_ingreso,
                 }

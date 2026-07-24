@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Tuple
 
 from src.finanzas.monederos.domain.movimientomonedero import MovimientoMonedero
 from src.persistence.domain.criteria import Criteria
@@ -8,7 +8,7 @@ from src.persistence.domain.criteria import Criteria
 class MovimientoMonederoRepository(ABC):
 
     @abstractmethod
-    def list(self, criteria: Criteria) -> List[MovimientoMonedero]:
+    def list(self, criteria: Criteria) -> Tuple[List[MovimientoMonedero], int]:
         pass
 
     @abstractmethod

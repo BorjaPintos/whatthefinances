@@ -36,7 +36,9 @@ class MovimientoMonederoEntity(BaseEntity):
             "end_fecha": OperacionEntity.fecha,
             "id_operacion": MovimientoMonederoEntity.id_operacion,
             "id_monedero": MovimientoMonederoEntity.id_monedero,
-            "cantidad": MovimientoMonederoEntity.cantidad
+            "cantidad": MovimientoMonederoEntity.cantidad,
+            "id_categoria_gasto": OperacionEntity.id_categoria_gasto,
+            "id_categoria_ingreso": OperacionEntity.id_categoria_ingreso,
         }
         return switcher.get(str_property, MovimientoMonederoEntity.id)
 
@@ -48,8 +50,9 @@ class MovimientoMonederoEntity(BaseEntity):
                 OperacionEntity.fecha: date,
                 MovimientoMonederoEntity.id_operacion: int,
                 MovimientoMonederoEntity.id_monedero: int,
-                MovimientoMonederoEntity.cantidad: float
-
+                MovimientoMonederoEntity.cantidad: float,
+                OperacionEntity.id_categoria_gasto: int,
+                OperacionEntity.id_categoria_ingreso: int,
             }
             return caster.get(column)(value)
         else:

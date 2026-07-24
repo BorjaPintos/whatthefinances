@@ -124,9 +124,10 @@ render_actions = function (data, type, row) {
             return restore
         }
         if (data != 0) {
+            movimientos = '<a class="movimientos-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Movimientos" data-bs-original-title="Movimientos" href="movimientos-monedero.html?id_monedero='+data+'"><i class="uil uil-exchange-alt"></i></a>'
             edit =  '<a class="edit-element font-18 text-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Edit" data-bs-original-title="Edit" data-element="'+data+'"><i class="uil uil-pen"></i></a>'
             del = '<a class="delete-element font-18 text-danger me-2" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Delete" data-bs-original-title="Borrar" data-element="'+data+'"><i class="uil uil-trash"></i></a>'
-            return edit + del
+            return movimientos + edit + del
         }
         return ""
     }

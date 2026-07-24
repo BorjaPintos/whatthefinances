@@ -11,14 +11,59 @@ from src.finanzas.cuentas.infrastructure.persistence.orm.movimientocuentaentity 
 from src.finanzas.operaciones.infrastructure.persistence.orm.operacionentity import OperacionEntity
 from src.persistence.domain.criteria import Criteria
 from src.persistence.domain.itransactionalrepository import ITransactionalRepository
+from src.persistence.infrastructure.orderdefault import MovimientosOrderDefault
 from src.persistence.infrastructure.sqlalchmeyquerybuilder import SQLAlchemyQueryBuilder
 from src.shared.domain.exceptions.notfounderror import NotFoundError
 
 
 class MovimientoCuentaRepositorySQLAlchemy(ITransactionalRepository, MovimientoCuentaRepository):
 
+    def __build_base_query(self, criteria: Criteria):
+        columnas = (
+            MovimientoCuentaEntity.id,
+            MovimientoCuentaEntity.id_operacion,
+            MovimientoCuentaEntity.id_cuenta,
+            MovimientoCuentaEntity.cantidad,
+            OperacionEntity.fecha,
+            OperacionEntity.descripcion,
+            OperacionEntity.id_categoria_gasto,
+            OperacionEntity.id_categoria_ingreso,
+        )
+        query_builder = SQLAlchemyQueryBuilder(MovimientoCuentaEntity, self._session,
+                                               selected_columns=columnas)
+        return query_builder.build_order_query(criteria, defaultOrder=MovimientosOrderDefault()) \
+            .join(OperacionEntity, MovimientoCuentaEntity.id_operacion == OperacionEntity.id)
+
     def list(self, criteria: Criteria) -> Tuple[List[MovimientoCuenta], int]:
-        pass
+        elements = []
+        try:
+            query = self.__build_base_query(criteria)
+            query = query.offset(criteria.offset()).limit(criteria.limit())
+            result = query.all()
+            if result is not None:
+                for row in result:
+                    params = {
+                        "id": row[0],
+                        "id_operacion": row[1],
+                        "id_cuenta": row[2],
+                        "cantidad": row[3],
+                        "fecha": row[4],
+                        "descripcion": row[5],
+                        "id_categoria_gasto": row[6],
+                        "id_categoria_ingreso": row[7],
+                    }
+                    elements.append(MovimientoCuenta(params))
+            return elements, self.count(criteria)
+        except Exception as e:
+            traceback.print_exc()
+        return elements, 0
+
+    def count(self, criteria: Criteria) -> int:
+        try:
+            return self.__build_base_query(criteria).count()
+        except Exception as e:
+            traceback.print_exc()
+        return 0
 
     def get_by_id_operacion(self, id_operacion: int) -> List[MovimientoCuenta]:
         elements = []
