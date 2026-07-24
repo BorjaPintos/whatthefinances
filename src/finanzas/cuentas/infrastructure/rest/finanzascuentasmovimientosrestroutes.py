@@ -1,6 +1,7 @@
 from flask import request
 from flask_login import login_required
 
+from finanzas.cuentas.infrastructure.rest import finanzascuentascontroller
 from src.finanzas.cuentas.infrastructure.rest import finanzascuentasmovimientoscontroller
 from src.shared.infraestructure.rest.response import serialize_response
 
@@ -28,4 +29,4 @@ def import_routes(rootpath, app):
     @login_required
     @serialize_response
     def get_cuenta_for_movimientos(id_cuenta: int):
-        return finanzascuentasmovimientoscontroller.get_cuenta_for_movimientos(id_cuenta)
+        return finanzascuentascontroller.get_cuenta(id_cuenta)

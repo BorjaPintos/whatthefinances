@@ -33,7 +33,7 @@ class ListMovimientosMonedero(TransactionalUseCase):
     def _create_filters(params: dict) -> Filter:
         filter = None
 
-        if "id_monedero" in params and params["id_monedero"]:
+        if "id_monedero" in params and params.get("id_monedero") is not None :
             monedero_filter = SimpleFilter(
                 "id_monedero", WhereOperator.IS, params["id_monedero"])
             filter = combine_filters(filter, CompositeOperator.AND, monedero_filter)

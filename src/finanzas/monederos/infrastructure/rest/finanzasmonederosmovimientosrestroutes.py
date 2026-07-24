@@ -1,6 +1,7 @@
 from flask import request
 from flask_login import login_required
 
+from finanzas.monederos.infrastructure.rest import finanzasmonederoscontroller
 from src.finanzas.monederos.infrastructure.rest import finanzasmonederosmovimientoscontroller
 from src.shared.infraestructure.rest.response import serialize_response
 
@@ -28,4 +29,4 @@ def import_routes(rootpath, app):
     @login_required
     @serialize_response
     def get_monedero_for_movimientos(id_monedero: int):
-        return finanzasmonederosmovimientoscontroller.get_monedero_for_movimientos(id_monedero)
+        return finanzasmonederoscontroller.get_monedero(id_monedero)

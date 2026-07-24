@@ -14,7 +14,7 @@ monedero_repository = MonederoRepositorySQLAlchemy()
 
 list_movimientos_monedero_use_case = ListMovimientosMonedero(
     movimiento_monedero_repository=movimiento_monedero_repository)
-get_monedero_use_case = GetMonedero(monedero_repository=monedero_repository)
+
 
 
 def list_movimientos_monedero(params: dict) -> Tuple[Pagination, int]:
@@ -25,16 +25,6 @@ def list_movimientos_monedero(params: dict) -> Tuple[Pagination, int]:
     for element in elements:
         response_elements.append(element.get_dto())
     return Pagination(response_elements, params.get("offset", 0), params.get("count", 30), total_elements), code
-
-
-def get_monedero_for_movimientos(id_monedero: int) -> Tuple[Any, int]:
-    code = 200
-    monedero = get_monedero_use_case.execute(apply_locale_int(id_monedero))
-    if monedero:
-        response = monedero.get_dto()
-    else:
-        response = {}
-    return response, code
 
 
 def __cast_params(params: dict):

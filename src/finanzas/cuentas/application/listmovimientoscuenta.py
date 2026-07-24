@@ -33,7 +33,7 @@ class ListMovimientosCuenta(TransactionalUseCase):
     def _create_filters(params: dict) -> Filter:
         filter = None
 
-        if "id_cuenta" in params and params["id_cuenta"]:
+        if "id_cuenta" in params and params.get("id_cuenta") is not None:
             cuenta_filter = SimpleFilter(
                 "id_cuenta", WhereOperator.IS, params["id_cuenta"])
             filter = combine_filters(filter, CompositeOperator.AND, cuenta_filter)

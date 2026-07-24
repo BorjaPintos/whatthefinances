@@ -27,16 +27,6 @@ def list_movimientos_cuenta(params: dict) -> Tuple[Pagination, int]:
     return Pagination(response_elements, params.get("offset", 0), params.get("count", 30), total_elements), code
 
 
-def get_cuenta_for_movimientos(id_cuenta: int) -> Tuple[Any, int]:
-    code = 200
-    cuenta = get_cuenta_use_case.execute(apply_locale_int(id_cuenta))
-    if cuenta:
-        response = cuenta.get_dto()
-    else:
-        response = {}
-    return response, code
-
-
 def __cast_params(params: dict):
     if params.get("id_cuenta") is not None:
         params["id_cuenta"] = apply_locale_int(params["id_cuenta"])

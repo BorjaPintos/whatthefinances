@@ -33,7 +33,10 @@ def import_routes(rootpath, app):
         user = request.user
         id_cuenta = request.args.get('id_cuenta', None)
         lista_headers = ["Fecha",  "Descripcion", "Cantidad","Saldo"]
-        cuenta, error = finanzascuentascontroller.get_cuenta(apply_locale_int(id_cuenta))
+        try:
+            cuenta, error = finanzascuentascontroller.get_cuenta(apply_locale_int(id_cuenta))
+        except:
+            cuenta = {}
         return render_template('/movimientoscuenta.html', username=user.get_name(),
                                title=f"Movimientos Cuenta: {cuenta.get("nombre", "Desconocido")}",
                                lista_headers=lista_headers,

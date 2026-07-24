@@ -21,7 +21,10 @@ def import_routes(rootpath, app):
         user = request.user
         id_monedero = request.args.get('id_monedero', None)
         lista_headers = ["Fecha", "Descripcion", "Cantidad", "Saldo"]
-        monedero, error = finanzasmonederoscontroller.get_monedero(apply_locale_int(id_monedero))
+        try:
+            monedero, error = finanzasmonederoscontroller.get_monedero(apply_locale_int(id_monedero))
+        except:
+            monedero = {}
         return render_template('/movimientosmonedero.html', username=user.get_name(),
                                title=f"Movimientos Monedero: {monedero.get("nombre", "Desconocido")}",
                                lista_headers=lista_headers,
