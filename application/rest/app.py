@@ -11,7 +11,8 @@ from werkzeug.security import safe_join
 
 from src.finanzas.categorias.infrastructure.rest import finanzascategoriasgastorestroutes, \
     finanzascategoriasingresorestroutes, finanzascategoriasfrontroutes
-from src.finanzas.cuentas.infrastructure.rest import finanzascuentasrestroutes, finanzascuentasfrontroutes
+from src.finanzas.cuentas.infrastructure.rest import finanzascuentasrestroutes, finanzascuentasfrontroutes, \
+    finanzascuentasmovimientosrestroutes
 from src.finanzas.hacienda.infrastructure.rest import finanzashaciendafrontroutes
 from src.finanzas.inversion.bolsa.infrastructure.rest import finanzasbolsarestroutes, finanzasbolsafrontroutes
 from src.finanzas.inversion.broker.infrastructure.rest import finanzasbrokerrestroutes, finanzasbrokerfrontroutes
@@ -22,7 +23,8 @@ from src.finanzas.inversion.valorparticipacion.infrastructure.rest import finanz
 from src.finanzas.inversion.dividendos.infrastructure.rest import finanzasdividendosrestroutes, \
     finanzasdividendosfrontroutes
 from src.finanzas.inversion.producto.infrastructure.rest import finanzasproductorestroutes, finanzasproductofrontroutes
-from src.finanzas.monederos.infrastructure.rest import finanzasmonederosrestroutes, finanzasmonederosfrontroutes
+from src.finanzas.monederos.infrastructure.rest import finanzasmonederosrestroutes, finanzasmonederosfrontroutes, \
+    finanzasmonederosmovimientosrestroutes
 from src.finanzas.operaciones.infrastructure.rest import finanzasoperacionesrestroutes, \
     finanzasoperacionesfavoritasrestroutes, finanzasoperacionesfrontroutes
 from src.finanzas.resumenes.infrastructure.rest import finanzasresumenesrestroutes, finanzasresumenesfrontroutes
@@ -120,7 +122,9 @@ class Rest(IApp):
 
     def _init_finanzas_rest_routes(self, finanzas_path: str):
         finanzascuentasrestroutes.import_routes(finanzas_path + "/cuenta", self.app)
+        finanzascuentasmovimientosrestroutes.import_routes(finanzas_path + "/movimiento_cuenta", self.app)
         finanzasmonederosrestroutes.import_routes(finanzas_path + "/monedero", self.app)
+        finanzasmonederosmovimientosrestroutes.import_routes(finanzas_path + "/movimiento_monedero", self.app)
         finanzascategoriasgastorestroutes.import_routes(finanzas_path + "/categoria_gasto", self.app)
         finanzascategoriasingresorestroutes.import_routes(finanzas_path + "/categoria_ingreso", self.app)
         finanzasoperacionesrestroutes.import_routes(finanzas_path + "/operacion", self.app)
