@@ -5,7 +5,7 @@ SQLAlchemy-Utils==0.42.1
 flask==3.1.3
 flask-cors==6.0.5
 flask-login==0.6.3
-pyjwt==2.13.0
+pyjwt==2.15.0
 pyOpenSSL==26.3.0
 uvicorn==0.49.0
 pywebview==6.2.1
